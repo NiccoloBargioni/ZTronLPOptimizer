@@ -1,0 +1,10 @@
+.DS_Store
+/.build
+/Packages
+xcuserdata/
+DerivedData/
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
+# Corpora fetched by Scripts/fetch-miplib.sh and Scripts/fetch-satlib.sh (not bundled, §14.1)
+/.corpora

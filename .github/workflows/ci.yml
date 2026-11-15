@@ -1,0 +1,76 @@
+# CI for ZTronLPOptimizer (specification §12, §14).
+#
+# Runs on a macOS runner with the Swift 6.4 toolchain, building for macOS and the iOS
+# Simulator; the iOS 15 deployment target is enforced by the compiler, so no iOS 15 simulator
+# runtime is required.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Rule C1: every target builds in Swift 6 language mode with zero diagnostics.
+  build-and-test:
+    name: Build (warnings as errors) and test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: swift --version
+      - name: Build, warnings as errors
+        run: swift build --build-tests -Xswiftc -warnings-as-errors
+      - name: Lint greps (rules C2, C3, C6)
+        run: Scripts/lint.sh
+      - name: Fetch the corpora that are not bundled
+        run: |
+          Scripts/fetch-miplib.sh
+          Scripts/fetch-satlib.sh
+      - name: Unit, property and liveness tests
+        run: swift test
+
+  # The corpus oracles of §14.1 at full size need an optimized build.
+  corpora:
+    name: Corpora and constructed optima (release)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the corpora that are not bundled
+        run: |
+          Scripts/fetch-miplib.sh
+          Scripts/fetch-satlib.sh
+      - name: Integration and liveness suites, optimized
+        run: swift test -c release --filter 'ZTronLPIntegrationTests|ZTronLPLivenessTests'
+
+  # Rule C10: Thread Sanitizer is clean on the integration suite with threads = 8.
+  thread-sanitizer:
+    name: Thread Sanitizer
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the corpora that are not bundled
+        run: |
+          Scripts/fetch-miplib.sh
+          Scripts/fetch-satlib.sh
+      # The latency bounds of rule L1 and the time limits of the corpus tests are for
+      # uninstrumented code; this job is about races.
+      - name: Integration and liveness suites under TSAN
+        env:
+          ZTRONLP_LATENCY_SCALE: "20"
+        run: swift test --sanitize=thread --filter 'ZTronLPIntegrationTests|ZTronLPLivenessTests|ZTronLPBranchAndBoundTests|ZTronLPCPSATTests'
+
+  ios:
+    name: iOS Simulator build (deployment target iOS 15)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the facade for the iOS Simulator
+        run: |
+          xcodebuild build -scheme ZTronLPOptimizer \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .build/xcode
