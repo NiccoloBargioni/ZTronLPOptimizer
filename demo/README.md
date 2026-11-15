@@ -46,6 +46,11 @@ Release.
 
 ## The tabs
 
+On iPhone and iPad each strategy is a tab. An iPhone shows four tabs and puts Automatic,
+Portfolio and Conditioned under *More*. iOS gives *More* its own navigation bar, so a problem
+page there has two back buttons; the upper one returns to the *More* list. A Mac shows the
+strategies as a sidebar instead, so its window has three columns: strategy, example, problem.
+
 | Tab | Runs | Well conditioned | Badly conditioned | No optimum | Other |
 |---|---|---|---|---|---|
 | Simplex | `Simplex(.dual)` or `Simplex(.primal)` | Furniture workshop, Transport plan | Hilbert system 7 × 7, Feed blend in mixed units | Forgotten capacity limit (unbounded, with a ray), Overbooked production line (infeasible, with a Farkas certificate) | |
@@ -97,8 +102,9 @@ In the list, the icon next to a problem shows the outcome of its last run:
   - `Runner.swift`: compiles an example and solves it under a time limit.
   - `Report.swift`: turns the analysis into the log.
   - `Example.swift` and `Format.swift`: the example type and number formatting.
-- `ZTronLPDemo/Views/` holds the tabs (`ContentView`), the example list (`StrategyView`), a
-  problem's page (`ExampleDetailView`) and the log (`LogView`).
+- `ZTronLPDemo/Views/` holds the tabs, or the Mac's three columns (`ContentView`), a
+  strategy's example list (`StrategyView`), a problem's page (`ExampleDetailView`) and the log
+  (`LogView`).
 - `ZTronLPDemo/RunStore.swift` keeps each tab's choices and logs, and starts and cancels solves.
 
 The project uses a folder-synchronized group, so files added under `ZTronLPDemo/` join the

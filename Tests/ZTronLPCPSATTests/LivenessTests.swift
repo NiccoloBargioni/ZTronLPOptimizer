@@ -175,8 +175,9 @@ import ZTronLPTestSupport
 
     @Test func timeLimitWithoutAnIncumbentIsNoSolution() async throws {
         var context = SolveContext()
-        // Long enough for the search to get under way, also in an instrumented build.
-        context.timeLimit = 0.1 * LivenessHarness.instrumentationScale
+        // Long enough for the search to get under way, also in an instrumented build and on a
+        // machine that is busy with the rest of the suite (0.1 s was not, once).
+        context.timeLimit = 0.3 * LivenessHarness.instrumentationScale
         // With and without the LP propagator: its relaxation of the pigeonhole — the rows
         // "at most one pigeon per hole" — proves nothing, and the worker backs off from it.
         for strategy in [CPSAT(deterministic: true), CPSAT(lpPropagator: false, deterministic: true)] {

@@ -402,6 +402,47 @@ all engines: p99 3.64 ms, max 4.43 ms over 240 solves
     simplex iterations; and a worker whose relaxation keeps proving nothing looks at it less
     and less often. The other half of the portfolio stays pure CDCL.
 
+16. **An unlimited simplex run ends with a second look at tighter tolerances.** "Optimal"
+    in v0.1 means that no bound and no reduced-cost sign is violated by more than 1e-7. On an
+    ill-conditioned problem several neighbouring bases satisfy that, and their vertices can
+    lie far apart: on the 8 × 8 Hilbert matrix as an equality system the basis with seven of
+    the eight columns satisfies every row to 2e-10, at distance 1 from the only solution, and
+    every engine of the first v0.1 build returned such a point. So when the recomputed
+    optimal vertex still shows a violation that stands clear of rounding — above 1e-10, and
+    above 1e4 units of roundoff on the terms it is computed from, which is what keeps the
+    pass from chasing noise on badly scaled problems — the method goes on at that tolerance,
+    with pivots down to the same relative size, for at most min(500, max(50, 2·m)) pivots
+    (`SimplexEngine.refine`). The pass can only replace an optimal answer by a better one:
+    anything but an optimal ending returns the engine to the basis it started from. It runs
+    only when the run has no cutoff and no iteration budget, so branch-and-bound nodes,
+    probes and CP-SAT's looks at its relaxation are not touched. On the netlib set and on
+    several hundred constructed instances, badly scaled ones included, it changes nothing —
+    not a pivot, not a warning; on Hilbert problems up to order 8 every LP
+    strategy now returns the solution to about 1e-6, which is what a dense solve in double
+    precision gives. Beyond that order the solution cannot be recovered in double precision;
+    the answer is then optimal within the tolerances and carries a warning. The warning
+    comes from a condition estimate of the optimal basis — `dgecon` on the dense factors,
+    Hager's estimate through `ftran` and `btran` otherwise.
+17. **The interior point hands a stall to the simplex.** The normal equations square the
+    condition number, so on such a problem the residuals stop falling around 1e-6 while
+    the complementarity goes to zero. v0.1's test for "not converging" read that as
+    infeasible-or-unbounded, which was wrong. A run whose complementarity is closed and
+    whose residuals are stuck below 1e-4 is now "stalled": with `crossover: .lite` the
+    simplex finishes from the last iterate and its verdict is the answer; with
+    `crossover: .none` the result is a numerical failure that says so.
+18. **Small pivots as a last resort, and tolerances kept in proportion.** A ratio test that
+    finds no entry above the pivot tolerance used to conclude at once: the dual method that
+    the row proves infeasibility, the primal method that the step is blocked or unbounded,
+    and phase 1 that the infeasibility has no direction of descent. Each of those is only
+    true if it is true of the entries that were set aside as too small, so they now get a
+    second look, down to a thousandth of the tolerance; a pivot taken there is followed by a
+    refactorization, must agree in its own digits when computed by row and by column, and
+    counts against a limit of m + 50 per run. Separately, a caller who lowers the
+    feasibility tolerances and nothing else gets the pivot tolerance and the Harris slack
+    lowered in the proportion the defaults have (`Tolerances.consistent`): with a pivot
+    tolerance above the feasibility tolerance the method keeps breaking the feasibility it
+    has just restored, which on the Hilbert problem ended in a false "infeasible".
+
 ## Known gaps against the specification
 
 - **The CP-SAT row of §14.3 is met only with the LP propagator, and so the default of

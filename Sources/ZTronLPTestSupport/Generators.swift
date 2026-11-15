@@ -52,6 +52,18 @@ public struct ConstructedInstance: Sendable {
     public let seed: UInt64
 }
 
+/// The shapes of `InstanceGenerator.hilbert(order:form:integer:)`.
+public enum HilbertForm: String, Sendable, CaseIterable {
+    /// min cᵀx, H·x = b, x ≥ 0: one feasible point.
+    case equality
+    /// The same with free columns.
+    case equalityFree
+    /// min cᵀx, H·x ≥ b, x ≥ 0: every row active, every dual 1.
+    case covering
+    /// max cᵀx, H·x ≤ b, x ≥ 0.
+    case packing
+}
+
 /// Options of the constructed-optimum generator.
 public struct ConstructedOptions: Sendable {
     /// Fraction of stored entries per column, at least one entry per column and per row.
@@ -261,6 +273,56 @@ public enum InstanceGenerator {
         return CompiledLP(
             a: SparseCSC.fromTriplets(rows: m, cols: n, entries), c: c,
             xl: [Double](repeating: 0, count: n), xu: [Double](repeating: .infinity, count: n), rl: rl, ru: ru)
+    }
+
+    /// An LP on the n × n Hilbert matrix H, h_ij = 1/(i + j − 1), whose only optimum is
+    /// x = (1, …, 1), with the objective c = Hᵀ·1 and the right-hand side b = H·1.
+    ///
+    /// The Hilbert matrix is the textbook ill-conditioned matrix: its condition number grows
+    /// like e^(3.5·n) — 1.5e7 at n = 6, 1.5e10 at n = 8, 1.6e13 at n = 10 — so these
+    /// problems test what an engine does when feasibility and optimality within the usual
+    /// tolerances no longer pin the solution down. Up to n = 8 a solve in double precision
+    /// can recover x to about 1e-6; beyond that it cannot, and the most an engine can do is
+    /// say so.
+    public static func hilbert(order n: Int, form: HilbertForm, integer: Bool = false) -> ConstructedInstance {
+        var entries: [(row: Int, col: Int, value: Double)] = []
+        var b = [Double](repeating: 0, count: n)
+        var c = [Double](repeating: 0, count: n)
+        for i in 0..<n {
+            for j in 0..<n {
+                let value = 1 / Double(i + j + 1)
+                entries.append((i, j, value))
+                b[i] += value
+                c[j] += value
+            }
+        }
+        let a = SparseCSC.fromTriplets(rows: n, cols: n, entries)
+        let zero = [Double](repeating: 0, count: n)
+        let infinite = [Double](repeating: .infinity, count: n)
+        let unbounded = [Double](repeating: -.infinity, count: n)
+        let integerColumns: [Int32] = integer ? (0..<n).map { Int32($0) } : []
+        let upper = integer ? [Double](repeating: 10, count: n) : infinite
+        let lp: CompiledLP
+        var dual = [Double](repeating: 1, count: n)
+        switch form {
+        case .equality:
+            lp = CompiledLP(a: a, c: c, xl: zero, xu: upper, rl: b, ru: b, integerColumns: integerColumns)
+        case .equalityFree:
+            lp = CompiledLP(
+                a: a, c: c, xl: integer ? zero : unbounded, xu: upper, rl: b, ru: b, integerColumns: integerColumns)
+        case .covering:
+            lp = CompiledLP(a: a, c: c, xl: zero, xu: upper, rl: b, ru: infinite, integerColumns: integerColumns)
+        case .packing:
+            // maximize cᵀx subject to H·x ≤ b: the minimization form has costs −c and duals −1.
+            lp = CompiledLP(
+                a: a, c: c.map { -$0 }, sense: .maximize, xl: zero, xu: upper, rl: unbounded, ru: b,
+                integerColumns: integerColumns)
+            dual = [Double](repeating: -1, count: n)
+        }
+        var objective = 0.0
+        for value in b { objective += value }
+        return ConstructedInstance(
+            lp: lp, primal: [Double](repeating: 1, count: n), dual: dual, objective: objective, seed: UInt64(n))
     }
 
     /// A random bounded MILP: knapsack-style rows with nonnegative coefficients over integer

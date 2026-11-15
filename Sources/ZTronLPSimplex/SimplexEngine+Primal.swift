@@ -105,6 +105,39 @@ extension SimplexEngine {
         }
     }
 
+    /// Phase 1's second look, when no column prices out: the column whose phase-1 reduced cost
+    /// has the attractive sign and is largest among those below the dual tolerance, down to
+    /// `fragilePivotFactor` of it, and that can still lower the infeasibility by more than the
+    /// feasibility tolerance.
+    ///
+    /// "No direction of descent" proves infeasibility only if it is true of every column. A
+    /// column that lowers the infeasibility slowly but without limit — a small coefficient on
+    /// an unbounded variable — makes the problem feasible.
+    func weakPhase1Entering() -> (q: Int, sigma: Double)? {
+        let floor = Self.fragilePivotFactor * tol.dualFeasibility
+        var best = -1
+        var bestMagnitude = floor
+        var bestDirection = 0.0
+        for j in 0..<total where pos[j] < 0 && !taboo[j] {
+            let dj = d[j]
+            var direction = 0.0
+            switch status[j] {
+            case .atLower: if dj < 0 { direction = 1 }
+            case .atUpper: if dj > 0 { direction = -1 }
+            case .free: direction = dj < 0 ? 1 : (dj > 0 ? -1 : 0)
+            default: break
+            }
+            let magnitude = Swift.abs(dj)
+            guard direction != 0, magnitude > bestMagnitude else { continue }
+            let range = status[j] == .free ? Double.infinity : upper[j] - lower[j]
+            guard magnitude * range > tol.primalFeasibility else { continue }
+            bestMagnitude = magnitude
+            best = j
+            bestDirection = direction
+        }
+        return best >= 0 ? (best, bestDirection) : nil
+    }
+
     /// Chooses the entering column: the eligible nonbasic that maximizes d²/w (lowest index
     /// under Bland's rule). Returns nil when no column is eligible.
     mutating func chooseEntering() async -> (q: Int, sigma: Double)? {
@@ -643,7 +676,11 @@ extension SimplexEngine {
             phase1Pricing = phase == 1
             await report(phase: phase, infeasibility: infeasibility.sum)
 
-            guard let (q, sigma) = await chooseEntering() else {
+            var entering = await chooseEntering()
+            // True when the step that follows rests on a quantity below a tolerance: it is
+            // counted, and a pivot is followed by a refactorization.
+            var fragile = false
+            if entering == nil {
                 // Nothing prices out. Trust that only on iterates that come straight from a
                 // fresh factorization.
                 if factor.updatesSinceRefactor > 0 && verifications < 8 {
@@ -657,12 +694,18 @@ extension SimplexEngine {
                     forceRefactor = true
                     continue
                 }
-                if phase == 1 {
+                guard phase == 1 else { return .optimal }
+                // No direction of descent above the tolerance. Before that is read as a proof
+                // of infeasibility, the directions a little below it get a look.
+                if fragilePivots < fragilePivotLimit, let weak = weakPhase1Entering() {
+                    entering = weak
+                    fragile = true
+                } else {
                     lastDualRay = farkasRay(from: y)
                     return .infeasible
                 }
-                return .optimal
             }
+            guard let (q, sigma) = entering else { continue }
 
             ftranColumn(q)
             var step = phase == 1 ? phase1RatioTest(q: q, sigma: sigma) : phase2RatioTest(q: q, sigma: sigma)
@@ -670,7 +713,6 @@ extension SimplexEngine {
             // "blocked" or "unbounded", entries a little below the tolerance get a look: if one
             // of them does limit the step, that is the pivot, and the factorization is rebuilt
             // right after it.
-            var fragile = false
             if step.isBlockedOrUnbounded, fragilePivots < fragilePivotLimit {
                 let second = phase == 1
                     ? phase1RatioTest(q: q, sigma: sigma, pivotFactor: Self.fragilePivotFactor)
@@ -703,6 +745,7 @@ extension SimplexEngine {
                 iterations += 1
                 if phase == 1 { phase1Iterations += 1 }
                 iterationsSinceResidualCheck += 1
+                if fragile { fragilePivots += 1 }
 
             case .pivot(let r, let theta, let atUpper):
                 let alphaR = alpha[r]

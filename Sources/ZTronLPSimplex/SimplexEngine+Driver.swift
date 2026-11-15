@@ -656,10 +656,54 @@ extension SimplexEngine {
         await warnIfIllConditioned()
     }
 
+    /// κ₁(B) of the current basis: the factorization's own estimate when it has one (dense LU),
+    /// otherwise Hager's estimate of ‖B⁻¹‖₁ — a handful of solves with B and Bᵀ — times ‖B‖₁.
+    func basisConditionEstimate() -> Double? {
+        guard hasFactor, m > 0 else { return nil }
+        if let own = factor.conditionEstimate() { return own }
+        // ‖B‖₁: the largest absolute column sum (a logical column is −e_i).
+        var norm = 0.0
+        for k in 0..<m {
+            let j = Int(head[k])
+            var sum = 1.0
+            if j < n {
+                sum = 0
+                for p in lp.a.colStart[j]..<lp.a.colStart[j + 1] { sum += Swift.abs(lp.a.values[p]) }
+            }
+            if sum > norm { norm = sum }
+        }
+        // Hager (1984), as refined by Higham: maximize ‖B⁻¹x‖₁ over the unit 1-norm ball.
+        var v = [Double](repeating: 1 / Double(m), count: m)
+        var inverseNorm = 0.0
+        var lastIndex = -1
+        for _ in 0..<5 {
+            factor.ftran(&v)
+            var sum = 0.0
+            for i in 0..<m { sum += Swift.abs(v[i]) }
+            guard sum.isFinite else { return nil }
+            if sum <= inverseNorm { break }
+            inverseNorm = sum
+            for i in 0..<m { v[i] = v[i] >= 0 ? 1 : -1 }
+            factor.btran(&v)
+            var index = 0
+            var largest = 0.0
+            for i in 0..<m where Swift.abs(v[i]) > largest {
+                largest = Swift.abs(v[i])
+                index = i
+            }
+            if index == lastIndex { break }
+            lastIndex = index
+            for i in 0..<m { v[i] = 0 }
+            v[index] = 1
+        }
+        let kappa = norm * inverseNorm
+        return kappa.isFinite ? kappa : nil
+    }
+
     /// Says so when the optimal basis is too ill-conditioned for the values to be accurate to
     /// the tolerance: an error of about κ·ε in the basic variables.
     mutating func warnIfIllConditioned() async {
-        guard hasFactor, factor.updatesSinceRefactor == 0, let kappa = factor.conditionEstimate(), kappa.isFinite else { return }
+        guard hasFactor, factor.updatesSinceRefactor == 0, let kappa = basisConditionEstimate(), kappa.isFinite else { return }
         guard kappa * Double.ulpOfOne * 10 > tol.primalFeasibility else { return }
         await warn(
             "the optimal basis is ill-conditioned (condition estimate \(kappa)): the values may be wrong by about "
