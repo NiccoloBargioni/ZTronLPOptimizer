@@ -10,7 +10,7 @@ from the specification — is in [HANDBOOK.md](HANDBOOK.md).
 
 | | |
 |---|---|
-| Version | 0.1; implements *ZTronLPOptimizer — Technical Specification v0.1* |
+| Version | No tagged release yet; implements *ZTronLPOptimizer — Technical Specification v0.1* (the scope that document calls v1) |
 | Platforms | iOS 15, macOS 12, Mac Catalyst 15 |
 | Toolchain | Swift tools 6.0, Swift 6 language mode. Built and tested with Swift 6.4 only |
 | Dependencies | `swift-atomics`, `swift-collections`; Accelerate and, optionally, Metal from the SDK |
@@ -65,12 +65,13 @@ models. Not for Linux: every engine needs Accelerate.
 
 ### Adding it to a project
 
-The package has no remote yet, so it is added by path:
+There is no tagged release yet, so a dependency names the branch, or a local checkout:
 
 ```swift
 // Package.swift of the app or package that uses it
 dependencies: [
-    .package(path: "../ZTronLPOptimizer"),
+    .package(url: "https://github.com/NiccoloBargioni/ZTronLPOptimizer.git", branch: "main"),
+    // or, from a checkout next to the project: .package(path: "../ZTronLPOptimizer"),
 ],
 targets: [
     .target(name: "MyApp", dependencies: [
@@ -139,7 +140,9 @@ print(lp.analysis.iterations)                       // engine facts, typed per e
 ```
 
 The declarations, the model and the numbers of this example are compiled and checked by
-`Tests/ZTronLPOptimizerTests/ReadmeExampleTests.swift`.
+`Tests/ZTronLPOptimizerTests/ReadmeExampleTests.swift`. A SwiftUI app that runs each strategy
+on a few small problems — well conditioned, badly conditioned, without an optimum — is in
+[demo/](demo/README.md).
 
 ## 2. Public API
 
@@ -412,7 +415,7 @@ judgements; the evidence column says what they rest on.
 | 8 | **Results differ between runs.** Parallel search explores in a different order each time. | Certain for parallel search | Low, unless a test compares solutions or timings | Node counts, timings and, when there are several optima, the solution returned vary; the objective agrees within the gap. | `deterministic: true` on `BranchAndBound` and `CPSAT` runs a single worker with a fixed seed. Compare objectives, not solutions. |
 | 9 | **A value read from a solve that has none.** | Medium | Medium: a number that means nothing flows on | `Solution.value(of:)` does not look at the status. It returns 0 when the analysis has no primal array or the variable is not in the model, and otherwise whatever the array holds — and a `Simplex` result that is infeasible, unbounded or stopped still carries its last iterate there. | `status.hasSolution` is the only guard; check it before reading any value. |
 | 10 | **"Optimal" taken as exact for an integer model.** | Medium on large objective values | Low to medium | `.optimal` means incumbent − bound ≤ max(1e-6, 1e-4·max(1, abs(incumbent))): the larger of the two gaps, so an incumbent of 1,000 with a bound of 999.95 is optimal. CP-SAT's gap cannot be changed: its proof is exact for integral costs only while the objective stays below 10⁴. | Pass a tighter `Gap` to `BranchAndBound` when the exact optimum matters; for CP-SAT, keep objective values below 10⁴ or use `BranchAndBound`. |
-| 11 | **The API changes.** | High before 1.0 | Low to medium: source breaks | Version 0.1; a large public surface, much of it building blocks; two defaults already differ from the specification (the CP-SAT LP propagator, the Metal thresholds). | Depend on the types of sections 2.1 to 2.5 rather than on the building blocks, and expect renames until 1.0. |
+| 11 | **The API changes.** | High until a release is tagged | Low to medium: source breaks | No tagged release; a large public surface, much of it building blocks; two defaults already differ from the specification (the CP-SAT LP propagator, the Metal thresholds). | Depend on the types of sections 2.1 to 2.5 rather than on the building blocks, pin a revision rather than the branch, and expect renames until a release is tagged. |
 | 12 | **A file from an untrusted source.** | Low to medium | Medium: the process stops | The MPS and LP readers are tested on the corpus files, golden files and malformed inputs, which yield `SolverError.invalidModel`. They were not fuzzed, and a violated precondition in Swift traps. | Validate or sandbox files that come from outside. |
 | 13 | **A debug build mistaken for the real speed.** | High during development | Low | A package builds with the app's configuration. Search is about two orders of magnitude slower unoptimized: CP-SAT on `mod008` took about 50 s in the debug test suite against 0.26 s in release. | Judge performance in a release build only. |
 | 14 | **The GPU tier adds risk without a return.** | Low | Low | The pricing kernel's speed-up over the CPU ranged from 0.35× to 2.30× over eleven runs, and its automatic threshold (3,000,000 columns) is 150 times the largest problem solved end to end here. The feasibility screen has a much lower one — batches of 64 points on 100,000 nonzeros — so a MILP of that size solved through `Automatic`, `Portfolio` or `Conditioned`, which attach the tier, sends its rounding batches to the GPU at every node; that path was never measured. When the shader library is not precompiled, the first use compiles it. | `MetalPolicy.off` keeps the tier off; `.automatic` does so only below those sizes. Correctness does not depend on it. |
@@ -706,9 +709,10 @@ later figure includes whatever earlier sections left allocated.
 | | Measured |
 |---|---|
 | Clean debug build of the package and its tests | about 22 s |
-| The whole test suite, debug build | about 4 minutes |
-| Tests | 529 in 13 targets pass in a debug build; the release run of the integration, liveness, CP-SAT and facade targets passes with one recorded known issue (defect 1) |
+| The whole test suite, debug build | 4 to 5 minutes |
+| Tests | 546 in 13 targets, debug build. The release run of eight targets (core, simplex, interior point, branch and bound, CP-SAT, facade, integration, liveness) passes with one recorded known issue (defect 1) |
 | Thread Sanitizer | No reports on the simplex, interior-point, branch-and-bound, CP-SAT, facade, integration and liveness targets |
+| Tests that measure wall-clock time | The last full debug runs were made while other builds saturated the machine (load averages from 35 to 250 on 8 cores). Two tests failed in them and pass on their own, three times out of three: a timer that must not fall more than 50 ms behind while every core solves (it fell 53 and 75 ms behind), and a CP-SAT run that must have started searching within 0.3 s. Every other test passed in those runs, so every test of the final tree has passed, but no single full debug run of it was green |
 
 ### What these numbers do not say
 

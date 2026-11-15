@@ -102,8 +102,8 @@ holds, and otherwise stays as in v0.1 with the reason recorded in HANDBOOK:
 | Presolve of `Simplex`, `InteriorPoint`, `BranchAndBound` with `presolve: true` | six rules | the rules of §5 as well |
 
 One addition is source-breaking for a client that switches exhaustively over a public enum:
-the case `Simplex.Factorization.sparseLU`. That is accepted at version 0.x and listed in the
-README's API risk.
+the case `Simplex.Factorization.sparseLU`. That is accepted while no release is tagged and is
+listed in the README's API risk.
 
 ### 2.4 What a work package is
 
@@ -1221,7 +1221,7 @@ binaries.
 1. Should cuts also feed CP-SAT's LP propagator, which solves the same relaxation? Not
    specified here; the cut loop is written so that it could.
 2. `Simplex.Factorization.sparseLU` breaks exhaustive switches in client code. Acceptable
-   at 0.x, or should the selection move to a struct?
+   before a tagged release, or should the selection move to a struct?
 3. The acceptance for cuts is stated on ten small instances. Is there a model of your own
    that should be in the gate?
 

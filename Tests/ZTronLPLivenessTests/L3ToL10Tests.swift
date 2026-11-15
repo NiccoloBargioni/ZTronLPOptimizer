@@ -191,7 +191,9 @@ private func dense(
         let mip = LivenessProblems.mip()
         var context = SolveContext()
         context.memoryBudgetBytes = 16 * 1024 * 1024
-        context.timeLimit = 60
+        // Generous, and wider still in an instrumented build: what is under test is the
+        // budget, and a run that ends on the clock says nothing about it.
+        context.timeLimit = 60 * LivenessHarness.instrumentationScale
         let analysis = try await BranchAndBound(engine: Simplex(.dual), nodeSelection: .bestBound).solve(mip, context: context)
         #expect(analysis.status == .optimal || analysis.status.stopReason == .memoryBudget, "\(analysis.status)")
         #expect(analysis.status.hasSolution)
