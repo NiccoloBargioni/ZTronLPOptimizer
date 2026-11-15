@@ -31,6 +31,9 @@ package struct SimplexFaultInjection: Sendable {
     /// The pivots the refinement pass may spend; `nil` is its own bound. A test sets 0 to see
     /// the pass give up and the run return to the basis it started from.
     package var refinementIterationLimit: Int? = nil
+    /// Raises a cancellation at the start of the refinement pass's own pivoting, so a test can
+    /// see that the run keeps the answer it had and returns without refactoring.
+    package var stopInsideRefinement = false
     package init() {}
 }
 

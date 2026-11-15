@@ -210,6 +210,12 @@ Peak resident memory over the whole run was 1.3 GB: 1.1 GB after the branch-and-
 (the `stein45` trees), the rest from the 3,000,000-column problem of the Metal section. A
 solve's default budget is a quarter of the machine's memory.
 
+That run was made before decisions 16 to 18 changed the simplex and the interior point. Two
+runs after them were made with other builds loading the machine (load averages of 40 to 60
+on 8 cores) and are not printed here: the linear-programming sections came out the same
+(identical pivot counts; totals within 2 %), the search and latency sections cannot be
+compared under that load. README §5 says what was compared instead.
+
 <details>
 <summary>The full output of that run</summary>
 
@@ -419,10 +425,12 @@ all engines: p99 3.64 ms, max 4.43 ms over 240 solves
     several hundred constructed instances, badly scaled ones included, it changes nothing —
     not a pivot, not a warning; on Hilbert problems up to order 8 every LP
     strategy now returns the solution to about 1e-6, which is what a dense solve in double
-    precision gives. Beyond that order the solution cannot be recovered in double precision;
-    the answer is then optimal within the tolerances and carries a warning. The warning
-    comes from a condition estimate of the optimal basis — `dgecon` on the dense factors,
-    Hager's estimate through `ftran` and `btran` otherwise.
+    precision gives. Beyond that order the residual that separates the neighbouring bases is
+    below 1e-10 and cannot be told from rounding, so the engine stays where it is; the
+    answer is then optimal within the tolerances and carries a warning. The warning comes
+    from a condition estimate of the optimal basis — `dgecon` on the dense factors, Hager's
+    estimate through `ftran` and `btran` otherwise. A stop signal that lands inside the pass
+    restores the answer from a copy and returns without factoring anything.
 17. **The interior point hands a stall to the simplex.** The normal equations square the
     condition number, so on such a problem the residuals stop falling around 1e-6 while
     the complementarity goes to zero. v0.1's test for "not converging" read that as

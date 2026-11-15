@@ -532,6 +532,9 @@ public enum LPFormat {
         mutating func parse(_ text: String) throws -> CompiledLP {
             var section = Section.none
             var pending: [Token] = []        // tokens of the statement being assembled
+            // Whether `pending` holds a relational operator; kept beside it so that a constraint
+            // wrapped over many lines is not rescanned on every line.
+            var pendingHasRelational = false
             var pendingLine = 0
             var objectiveTokens: [Token] = []
             var objectiveLine = 0
@@ -558,6 +561,7 @@ public enum LPFormat {
                 }
                 if !current.isEmpty { statements.append((currentName, current)) }
                 pending = []
+                pendingHasRelational = false
                 for statement in statements {
                     try addConstraint(statement.tokens, name: statement.name, line: pendingLine)
                 }
@@ -610,7 +614,7 @@ public enum LPFormat {
                     // own (more terms of the right-hand side). A line such as "- x + y <= 3"
                     // is therefore a new, unlabelled constraint.
                     let startsLabelled = tokens.count >= 2 && tokens[1] == .colon
-                    let previousComplete = pending.contains { $0 == .lessEqual || $0 == .greaterEqual || $0 == .equal }
+                    let previousComplete = pendingHasRelational
                         && !(pending.last == .lessEqual || pending.last == .greaterEqual || pending.last == .equal)
                         && !(pending.last == .plus || pending.last == .minus)
                     let startsWithRelational = tokens.first == .lessEqual || tokens.first == .greaterEqual || tokens.first == .equal
@@ -622,6 +626,7 @@ public enum LPFormat {
                     }
                     if pending.isEmpty { pendingLine = lineNumber }
                     pending.append(contentsOf: tokens)
+                    if hasRelational { pendingHasRelational = true }
                 case .bounds:
                     try addBound(tokens, line: lineNumber)
                 case .generals, .binaries:

@@ -158,6 +158,26 @@ struct LPFormatTests {
         #expect(read.m == 1 && read.n == n && read.nnz == n)
     }
 
+    /// A row of 30,000 terms is written over more than a thousand lines with its operator on
+    /// the last one. The reader keeps a flag for "the pending constraint has its operator"
+    /// instead of rescanning the tokens collected so far on every line, so this is linear.
+    @Test func aRowWrappedOverAThousandLinesReadsBack() throws {
+        let n = 30_000
+        var entries: [(row: Int, col: Int, value: Double)] = []
+        for j in 0..<n { entries.append((0, j, Double(1 + j % 7))) }
+        entries.append((1, 0, 1))
+        entries.append((1, n - 1, -1))
+        let lp = CompiledLP(
+            a: .fromTriplets(rows: 2, cols: n, entries), c: [Double](repeating: 1, count: n),
+            xl: [Double](repeating: 0, count: n), xu: [Double](repeating: 1, count: n),
+            rl: [-.infinity, 0], ru: [Double(n), 0])
+        let text = try LPFormat.write(lp)
+        #expect(text.split(separator: "\n").count > 1_000)
+        let read = try LPFormat.read(text)
+        #expect(read.m == 2 && read.n == n && read.nnz == n + 2)
+        expectStructurallyEqual(lp, read, "a row of \(n) terms")
+    }
+
     @Test func namesAreMappedToTheLPAlphabet() {
         #expect(LPFormat.lpName("x[3,7]") == "x(3,7)")
         #expect(LPFormat.lpName("ship[Plant[id_0],Market[id_1]]") == "ship(Plant(id_0),Market(id_1))")

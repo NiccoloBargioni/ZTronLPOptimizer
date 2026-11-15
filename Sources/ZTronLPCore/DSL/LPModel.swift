@@ -92,7 +92,9 @@ public struct LPModel<V: LPVariable>: Sendable {
         forEach s: S, name: ((S.Element) -> String)? = nil,
         _ body: (S.Element) -> LinearConstraint<V>
     ) {
-        constraints.reserveCapacity(constraints.count + s.underestimatedCount)
+        // No `reserveCapacity` here: it allocates exactly what is asked, so a model built by
+        // many `forEach:` calls would move all its constraints on every call. `append` grows
+        // the array geometrically.
         for element in s {
             var c = body(element)
             if let name { c.name = name(element) }

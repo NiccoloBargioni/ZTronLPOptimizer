@@ -53,8 +53,8 @@ certificate when the model is infeasible or unbounded, and the facts of the engi
 4. *Double precision decides.* Feasibility and optimality are decided in IEEE double on the
    CPU. The GPU tier only proposes candidates, which the CPU checks again.
 5. *A solve is a good citizen.* It does not block a thread of the cooperative pool, answers
-   cancellation within milliseconds (4.4 ms at worst over 240 measured solves), bounds the
-   memory of its search, and delivers `.finished` as the last progress event exactly once.
+   cancellation within milliseconds (4.4 ms at worst over 240 solves on a quiet machine),
+   bounds the memory of its search, and delivers `.finished` as the last progress event exactly once.
 6. *Reproducible on request.* `BranchAndBound(deterministic: true)` and
    `CPSAT(deterministic: true)` give the same result and the same event sequence every run.
 
@@ -408,7 +408,7 @@ judgements; the evidence column says what they rest on.
 | 4 | **Memory pressure on a phone.** iOS ends a process that exceeds its allowance; that is not an error the app can catch. | Medium for integer models | High: the app is terminated | The benchmark run peaked at 1.16 GB resident after the branch-and-bound section on a 24 GB Mac. The budget counts open nodes and learned clauses, not the working storage of an LP solve, and nothing was run on an iPhone. | Set `memoryBudgetBytes` explicitly on iOS instead of relying on the default quarter of the remaining allowance; set `nodeLimit`; test on the smallest supported device. |
 | 5 | **Platform and toolchain gaps.** | Medium | Medium: a build failure or a behaviour difference found late | Built and run with Swift 6.4 on an M3 only. iOS and Mac Catalyst are compiled but were never executed, on a device or in a simulator; Intel was never run; the Swift 6.0 to 6.3 path, which needs an experimental feature flag, was never compiled. | Run the test suite on the target device and toolchain before relying on it. |
 | 6 | **Deprecated Accelerate entry points.** | Low in the near term | Medium: one target to port | The package calls the legacy CLAPACK and CBLAS symbols, which Apple has marked deprecated since iOS 16.4, because its floor is iOS 15. | All such calls sit in one C target, `CLAPACKShim`. Raising the floor to iOS 16.4 allows the new interface. |
-| 7 | **Slow solves when the app is busy.** | Medium | Medium: latency | Workers are tasks on Swift's cooperative pool. In a debug build, branch and bound on `flugpl` took 0.07 s on its own and 34 to 50 s while the rest of the test suite ran in parallel. | Run one solve at a time, or give each its share with `SolveContext.threads`; keep long CPU-bound work off the pool while a solve runs. |
+| 7 | **Slow solves when the app is busy.** | Medium | Medium: latency | Workers are tasks on Swift's cooperative pool. In a debug build, branch and bound on `flugpl` took 0.07 s on its own and 34 to 50 s while the rest of the test suite ran in parallel. With other builds loading the machine five to eight times over, the release benchmark's cancellation latency rose from a worst case of 4.4 ms to a p99 of 57 ms and a worst case of 124 ms. | Run one solve at a time, or give each its share with `SolveContext.threads`; keep long CPU-bound work off the pool while a solve runs. |
 | 8 | **Results differ between runs.** Parallel search explores in a different order each time. | Certain for parallel search | Low, unless a test compares solutions or timings | Node counts, timings and, when there are several optima, the solution returned vary; the objective agrees within the gap. | `deterministic: true` on `BranchAndBound` and `CPSAT` runs a single worker with a fixed seed. Compare objectives, not solutions. |
 | 9 | **A value read from a solve that has none.** | Medium | Medium: a number that means nothing flows on | `Solution.value(of:)` does not look at the status. It returns 0 when the analysis has no primal array or the variable is not in the model, and otherwise whatever the array holds — and a `Simplex` result that is infeasible, unbounded or stopped still carries its last iterate there. | `status.hasSolution` is the only guard; check it before reading any value. |
 | 10 | **"Optimal" taken as exact for an integer model.** | Medium on large objective values | Low to medium | `.optimal` means incumbent − bound ≤ max(1e-6, 1e-4·max(1, abs(incumbent))): the larger of the two gaps, so an incumbent of 1,000 with a bound of 999.95 is optimal. CP-SAT's gap cannot be changed: its proof is exact for integral costs only while the objective stays below 10⁴. | Pass a tighter `Gap` to `BranchAndBound` when the exact optimum matters; for CP-SAT, keep objective values below 10⁴ or use `BranchAndBound`. |
@@ -457,9 +457,12 @@ Behaviour that falls short of what the specification or common sense expects.
    every LP strategy returns the solution to about 1e-6 (section 5).
 9. **Beyond a condition number of about 1e11 only the objective can be trusted.** From order
    9 of the same family the answer is still `optimal`, feasible and right in its objective
-   to 1e-12, but the point need not be the solution: double precision does not hold the
-   digits that would tell. The answer carries a warning that the optimal basis is
-   ill-conditioned. Nothing short of extended precision arithmetic changes this.
+   to 1e-11, but the point need not be the solution: the residual that tells the
+   neighbouring bases apart is then below 1e-10, where the simplex cannot separate it from
+   rounding. (A dense solve of the whole system, which never has to choose a basis, still
+   gets five digits at order 9 and three at order 10; at order 12 nothing is left for
+   anyone.) The answer carries a warning that the optimal basis is ill-conditioned. Going
+   further needs residuals in extended precision.
 10. **`InteriorPoint(crossover: .none)` gives up early on ill-conditioned problems**: from a
     condition number of about 1e6 on a dense system its residuals stall above the tolerance
     and the result is `.numericalFailure`. The default, with crossover, is not affected.
@@ -514,8 +517,9 @@ Behaviour that falls short of what the specification or common sense expects.
 
 ## 5. Measured performance
 
-One machine, one run of the benchmark, unless a range over several runs is given: MacBook with
-an Apple M3 (8 cores, 24 GB), macOS 27, Swift 6.4, release build.
+One machine: MacBook with an Apple M3 (8 cores, 24 GB), macOS 27, Swift 6.4, release build.
+The tables hold one run of the benchmark on a quiet machine, unless a range over several
+runs is given.
 
 ```bash
 swift run -c release ZTronLPBenchmarks
@@ -524,6 +528,22 @@ swift run -c release ZTronLPBenchmarks
 Times are wall-clock seconds. The acceptance column quotes the specification, which states its
 limits for an M1; an M3 is faster, so "met" below means met on this machine. The complete
 output of the run is in [HANDBOOK.md](HANDBOOK.md#benchmarks).
+
+**How current the tables are.** That run predates the engine changes that fixed defect 8.
+After them the benchmark was run twice more, both times while other builds were loading the
+machine (load averages of 40 to 60 on 8 cores), so only part of it could be compared:
+
+- *Linear programs:* unchanged. Netlib totals 0.113 s, 0.088 s and 0.038 s against 0.112 s,
+  0.087 s and 0.038 s, with identical pivot counts on every instance; the transport LP
+  2.07 s, 3.62 s, 0.64 s, 1.06 s and 0.145 s against 2.04 s, 3.62 s, 0.64 s, 1.03 s and
+  0.141 s.
+- *Search:* not comparable by time — under that load even pure CP-SAT, which the changes do
+  not touch, ran up to 40 % slower. By work, which load does not affect: in deterministic
+  mode the nine MIPLIB 3 instances other than `stein45` reach the same optima, with LP
+  pivots summed over the set within 1 % of what they are with the changes switched off
+  (−0.7 % with the primal node engine, +0.1 % with the dual), and CP-SAT's conflicts
+  identical on five of the six pure-integer ones.
+- *Cancellation latency:* not comparable; the figures measured under load are in risk 7.
 
 ### Summary
 
@@ -537,7 +557,7 @@ output of the run is in [HANDBOOK.md](HANDBOOK.md#benchmarks).
 | 7 pure-integer MIPLIB 3 instances, `CPSAT()` | 7 of 7 optimal; slowest 18.6 s | each ≤ 60 s | met |
 | The same, `CPSAT(lpPropagator: false)` | 5 of 7 optimal; 2 stop at the 60 s limit | each ≤ 60 s | **not met** |
 | Metal pricing kernel against the CPU | 0.40× at 200,000 columns, 1.53× at 3,000,000 | ≥ 1.5× at 200,000 columns, or raise the threshold | not met; threshold raised |
-| Cancellation latency, 240 solves | p99 3.64 ms, worst 4.43 ms | p99 ≤ 50 ms | met |
+| Cancellation latency, 240 solves | p99 3.64 ms, worst 4.43 ms on a quiet machine; p99 57 ms, worst 124 ms with the machine loaded five to eight times over | p99 ≤ 50 ms | met on a quiet machine, not under that load |
 
 ### Linear programs: the netlib set
 
@@ -577,6 +597,34 @@ configuration reaches the same optimum.
 
 At this size the sparse QR basis is three times faster than the dense one, which is why it is
 the automatic choice above 1,500 rows, and the interior point is faster than either.
+
+### Linear programs: ill-conditioned ones
+
+LPs on the n × n Hilbert matrix, whose only optimum is x = (1, …, 1), in four formulations
+(equalities with nonnegative or free columns, covering, packing). The entries are the
+largest distance of a returned component from 1 over the four; "dense solve" is what LAPACK
+gets from the equation system itself, the best double precision can do without choosing a
+basis. Every solve at every order ends `optimal`. Measured with the engines as they are now.
+
+| Order | Condition estimate | Dense solve | `Simplex(.dual)` | `Simplex(.primal)` | `InteriorPoint()` | Objective, worst relative error | Answers with a warning |
+|---|---|---|---|---|---|---|---|
+| 3 | 7e2 | 1e-15 | 7e-15 | 9e-15 | 9e-15 | 1e-16 | 0 of 12 |
+| 4 | 3e4 | 5e-13 | 5e-13 | 6e-13 | 5e-13 | 3e-16 | 0 of 12 |
+| 5 | 9e5 | 6e-12 | 6e-12 | 8e-12 | 6e-12 | 1e-16 | 3 of 12 |
+| 6 | 3e7 | 5e-10 | 6e-10 | 6e-10 | 4e-10 | 2e-16 | 4 of 12 |
+| 7 | 1e9 | 5e-9 | 2e-8 | 3e-8 | 4e-8 | 2e-16 | 12 of 12 |
+| 8 | 3e10 | 1e-6 | 4e-7 | 9e-7 | 8e-7 | 3e-16 | 12 of 12 |
+| 9 | 1e12 | 3e-5 | 1 | 1 | 1 | 8e-13 | 12 of 12 |
+| 10 | 4e13 | 9e-4 | 1 | 1 | 1 | 8e-12 | 12 of 12 |
+| 11 | 1e15 | 3e-2 | 1 | 1 | 1 | 2e-13 | 12 of 12 |
+| 12 | 4e16 | 6e-1 | 2 | 2 | 3 | 6e-13 | 12 of 12 |
+
+Up to order 8 the engines are as accurate as the dense solve. From order 9 they return a
+point that satisfies every constraint and has the right objective but is not the solution,
+and say so (defect 9). The warnings at orders 5 and 6 are the interior point's, whose normal
+equations stall there before the simplex finishes the solve. Before the fix of defect 8 the
+simplex columns read 1 from order 7 on, and at order 8 the interior point answered
+`infeasibleOrUnbounded`.
 
 ### Mixed-integer programs: branch and bound
 

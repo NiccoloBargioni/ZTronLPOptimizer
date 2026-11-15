@@ -606,22 +606,28 @@ extension SimplexEngine {
             return
         }
 
-        let start = Basis(status: status, basic: head)
-        let startX = x
+        // The answer the run already has, kept whole: the iterates as well as the basis, so
+        // that going back to it costs a copy and not a factorization.
+        let start = (status: status, head: head, pos: pos, x: x, y: y, d: d)
         let startMethod = lastMethod
         let savedSuppression = suppressPerturbation
         suppressPerturbation = true
         var accepted = false
+        var stopped = false
         do {
+            if faults.stopInsideRefinement { throw StopSignal.cancelled }
             let budget = iterations + (faults.refinementIterationLimit ?? Swift.min(500, Swift.max(50, 2 * m)))
             // Dual feasible: the dual method repairs the bounds. Otherwise the primal method,
             // whose composite phase 1 takes any start.
             let method: Simplex.Method = dualViolation <= strict.dualFeasibility ? .dual : .primal
             let status = try await drive(method: method, cutoff: nil, cap: budget, gate: &gate)
             accepted = status == .optimal
+        } catch is StopSignal {
+            // Cancellation or the deadline inside the pass does not undo the answer the run
+            // already has, and must not make the caller wait for it either.
+            stopped = true
         } catch {
-            // A stop signal or a numerical failure inside the pass does not undo the answer
-            // the run already has.
+            // Nor does a numerical failure.
             accepted = false
         }
         tol = entry
@@ -632,7 +638,7 @@ extension SimplexEngine {
 
         if accepted {
             var moved = 0.0
-            for j in 0..<n { moved = Swift.max(moved, Swift.abs(x[j] - startX[j]) / (1 + Swift.abs(startX[j]))) }
+            for j in 0..<n { moved = Swift.max(moved, Swift.abs(x[j] - start.x[j]) / (1 + Swift.abs(start.x[j]))) }
             if moved > 1e-6 {
                 await warn(
                     "the first optimal basis was optimal only within the tolerances; pivoting on at tolerance "
@@ -640,12 +646,23 @@ extension SimplexEngine {
                         + "(relative, scaled problem): the problem is ill-conditioned or has alternative optima")
             }
         } else {
-            // Back to the basis the run had proved optimal.
+            // Back to the vertex the run had proved optimal. The factorization belongs to
+            // whatever basis the pass reached, so it is dropped; after a stop signal nothing
+            // is rebuilt — the outcome needs the iterates, which are restored, and the caller
+            // is waiting.
             restoreTrueData()
-            loadBasis(start)
-            if !hasFactor { try refactorize() }
-            computePrimals()
-            await computeDualsAsync()
+            status = start.status
+            head = start.head
+            pos = start.pos
+            x = start.x
+            y = start.y
+            d = start.d
+            hasFactor = false
+            for k in 0..<m { dse[k] = 1 }
+            resetPricingWeights()
+            rebuildHash()
+            if stopped { return }
+            try refactorize()
             let remaining = Swift.max(primalViolation, dualViolation)
             if remaining > 10 * Swift.max(strict.primalFeasibility, strict.dualFeasibility) {
                 await warn(

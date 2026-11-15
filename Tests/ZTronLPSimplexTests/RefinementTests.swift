@@ -69,6 +69,22 @@ private func distanceFromOnes(_ analysis: SimplexAnalysis) -> Double {
         for i in duals.indices { #expect(abs(duals[i] - reference[i]) <= 1e-9 * (1 + abs(reference[i]))) }
     }
 
+    /// A cancellation that lands inside the pass costs nothing: the run returns the answer it
+    /// had, restored from a copy, and does not stop to factor a basis again.
+    @Test(arguments: bothMethods)
+    func aStopInsideThePassKeepsTheAnswerAndRefactorsNothing(_ method: Simplex.Method) async throws {
+        let plain = try await solve(hilbert.lp, method) { $0.faults.skipRefinement = true }
+        let stopped = try await solve(hilbert.lp, method) { $0.faults.stopInsideRefinement = true }
+        #expect(stopped.status == .optimal)
+        #expect(stopped.basis == plain.basis)
+        #expect(stopped.iterations == plain.iterations)
+        #expect(stopped.refactorizations == plain.refactorizations, "a stop must not pay for a factorization")
+        #expect(stopped.primal == plain.primal)
+        #expect(stopped.dual == plain.dual)
+        #expect(stopped.reducedCosts == plain.reducedCosts)
+        #expect(stopped.objectiveValue == plain.objectiveValue)
+    }
+
     /// A run with an iteration budget is one of many related solves — a branch-and-bound
     /// node, a probe, a look of CP-SAT's propagator — and ends where it always did.
     @Test func runsWithAnIterationBudgetAreNotRefined() async throws {
