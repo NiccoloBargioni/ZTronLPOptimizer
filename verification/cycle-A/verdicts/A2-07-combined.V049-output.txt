@@ -1,0 +1,128 @@
+== textbook max LP of SimplexBasicsTests.textbookProblem
+  primal presolve true: optimal obj 36.0 y [-0.0, 1.5, 1.0] rc [-0.0, -0.0, -0.0, 1.5, 1.0] control true oracle gap 0.00e+00 dualInf 0.00e+00
+    mutation 'negate all duals': textbookProblem assertions FAIL (caught)
+    mutation 'all duals zero': textbookProblem assertions FAIL (caught)
+    mutation 'negate the largest dual': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.001': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.1': textbookProblem assertions FAIL (caught)
+    mutation 'reduced costs alone negated': textbookProblem assertions pass (missed)
+    mutation 'reduced costs without the max flip': textbookProblem assertions pass (missed)
+  primal presolve false: optimal obj 36.0 y [-0.0, 1.5, 1.0] rc [-0.0, -0.0, -0.0, 1.5, 1.0] control true oracle gap 0.00e+00 dualInf 0.00e+00
+    mutation 'negate all duals': textbookProblem assertions FAIL (caught)
+    mutation 'all duals zero': textbookProblem assertions FAIL (caught)
+    mutation 'negate the largest dual': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.001': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.1': textbookProblem assertions FAIL (caught)
+    mutation 'reduced costs alone negated': textbookProblem assertions pass (missed)
+    mutation 'reduced costs without the max flip': textbookProblem assertions pass (missed)
+  dual presolve true: optimal obj 36.0 y [-0.0, 1.5, 1.0] rc [-0.0, -0.0, -0.0, 1.5, 1.0] control true oracle gap 0.00e+00 dualInf 0.00e+00
+    mutation 'negate all duals': textbookProblem assertions FAIL (caught)
+    mutation 'all duals zero': textbookProblem assertions FAIL (caught)
+    mutation 'negate the largest dual': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.001': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.1': textbookProblem assertions FAIL (caught)
+    mutation 'reduced costs alone negated': textbookProblem assertions pass (missed)
+    mutation 'reduced costs without the max flip': textbookProblem assertions pass (missed)
+  dual presolve false: optimal obj 36.0 y [-0.0, 1.5, 1.0] rc [-0.0, -0.0, -0.0, 1.5, 1.0] control true oracle gap 0.00e+00 dualInf 0.00e+00
+    mutation 'negate all duals': textbookProblem assertions FAIL (caught)
+    mutation 'all duals zero': textbookProblem assertions FAIL (caught)
+    mutation 'negate the largest dual': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.001': textbookProblem assertions FAIL (caught)
+    mutation 'duals x 1.1': textbookProblem assertions FAIL (caught)
+    mutation 'reduced costs alone negated': textbookProblem assertions pass (missed)
+    mutation 'reduced costs without the max flip': textbookProblem assertions pass (missed)
+== transport LP of FacadeTests.transportLPWithNamedDuals, Simplex(.dual) and Simplex(.primal)
+  objective 260.0 duals ["-2.00e+00", "-4.00e+00", "0.00e+00", "3.00e+00", "6.00e+00", "3.00e+00", "6.00e+00"] control strong=true signs=true; oracle gap 0.00e+00 dualInf 0.00e+00
+    mutation 'negate all duals': FacadeTests assertions FAIL (caught) strong=false signs=true
+    mutation 'all duals zero': FacadeTests assertions FAIL (caught) strong=false signs=true
+    mutation 'negate the largest dual': FacadeTests assertions FAIL (caught) strong=false signs=true
+    mutation 'duals x 1.001': FacadeTests assertions FAIL (caught) strong=false signs=false
+    mutation 'duals x 1.1': FacadeTests assertions FAIL (caught) strong=false signs=false
+    mutation 'reduced costs alone negated': FacadeTests assertions FAIL (caught) strong=true signs=false
+  objective 260.0 duals ["-2.00e+00", "-4.00e+00", "0.00e+00", "3.00e+00", "6.00e+00", "3.00e+00", "6.00e+00"] control strong=true signs=true; oracle gap 0.00e+00 dualInf 0.00e+00
+    mutation 'negate all duals': FacadeTests assertions FAIL (caught) strong=false signs=true
+    mutation 'all duals zero': FacadeTests assertions FAIL (caught) strong=false signs=true
+    mutation 'negate the largest dual': FacadeTests assertions FAIL (caught) strong=false signs=true
+    mutation 'duals x 1.001': FacadeTests assertions FAIL (caught) strong=false signs=false
+    mutation 'duals x 1.1': FacadeTests assertions FAIL (caught) strong=false signs=false
+    mutation 'reduced costs alone negated': FacadeTests assertions FAIL (caught) strong=true signs=false
+== netlib: 13 instances x 4 NetlibSimplexTests configurations
+  afiro primal: control worst 5.55e-17 tol 4.66e-03 gap -1.22e-16 dualInf 5.55e-17 |y-yB| 2.86e-17 | MISSED 'duals x 1.001'
+  afiro dual: control worst 5.55e-17 tol 4.66e-03 gap -1.22e-16 dualInf 5.55e-17 |y-yB| 2.70e-17 | MISSED 'duals x 1.001'
+  afiro primal/nopre/noscale: control worst 5.55e-17 tol 4.66e-03 gap -1.22e-16 dualInf 5.55e-17 |y-yB| 2.86e-17 | MISSED 'duals x 1.001'
+  afiro dual/nopre/noscale: control worst 1.11e-16 tol 4.66e-03 gap 0.00e+00 dualInf 5.55e-17 |y-yB| 8.57e-17 | MISSED 'duals x 1.001'
+  sc50a primal: control worst 1.67e-16 tol 6.56e-04 gap 4.33e-16 dualInf 1.67e-16 |y-yB| 9.68e-17
+  sc50a dual: control worst 1.67e-16 tol 6.56e-04 gap 4.33e-16 dualInf 1.67e-16 |y-yB| 9.68e-17
+  sc50a primal/nopre/noscale: control worst 1.11e-16 tol 6.56e-04 gap 2.17e-16 dualInf 1.11e-16 |y-yB| 1.29e-16
+  sc50a dual/nopre/noscale: control worst 1.11e-16 tol 6.56e-04 gap 2.17e-16 dualInf 1.11e-16 |y-yB| 1.29e-16
+  sc50b primal: control worst 1.11e-16 tol 7.10e-04 gap -2.00e-16 dualInf 5.55e-17 |y-yB| 1.27e-16
+  sc50b dual: control worst 1.11e-16 tol 7.10e-04 gap -2.00e-16 dualInf 5.55e-17 |y-yB| 1.27e-16
+  sc50b primal/nopre/noscale: control worst 1.11e-16 tol 7.10e-04 gap -2.00e-16 dualInf 5.55e-17 |y-yB| 6.34e-17
+  sc50b dual/nopre/noscale: control worst 1.11e-16 tol 7.10e-04 gap -2.00e-16 dualInf 5.55e-17 |y-yB| 6.34e-17
+  sc105 primal: control worst 1.11e-16 tol 5.32e-04 gap -5.34e-16 dualInf 1.11e-16 |y-yB| 1.32e-16
+  sc105 dual: control worst 1.11e-16 tol 5.32e-04 gap -5.34e-16 dualInf 1.11e-16 |y-yB| 1.32e-16
+  sc105 primal/nopre/noscale: control worst 2.22e-16 tol 5.32e-04 gap 6.68e-16 dualInf 2.22e-16 |y-yB| 1.65e-16
+  sc105 dual/nopre/noscale: control worst 2.22e-16 tol 5.32e-04 gap 6.68e-16 dualInf 2.22e-16 |y-yB| 1.65e-16
+  kb2 primal: control worst 2.64e-14 tol 1.75e-02 gap -6.49e-16 dualInf 2.64e-14 |y-yB| 5.11e-15 | MISSED 'duals x 1.001'
+  kb2 dual: control worst 2.23e-14 tol 1.75e-02 gap 2.60e-16 dualInf 1.33e-14 |y-yB| 8.48e-15 | MISSED 'duals x 1.001'
+  kb2 primal/nopre/noscale: control worst 1.65e-13 tol 1.75e-02 gap 0.00e+00 dualInf 1.27e-14 |y-yB| 1.12e-14 | MISSED 'duals x 1.001'
+  kb2 dual/nopre/noscale: control worst 1.31e-14 tol 1.75e-02 gap 1.30e-16 dualInf 4.43e-15 |y-yB| 8.19e-15 | MISSED 'duals x 1.001'
+  adlittle primal: control worst 1.93e-12 tol 2.25e+00 gap -3.87e-16 dualInf 1.93e-12 |y-yB| 4.40e-15
+  adlittle dual: control worst 7.96e-13 tol 2.25e+00 gap -1.29e-16 dualInf 7.96e-13 |y-yB| 4.85e-16
+  adlittle primal/nopre/noscale: control worst 1.02e-12 tol 2.25e+00 gap -3.87e-16 dualInf 1.02e-12 |y-yB| 2.98e-16
+  adlittle dual/nopre/noscale: control worst 1.33e-12 tol 2.25e+00 gap 5.16e-16 dualInf 1.33e-12 |y-yB| 4.12e-16
+  blend primal: control worst 2.07e-14 tol 3.18e-04 gap -6.70e-16 dualInf 2.07e-14 |y-yB| 2.01e-15
+  blend dual: control worst 2.07e-14 tol 3.18e-04 gap -6.70e-16 dualInf 2.07e-14 |y-yB| 2.01e-15
+  blend primal/nopre/noscale: control worst 2.07e-14 tol 3.18e-04 gap 1.12e-16 dualInf 2.83e-15 |y-yB| 1.29e-15
+  blend dual/nopre/noscale: control worst 2.07e-14 tol 3.18e-04 gap 1.12e-16 dualInf 2.83e-15 |y-yB| 1.29e-15
+  share2b primal: control worst 5.51e-14 tol 4.17e-03 gap -2.73e-16 dualInf 5.51e-14 |y-yB| 4.86e-15 | MISSED 'duals x 1.001'
+  share2b dual: control worst 6.84e-14 tol 4.17e-03 gap 4.09e-16 dualInf 4.97e-14 |y-yB| 4.14e-15 | MISSED 'duals x 1.001'
+  share2b primal/nopre/noscale: control worst 6.66e-14 tol 4.17e-03 gap 4.09e-16 dualInf 6.66e-14 |y-yB| 3.42e-15 | MISSED 'duals x 1.001'
+  share2b dual/nopre/noscale: control worst 5.68e-14 tol 4.17e-03 gap 4.09e-16 dualInf 2.66e-14 |y-yB| 6.83e-15 | MISSED 'duals x 1.001'
+  stocfor1 primal: control worst 7.15e-14 tol 4.11e-01 gap 5.31e-16 dualInf 7.15e-14 |y-yB| 4.49e-16 | MISSED 'duals x 1.001'
+  stocfor1 dual: control worst 2.48e-13 tol 4.11e-01 gap 1.77e-16 dualInf 2.48e-13 |y-yB| 3.65e-16 | MISSED 'duals x 1.001'
+  stocfor1 primal/nopre/noscale: control worst 1.70e-13 tol 4.11e-01 gap 0.00e+00 dualInf 1.70e-13 |y-yB| 4.89e-16 | MISSED 'duals x 1.001'
+  stocfor1 dual/nopre/noscale: control worst 2.53e-13 tol 4.11e-01 gap 0.00e+00 dualInf 2.53e-13 |y-yB| 6.73e-16 | MISSED 'duals x 1.001'
+  scagr7 primal: control worst 8.74e-13 tol 2.33e+01 gap 1.80e-15 dualInf 5.19e-13 |y-yB| 2.16e-15 | MISSED 'duals x 1.001'
+  scagr7 dual: control worst 2.77e-12 tol 2.33e+01 gap 2.40e-15 dualInf 1.08e-12 |y-yB| 4.32e-15 | MISSED 'duals x 1.001'
+  scagr7 primal/nopre/noscale: control worst 5.78e-13 tol 2.33e+01 gap 2.00e-16 dualInf 5.08e-13 |y-yB| 1.95e-15 | MISSED 'duals x 1.001'
+  scagr7 dual/nopre/noscale: control worst 6.11e-13 tol 2.33e+01 gap -5.99e-16 dualInf 6.11e-13 |y-yB| 4.32e-16 | MISSED 'duals x 1.001'
+  beaconfd primal: control worst 4.52e-15 tol 3.36e-01 gap -4.33e-16 dualInf 1.78e-15 |y-yB| 5.81e+00 | MISSED 'duals x 1.001'
+  beaconfd dual: control worst 2.41e-15 tol 3.36e-01 gap -4.33e-16 dualInf 2.41e-15 |y-yB| 5.81e+00 | MISSED 'duals x 1.001'
+  beaconfd primal/nopre/noscale: control worst 3.40e-14 tol 3.36e-01 gap -1.73e-15 dualInf 2.00e-14 |y-yB| 2.37e-15 | MISSED 'duals x 1.001'
+  beaconfd dual/nopre/noscale: control worst 3.73e-14 tol 3.36e-01 gap -6.50e-16 dualInf 3.26e-14 |y-yB| 2.04e-15 | MISSED 'duals x 1.001'
+  israel primal: control worst 3.41e-13 tol 8.97e+00 gap 0.00e+00 dualInf 1.71e-13 |y-yB| 1.08e-14 | MISSED 'duals x 1.001'
+  israel dual: control worst 7.96e-13 tol 8.97e+00 gap -1.30e-16 dualInf 3.93e-13 |y-yB| 1.66e-14 | MISSED 'duals x 1.001'
+  israel primal/nopre/noscale: control worst 7.19e-12 tol 8.97e+00 gap 2.60e-16 dualInf 6.73e-13 |y-yB| 2.31e-14 | MISSED 'duals x 1.001'
+  israel dual/nopre/noscale: control worst 1.07e-11 tol 8.97e+00 gap 1.30e-16 dualInf 3.01e-12 |y-yB| 2.14e-14 | MISSED 'duals x 1.001'
+  degen2 primal: control worst 7.77e-14 tol 1.44e-02 gap 7.92e-16 dualInf 7.77e-14 |y-yB| 1.25e-14
+  degen2 dual: control worst 4.03e-14 tol 1.44e-02 gap 6.33e-16 dualInf 4.03e-14 |y-yB| 4.02e-15
+  degen2 primal/nopre/noscale: control worst 7.77e-14 tol 1.44e-02 gap 7.92e-16 dualInf 7.77e-14 |y-yB| 1.25e-14
+  degen2 dual/nopre/noscale: control worst 4.03e-14 tol 1.44e-02 gap 6.33e-16 dualInf 4.03e-14 |y-yB| 4.02e-15
+netlib cases solved optimal: 52; control (real duals) passes the suite's assertion: 52/52; worst worst/tol 6.51e-11
+independent oracle on real duals: worst |duality gap| 2.40e-15, worst dual infeasibility 3.01e-12, worst |y - B^-T c_B|/(1+|y|max) 5.81e+00 over 52 bases, worst |reported rc - derived rc| 0.00e+00
+mutation 'negate all duals': NetlibSimplexTests assertion fails in 52/52 cases; Lagrangian oracle rejects 52/52
+mutation 'all duals zero': NetlibSimplexTests assertion fails in 52/52 cases; Lagrangian oracle rejects 52/52
+mutation 'negate the largest dual': NetlibSimplexTests assertion fails in 52/52 cases; Lagrangian oracle rejects 52/52
+mutation 'duals x 1.001': NetlibSimplexTests assertion fails in 24/52 cases; Lagrangian oracle rejects 52/52
+mutation 'duals x 1.1': NetlibSimplexTests assertion fails in 52/52 cases; Lagrangian oracle rejects 52/52
+mutation 'negate one nonzero dual' (each in turn): assertion fails 3924/4137; oracle rejects 4137/4137
+mutation 'zero one nonzero dual' (each in turn): assertion fails 3880/4137; oracle rejects 4136/4137
+== constructed optima: 200 instances x 2 methods, min and max, free columns, ranges, degenerate
+constructed: 400 optimal solves (100 of 200 instances are maximizations), 0 bad; worst |gap| 1.63e-14, worst dual infeasibility 2.04e-14, worst |rc_logical - dual| 0.00e+00, worst |reported rc - flip*d(flip*y)| 0.00e+00
+== Hilbert orders 3-8, worst distance from (1,...,1) over the four forms
+  order 3: Simplex(.dual) 6.66e-15 [optimal] Simplex(.primal) 8.99e-15 [optimal] InteriorPoint() 8.99e-15 [optimal]
+  order 4: Simplex(.dual) 5.30e-13 [optimal] Simplex(.primal) 6.12e-13 [optimal] InteriorPoint() 5.30e-13 [optimal]
+  order 5: Simplex(.dual) 5.84e-12 [optimal] Simplex(.primal) 8.21e-12 [optimal] InteriorPoint() 5.77e-12 [optimal]
+  order 6: Simplex(.dual) 5.79e-10 [optimal] Simplex(.primal) 5.79e-10 [optimal] InteriorPoint() 4.20e-10 [optimal]
+  order 7: Simplex(.dual) 1.92e-08 [optimal] Simplex(.primal) 3.37e-08 [optimal] InteriorPoint() 3.99e-08 [optimal]
+  order 8: Simplex(.dual) 3.96e-07 [optimal] Simplex(.primal) 8.72e-07 [optimal] InteriorPoint() 7.64e-07 [optimal]
+elapsed 0.5 s
+rc=0
+== aside: beaconfd, the basis returned with presolve on versus the duals returned
+  primal: basic 173 (114 structural); rows whose dual differs from B^-T c_B: 25; reported y gap -4.33e-16 dualInf 1.78e-15; basis y gap -4.33e-16 dualInf 1.78e-15; warm start of the unpresolved problem: optimal in 0 iterations
+  dual: basic 173 (114 structural); rows whose dual differs from B^-T c_B: 25; reported y gap -4.33e-16 dualInf 2.41e-15; basis y gap -4.33e-16 dualInf 1.78e-15; warm start of the unpresolved problem: optimal in 0 iterations
+  primal/nopre/noscale: basic 173 (89 structural); rows whose dual differs from B^-T c_B: 0; reported y gap -1.73e-15 dualInf 2.00e-14; basis y gap -2.38e-15 dualInf 1.30e-15; warm start of the unpresolved problem: optimal in 0 iterations
+  dual/nopre/noscale: basic 173 (89 structural); rows whose dual differs from B^-T c_B: 0; reported y gap -6.50e-16 dualInf 3.26e-14; basis y gap -4.33e-16 dualInf 1.30e-15; warm start of the unpresolved problem: optimal in 0 iterations
+elapsed 0.0 s
+rc=0

@@ -1,0 +1,150 @@
+
+==== M3: (2^49+0.375)x + (2^49+0.375)y - (2^50+0.75)z = 0, binaries, max x+y+z
+  compiled row 0 [0.0, 0.0]: 562949953421312.3750000000 [m=4503599627370499 e=-3; |v-round(v)|=0.375, 4ulp=0.5] ; 562949953421312.3750000000 [m=4503599627370499 e=-3; |v-round(v)|=0.375, 4ulp=0.5] ; -1125899906842624.7500000000 [m=-4503599627370499 e=-2; |v-round(v)|=0.25, 4ulp=1.0]
+  README rule on row 0 coefficients: REJECT (needs 10^1; max |scaled| = 1.126e+16 >= 2^53)
+  README rule on objective: accept at 10^0 (max |scaled| = 1)
+  ORACLE exact enumeration: 8 points, 2 feasible; optimum 3.000000 [= 3*2^0] at [1, 1, 1] (1 optimal points) [0.00 s]
+  CPSAT() x3 identical: optimal obj=-0.000000 bound=-0.000000 x=(0,0,0)
+      exact check: point exactly feasible=true; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(deterministic: true) x3 identical: optimal obj=-0.000000 bound=-0.000000 x=(0,0,0)
+      exact check: point exactly feasible=true; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: optimal obj=-0.000000 bound=-0.000000 x=(0,0,0)
+      exact check: point exactly feasible=true; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(workers: 4, seed: 7) x3 identical: optimal obj=-0.000000 bound=-0.000000 x=(0,0,0)
+      exact check: point exactly feasible=true; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: optimal obj=-0.000000 bound=-0.000000 x=(0,0,0)
+      exact check: point exactly feasible=true; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT().solve(LPModel): optimal obj=-0.000000 x=(0,0,0)
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=3.000000 bound=3.000000 x=(1,1,1)
+      exact check: point exactly feasible=true; its exact objective 3.000000 [= 3*2^0]; equals exact optimum: true
+
+==== M3-control: same row at 2^40 (4ulp = 9e-4 < 0.375; needs 10^3 -> 1.1e15 < 2^53)
+  compiled row 0 [0.0, 0.0]: 1099511627776.3750000000 [m=8796093022211 e=-3; |v-round(v)|=0.375, 4ulp=0.0009765625] ; 1099511627776.3750000000 [m=8796093022211 e=-3; |v-round(v)|=0.375, 4ulp=0.0009765625] ; -2199023255552.7500000000 [m=-8796093022211 e=-2; |v-round(v)|=0.25, 4ulp=0.001953125]
+  README rule on row 0 coefficients: accept at 10^3 (max |scaled| = 2.199e+15)
+  README rule on objective: accept at 10^0 (max |scaled| = 1)
+  ORACLE exact enumeration: 8 points, 2 feasible; optimum 3.000000 [= 3*2^0] at [1, 1, 1] (1 optimal points) [0.00 s]
+  CPSAT() x3 identical: optimal obj=3.000000 bound=3.000000 x=(1,1,1)
+      exact check: point exactly feasible=true; its exact objective 3.000000 [= 3*2^0]; equals exact optimum: true
+  CPSAT(deterministic: true) x3 identical: optimal obj=3.000000 bound=3.000000 x=(1,1,1)
+      exact check: point exactly feasible=true; its exact objective 3.000000 [= 3*2^0]; equals exact optimum: true
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: optimal obj=3.000000 bound=3.000000 x=(1,1,1)
+      exact check: point exactly feasible=true; its exact objective 3.000000 [= 3*2^0]; equals exact optimum: true
+  CPSAT(workers: 4, seed: 7) x3 identical: optimal obj=3.000000 bound=3.000000 x=(1,1,1)
+      exact check: point exactly feasible=true; its exact objective 3.000000 [= 3*2^0]; equals exact optimum: true
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: optimal obj=3.000000 bound=3.000000 x=(1,1,1)
+      exact check: point exactly feasible=true; its exact objective 3.000000 [= 3*2^0]; equals exact optimum: true
+  CPSAT().solve(LPModel): optimal obj=3.000000 x=(1,1,1)
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=3.000000 bound=3.000000 x=(1,1,1)
+      exact check: point exactly feasible=true; its exact objective 3.000000 [= 3*2^0]; equals exact optimum: true
+
+==== M4: 1e-10 x0 + 1e-10 x1 >= 1e-10, binaries, min x0+x1
+  compiled row 0 [1e-10, inf]: 0.0000000001 [m=7737125245533627 e=-86; |v-round(v)|=1e-10, 4ulp=5.169878828456423e-26] ; 0.0000000001 [m=7737125245533627 e=-86; |v-round(v)|=1e-10, 4ulp=5.169878828456423e-26]
+  README rule on row 0 coefficients: REJECT (needs 10^10 > 10^6)
+  README rule on objective: accept at 10^0 (max |scaled| = 1)
+  ORACLE exact enumeration: 4 points, 3 feasible; optimum 1.000000 [= 1*2^0] at [1, 0] (2 optimal points) [0.00 s]
+  CPSAT() x3 identical: optimal obj=0.000000 bound=0.000000 x=(0,0)
+      exact check: point exactly feasible=false; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(deterministic: true) x3 identical: optimal obj=0.000000 bound=0.000000 x=(0,0)
+      exact check: point exactly feasible=false; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: optimal obj=0.000000 bound=0.000000 x=(0,0)
+      exact check: point exactly feasible=false; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(workers: 4, seed: 7) x3 identical: optimal obj=0.000000 bound=0.000000 x=(0,0)
+      exact check: point exactly feasible=false; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: optimal obj=0.000000 bound=0.000000 x=(0,0)
+      exact check: point exactly feasible=false; its exact objective 0.000000 [= 0*2^0]; equals exact optimum: false
+  CPSAT().solve(LPModel): optimal obj=0.000000 x=(0,0)
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=1.000000 bound=1.000000 x=(1,0)
+      exact check: point exactly feasible=true; its exact objective 1.000000 [= 1*2^0]; equals exact optimum: true
+
+==== M4-control: 1e-7 x0 + 1e-7 x1 >= 1e-7 (README: reject)
+  compiled row 0 [1e-07, inf]: 0.0000001000 [m=944473296573929 e=-73; |v-round(v)|=1e-07, 4ulp=5.293955920339377e-23] ; 0.0000001000 [m=944473296573929 e=-73; |v-round(v)|=1e-07, 4ulp=5.293955920339377e-23]
+  README rule on row 0 coefficients: REJECT (needs 10^7 > 10^6)
+  README rule on objective: accept at 10^0 (max |scaled| = 1)
+  ORACLE exact enumeration: 4 points, 3 feasible; optimum 1.000000 [= 1*2^0] at [1, 0] (2 optimal points) [0.00 s]
+  CPSAT() x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(deterministic: true) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(workers: 4, seed: 7) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT().solve(LPModel): THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=1.000000 bound=1.000000 x=(1,0)
+      exact check: point exactly feasible=true; its exact objective 1.000000 [= 1*2^0]; equals exact optimum: true
+
+==== M7: x - 1.0000000009 y >= 0, y = 1e6 fixed, x in [0, 2e6], min x
+  compiled row 0 [0.0, inf]: 1.0000000000 [m=1 e=0; |v-round(v)|=0.0, 4ulp=8.881784197001252e-16] ; -1.0000000009 [m=-562949953927967 e=-49; |v-round(v)|=9.000000744663339e-10, 4ulp=8.881784197001252e-16]
+  README rule on row 0 coefficients: REJECT (needs 10^10 > 10^6)
+  README rule on objective: accept at 10^0 (max |scaled| = 1)
+  ORACLE exact enumeration: 2000001 points, 1000000 feasible; optimum 1000001.000000 [= 1000001*2^0] at [1000001, 1000000] (1 optimal points) [0.03 s]
+  CPSAT() x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(deterministic: true) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(workers: 4, seed: 7) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT().solve(LPModel): THROW internal inconsistency: CP-SAT returned a point that violates row c1
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=1000001.000000 bound=1000001.000000 x=(1000001,1000000)
+      exact check: point exactly feasible=true; its exact objective 1000001.000000 [= 1000001*2^0]; equals exact optimum: true
+
+==== M7-control: x - 1.000000002 y >= 0, y = 1e6 fixed (|frac| 2e-9 > 1e-9)
+  compiled row 0 [0.0, inf]: 1.0000000000 [m=1 e=0; |v-round(v)|=0.0, 4ulp=8.881784197001252e-16] ; -1.0000000020 [m=-4503599636377695 e=-52; |v-round(v)|=1.999999943436137e-09, 4ulp=8.881784197001252e-16]
+  README rule on row 0 coefficients: REJECT (needs 10^9 > 10^6)
+  README rule on objective: accept at 10^0 (max |scaled| = 1)
+  ORACLE exact enumeration: 2000001 points, 1000000 feasible; optimum 1000001.000000 [= 1000001*2^0] at [1000001, 1000000] (1 optimal points) [0.02 s]
+  CPSAT() x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(deterministic: true) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(workers: 4, seed: 7) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+      exact check: no point
+  CPSAT().solve(LPModel): THROW unsupported: row c1 has coefficients that no power of 10 up to 1e6 makes integral
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=1000001.000000 bound=1000001.000000 x=(1000001,1000000)
+      exact check: point exactly feasible=true; its exact objective 1000001.000000 [= 1000001*2^0]; equals exact optimum: true
+
+==== M7b/D5a: (2^48+0.1875)x - 2^48 y <= 0, binaries, max x
+  compiled row 0 [-inf, 0.0]: 281474976710656.1875000000 [m=4503599627370499 e=-4; |v-round(v)|=0.1875, 4ulp=0.25] ; -281474976710656.0000000000 [m=-1 e=48; |v-round(v)|=0.0, 4ulp=0.25]
+  README rule on row 0 coefficients: accept at 10^1 (max |scaled| = 2.815e+15)
+  README rule on objective: accept at 10^0 (max |scaled| = 1)
+  ORACLE exact enumeration: 4 points, 2 feasible; optimum 0.000000 [= 0*2^0] at [0, 0] (2 optimal points) [0.00 s]
+  CPSAT() x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(deterministic: true) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(workers: 4, seed: 7) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: THROW internal inconsistency: CP-SAT returned a point that violates row c1
+      exact check: no point
+  CPSAT().solve(LPModel): THROW internal inconsistency: CP-SAT returned a point that violates row c1
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=1.000000 bound=1.000000 x=(1,1)
+      exact check: point exactly feasible=false; its exact objective 1.000000 [= 1*2^0]; equals exact optimum: false
+
+==== D5d: max (2^49+0.5)x, x binary, no rows
+  README rule on objective: accept at 10^1 (max |scaled| = 5.629e+15)
+  ORACLE exact enumeration: 2 points, 2 feasible; optimum 562949953421312.500000 [= 1125899906842625*2^-1] at [1] (1 optimal points) [0.00 s]
+  CPSAT() x3 identical: optimal obj=562949953421313.000000 bound=562949953421313.000000 x=(1)
+      exact check: point exactly feasible=true; its exact objective 562949953421312.500000 [= 1125899906842625*2^-1]; equals exact optimum: true
+  CPSAT(deterministic: true) x3 identical: optimal obj=562949953421313.000000 bound=562949953421313.000000 x=(1)
+      exact check: point exactly feasible=true; its exact objective 562949953421312.500000 [= 1125899906842625*2^-1]; equals exact optimum: true
+  CPSAT(lpPropagator: false, deterministic: true) x3 identical: optimal obj=562949953421313.000000 bound=562949953421313.000000 x=(1)
+      exact check: point exactly feasible=true; its exact objective 562949953421312.500000 [= 1125899906842625*2^-1]; equals exact optimum: true
+  CPSAT(workers: 4, seed: 7) x3 identical: optimal obj=562949953421313.000000 bound=562949953421313.000000 x=(1)
+      exact check: point exactly feasible=true; its exact objective 562949953421312.500000 [= 1125899906842625*2^-1]; equals exact optimum: true
+  CPSAT(workers: 2, lpPropagator: false, seed: 12345) x3 identical: optimal obj=562949953421313.000000 bound=562949953421313.000000 x=(1)
+      exact check: point exactly feasible=true; its exact objective 562949953421312.500000 [= 1125899906842625*2^-1]; equals exact optimum: true
+  CPSAT().solve(LPModel): optimal obj=562949953421313.000000 x=(1)
+  second engine BranchAndBound(engine: Simplex(.primal), deterministic: true): optimal obj=562949953421312.500000 bound=562949953421312.500000 x=(1)
+      exact check: point exactly feasible=true; its exact objective 562949953421312.500000 [= 1125899906842625*2^-1]; equals exact optimum: true

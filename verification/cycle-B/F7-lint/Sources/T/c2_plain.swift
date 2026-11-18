@@ -1,0 +1,1 @@
+var plainGlobal = 0

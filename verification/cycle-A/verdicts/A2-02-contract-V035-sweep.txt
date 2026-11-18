@@ -1,0 +1,60 @@
+BUCKET a <1e8: instances 20, Simplex(.primal) false .infeasible 0 (ray certifies in 0), Simplex(.dual) optimal 20
+BUCKET b 1e8-1e9: instances 25, Simplex(.primal) false .infeasible 9 (ray certifies in 0), Simplex(.dual) optimal 25
+BUCKET c 1e9-1e10: instances 26, Simplex(.primal) false .infeasible 20 (ray certifies in 0), Simplex(.dual) optimal 26
+BUCKET d 1e10-1e11: instances 26, Simplex(.primal) false .infeasible 6 (ray certifies in 0), Simplex(.dual) optimal 26
+BUCKET e 1e11-1e12: instances 18, Simplex(.primal) false .infeasible 4 (ray certifies in 0), Simplex(.dual) optimal 18
+BUCKET f >=1e12: instances 85, Simplex(.primal) false .infeasible 15 (ray certifies in 0), Simplex(.dual) optimal 85
+FALSE-INFEASIBLE k3 n 12 kappa 1.303e+10 x=1 viol 0.000e+00 primal infeasible, ray margin -4.672e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k5 n 12 kappa 1.765e+14 x=1 viol 0.000e+00 primal infeasible, ray margin -2.487e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k15 n 11 kappa 1.499e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -1.890e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k20 n 11 kappa 9.048e+14 x=1 viol 0.000e+00 primal infeasible, ray margin -5.877e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k22 n 11 kappa 3.456e+13 x=1 viol 0.000e+00 primal infeasible, ray margin -1.001e-06, warnings 0; dual optimal
+FALSE-INFEASIBLE k25 n 8 kappa 7.406e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -3.248e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k33 n 12 kappa 8.658e+10 x=1 viol 0.000e+00 primal infeasible, ray margin -2.619e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k34 n 8 kappa 5.370e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -3.376e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k36 n 10 kappa 1.193e+14 x=1 viol 0.000e+00 primal infeasible, ray margin -7.187e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k38 n 12 kappa 1.845e+10 x=1 viol 0.000e+00 primal infeasible, ray margin -2.674e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k46 n 8 kappa 2.233e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -1.654e-06, warnings 0; dual optimal
+FALSE-INFEASIBLE k52 n 7 kappa 2.340e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -5.820e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k53 n 6 kappa 1.659e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -5.369e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k57 n 10 kappa 1.139e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -2.407e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k59 n 10 kappa 1.534e+13 x=1 viol 0.000e+00 primal infeasible, ray margin -2.318e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k61 n 6 kappa 8.309e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -9.000e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k63 n 10 kappa 8.198e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -2.788e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k65 n 5 kappa 2.173e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -4.017e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k66 n 7 kappa 1.535e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -7.487e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k69 n 8 kappa 2.540e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -2.596e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k73 n 10 kappa 1.326e+12 x=1 viol 0.000e+00 primal infeasible, ray margin -1.284e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k76 n 6 kappa 8.968e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -8.589e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k80 n 7 kappa 5.979e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -2.261e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k83 n 10 kappa 5.736e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -9.670e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k85 n 10 kappa 6.636e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -2.875e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k91 n 8 kappa 4.004e+10 x=1 viol 0.000e+00 primal infeasible, ray margin -4.890e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k96 n 10 kappa 3.740e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -5.225e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k97 n 5 kappa 1.478e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -7.003e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k100 n 5 kappa 1.365e+12 x=1 viol 0.000e+00 primal infeasible, ray margin -2.008e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k103 n 5 kappa 1.704e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -7.756e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k106 n 11 kappa 2.477e+11 x=1 viol 0.000e+00 primal infeasible, ray margin -3.477e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k109 n 12 kappa 8.170e+10 x=1 viol 0.000e+00 primal infeasible, ray margin -1.116e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k116 n 9 kappa 1.471e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -8.335e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k117 n 6 kappa 3.710e+08 x=1 viol 0.000e+00 primal infeasible, ray margin -2.781e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k124 n 9 kappa 3.553e+12 x=1 viol 0.000e+00 primal infeasible, ray margin -1.377e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k126 n 9 kappa 3.666e+12 x=1 viol 0.000e+00 primal infeasible, ray margin -5.598e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k128 n 5 kappa 2.133e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -5.761e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k131 n 7 kappa 1.780e+11 x=1 viol 0.000e+00 primal infeasible, ray margin -1.961e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k133 n 12 kappa 4.153e+14 x=1 viol 0.000e+00 primal infeasible, ray margin -5.818e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k137 n 11 kappa 2.169e+12 x=1 viol 0.000e+00 primal infeasible, ray margin -9.596e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k138 n 9 kappa 2.791e+10 x=1 viol 0.000e+00 primal infeasible, ray margin -1.173e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k148 n 10 kappa 5.284e+13 x=1 viol 0.000e+00 primal infeasible, ray margin -2.827e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k149 n 11 kappa 8.420e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -3.874e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k159 n 12 kappa 7.672e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -3.734e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k162 n 10 kappa 1.068e+14 x=1 viol 0.000e+00 primal infeasible, ray margin -1.841e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k168 n 10 kappa 3.382e+11 x=1 viol 0.000e+00 primal infeasible, ray margin -3.126e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k171 n 6 kappa 1.384e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -9.000e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k172 n 7 kappa 2.316e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -5.444e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k174 n 11 kappa 2.493e+14 x=1 viol 0.000e+00 primal infeasible, ray margin -8.068e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k178 n 9 kappa 4.364e+12 x=1 viol 0.000e+00 primal infeasible, ray margin -1.045e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k183 n 5 kappa 2.450e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -4.167e-08, warnings 0; dual optimal
+FALSE-INFEASIBLE k186 n 9 kappa 6.620e+11 x=1 viol 0.000e+00 primal infeasible, ray margin -5.092e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k197 n 10 kappa 5.714e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -1.610e-07, warnings 0; dual optimal
+FALSE-INFEASIBLE k198 n 7 kappa 7.105e+09 x=1 viol 0.000e+00 primal infeasible, ray margin -3.209e-08, warnings 0; dual optimal

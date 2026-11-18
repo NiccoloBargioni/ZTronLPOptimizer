@@ -1,0 +1,107 @@
+primal T 0.0005 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.0005 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.0005 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.0005 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.001 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.001 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.001 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.001 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.002 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.002 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.002 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.002 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.003 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 1118.806014 gap 0.181421 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.003 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 1118.806014 gap 0.181421 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal T 0.003 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 969.000000 bound 1118.806014 gap 0.154599 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 969.000000
+primal T 0.003 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 969.000000 bound 1118.806014 gap 0.154599 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 969.000000
+primal T 0.005 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.556701 gap 0.136884 nodes 3 open 4 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+primal T 0.005 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.556701 gap 0.136884 nodes 3 open 4 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+primal T 0.005 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.750668 gap 0.137081 nodes 3 open 4 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+primal T 0.005 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.750668 gap 0.137081 nodes 3 open 4 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+primal T 0.01 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1005.000000 bound 1117.556701 gap 0.111997 nodes 6 open 7 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3", "rounding@9"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1005.000000
+primal T 0.01 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1005.000000 bound 1117.556701 gap 0.111997 nodes 6 open 7 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3", "rounding@9"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1005.000000
+primal T 0.01 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1041.000000 bound 1116.687516 gap 0.072707 nodes 19 open 20 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3", "rounding@17", "rounding@27"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1041.000000
+primal T 0.01 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1043.000000 bound 1116.251595 gap 0.070232 nodes 19 open 20 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3", "rounding@10"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1043.000000
+dual T 0.0005 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.0005 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.0005 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.0005 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.001 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.001 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.001 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.001 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.002 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.002 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.002 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.002 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.003 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 1118.806014 gap 0.181421 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.003 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 947.000000 bound 1118.806014 gap 0.181421 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+dual T 0.003 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 969.000000 bound 1118.806014 gap 0.154599 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 969.000000
+dual T 0.003 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 969.000000 bound 1118.806014 gap 0.154599 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 969.000000
+dual T 0.005 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.750668 gap 0.137081 nodes 2 open 3 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+dual T 0.005 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.750668 gap 0.137081 nodes 2 open 3 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+dual T 0.005 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.750668 gap 0.137081 nodes 3 open 4 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+dual T 0.005 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 983.000000 bound 1117.750668 gap 0.137081 nodes 3 open 4 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 983.000000
+dual T 0.01 threads 1 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1005.000000 bound 1117.556701 gap 0.111997 nodes 6 open 7 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3", "rounding@9"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1005.000000
+dual T 0.01 threads 1 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1005.000000 bound 1117.556701 gap 0.111997 nodes 6 open 7 rootLP 1120.525624 incumbents ["rounding@0", "rounding@3", "rounding@9"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1005.000000
+dual T 0.01 threads 8 rep 0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1043.000000 bound 1116.515628 gap 0.070485 nodes 18 open 19 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3", "rounding@8"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1043.000000
+dual T 0.01 threads 8 rep 1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1043.000000 bound 1116.687516 gap 0.070650 nodes 16 open 17 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3", "rounding@8"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1043.000000
+primal cancel after 0.2 ms: feasible(stoppedBy: ZTronLPCore.StopReason.cancelled) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal cancel after 0.5 ms: feasible(stoppedBy: ZTronLPCore.StopReason.cancelled) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal cancel after 1.0 ms: feasible(stoppedBy: ZTronLPCore.StopReason.cancelled) obj 947.000000 bound 947.000000 gap 0.000000 nodes 1 open 0 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID true
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal cancel after 2.0 ms: feasible(stoppedBy: ZTronLPCore.StopReason.cancelled) obj 947.000000 bound 1118.806014 gap 0.181421 nodes 1 open 2 rootLP 1120.525624 incumbents ["rounding@0"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 947.000000
+primal cancel after 5.0 ms: feasible(stoppedBy: ZTronLPCore.StopReason.cancelled) obj 1074.000000 bound 1116.687516 gap 0.039746 nodes 38 open 39 rootLP 1120.525624 incumbents ["rounding@0", "rounding@2", "rounding@3", "rounding@12", "rounding@39"] BOUND_INVALID false
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1074.000000
+SUMMARY stop: 27 of 53 results report a bound below the verified feasible objective 1097.0

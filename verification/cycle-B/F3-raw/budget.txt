@@ -1,0 +1,9 @@
+m=60 budget=57599 need16m2=57600 -> overMemoryBudget est=nil
+m=60 budget=57600 need16m2=57600 -> analyzed est=5.463e+20
+m=60 budget=57601 need16m2=57600 -> analyzed est=5.463e+20
+m=60 budget=0 need16m2=57600 -> overMemoryBudget est=nil
+m=60 budget=28800 need16m2=57600 -> overMemoryBudget est=nil
+invalid -> invalidBasis
+Conditioned(Simplex) budget=57599 m=60 -> overMemoryBudget status=optimal
+Conditioned(Simplex) budget=16m^2 -> analyzed
+rc=0

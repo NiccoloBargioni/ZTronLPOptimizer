@@ -1,0 +1,16 @@
+ipm-lite optimal obj=3.75 x=[-1.0, 1.25, 0.75] status=[ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.atUpper, ZTronLPCore.BasisStatus.atLower, ZTronLPCore.BasisStatus.atUpper] basic=[1, 2, 0] dual=[0.0, 1.5, -0.5] rc=[-2.5, 0.0, 0.0, 0.0, 1.5, -0.5] it=7 mu=2.439e-09 pr=1.348e-09 dr=1.480e-16 xo=optimal/0
+    KKT(returned duals): pviol=0.000e+00 dsign=0.000e+00 compl=0.000e+00 gap=0.000e+00 rc=0.000e+00 objRep=0.000e+00 objKnown=0.000e+00
+    basis primalInf=0.000e+00 dualInf=8.333e-01 xDiff=0.000e+00 objDiff=0.000e+00   <-- basis not optimal
+    analyzer on this basis: analyzed est=4.000e+00
+ipm-lite-nopre optimal obj=3.75 x=[-1.0, 1.25, 0.75] status=[ZTronLPCore.BasisStatus.atUpper, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.atLower, ZTronLPCore.BasisStatus.atUpper] basic=[3, 1, 2] dual=[0.0, 1.5, -0.5] rc=[-2.5, 0.0, 0.0, 0.0, 1.5, -0.5] it=8 mu=9.425e-11 pr=2.016e-11 dr=1.480e-16 xo=optimal/0
+    KKT(returned duals): pviol=0.000e+00 dsign=0.000e+00 compl=0.000e+00 gap=0.000e+00 rc=0.000e+00 objRep=0.000e+00 objKnown=0.000e+00
+    basis primalInf=0.000e+00 dualInf=0.000e+00 xDiff=0.000e+00 objDiff=0.000e+00 
+    analyzer on this basis: analyzed est=2.000e+00
+dual optimal obj=3.75 x=[-1.0, 1.25, 0.75] status=[ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.atUpper, ZTronLPCore.BasisStatus.atLower, ZTronLPCore.BasisStatus.atUpper] basic=[1, 2, 0] dual=[0.0, 1.5, -0.5] rc=[-2.5, 0.0, 0.0, 0.0, 1.5, -0.5] it=2
+    KKT(returned duals): pviol=0.000e+00 dsign=0.000e+00 compl=0.000e+00 gap=0.000e+00 rc=0.000e+00 objRep=0.000e+00 objKnown=0.000e+00
+    basis primalInf=0.000e+00 dualInf=8.333e-01 xDiff=0.000e+00 objDiff=0.000e+00   <-- basis not optimal
+    analyzer on this basis: analyzed est=4.000e+00
+primal optimal obj=3.75 x=[-1.0, 1.25, 0.75] status=[ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.atUpper, ZTronLPCore.BasisStatus.atLower, ZTronLPCore.BasisStatus.atUpper] basic=[2, 1, 0] dual=[0.0, 1.5, -0.5] rc=[-2.5, 0.0, 0.0, 0.0, 1.5, -0.5] it=2
+    KKT(returned duals): pviol=0.000e+00 dsign=0.000e+00 compl=0.000e+00 gap=0.000e+00 rc=0.000e+00 objRep=0.000e+00 objKnown=0.000e+00
+    basis primalInf=0.000e+00 dualInf=8.333e-01 xDiff=0.000e+00 objDiff=0.000e+00   <-- basis not optimal
+    analyzer on this basis: analyzed est=4.000e+00

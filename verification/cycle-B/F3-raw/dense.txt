@@ -1,0 +1,11 @@
+m=400 n=600 dense cols requested=2 actual>30%: 2 maxcol=212
+ipm-lite optimal obj=111.54317055379269 known=111.54317055379263 it=13 mu=5.667e-11 pr=1.157e-12 dr=1.151e-13 xo=optimal/41 t=0.02s | pviol=1.291e-14 dsign=4.004e-16 compl=1.630e-16 gap=6.314e-16 rc=1.001e-16 objRep=0.000e+00 objKnown=5.051e-16 | basis primalInf=1.594e-14 dualInf=5.937e-01 xDiff=2.298e-13 objDiff=2.525e-16  BASIS-FAIL
+   warnings: ["2 column(s) have more than 30% nonzeros; the normal equations will be dense (§8.3)"]
+ipm-none optimal obj=111.54317057637967 known=111.54317055379263 it=13 mu=5.667e-11 pr=1.157e-12 dr=1.151e-13 xo=- t=0.01s | pviol=3.331e-12 dsign=2.890e-15 compl=1.472e-12 gap=3.160e-10 rc=9.105e-16 objRep=0.000e+00 objKnown=2.007e-10
+   warnings: ["2 column(s) have more than 30% nonzeros; the normal equations will be dense (§8.3)"]
+ipm-none-nopre optimal obj=111.54317063965235 known=111.54317055379263 it=12 mu=1.713e-10 pr=1.917e-12 dr=2.218e-13 xo=- t=0.01s | pviol=1.897e-11 dsign=6.156e-15 compl=5.035e-12 gap=1.089e-09 rc=5.242e-16 objRep=0.000e+00 objKnown=7.629e-10
+   warnings: ["2 column(s) have more than 30% nonzeros; the normal equations will be dense (§8.3)"]
+dual optimal obj=111.54317055379269 known=111.54317055379263 it=492 t=0.06s | pviol=2.161e-14 dsign=7.007e-16 compl=1.636e-16 gap=1.894e-15 rc=3.556e-16 objRep=0.000e+00 objKnown=5.051e-16 | basis primalInf=4.402e-14 dualInf=4.681e-01 xDiff=1.411e-13 objDiff=8.839e-16  BASIS-FAIL
+   warnings: []
+analyzer dense findings: ["warning column x1 has entries in 49.2% of the rows, which makes the interior point\'s normal equations dense", "warning column x2 has entries in 53.0% of the rows, which makes the interior point\'s normal equations dense"]
+rc=0

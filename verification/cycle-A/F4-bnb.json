@@ -1,0 +1,240 @@
+{
+ "area": "F4 Branch and bound (cycle A, claims first)",
+ "findings": [
+  {
+   "id": "A4-01",
+   "title": "An LP-integral node solution is rounded and accepted as incumbent without re-checking feasibility or recomputing the objective: big-M model reported optimal at an infeasible point, objective off by a factor of 200",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "README §4 Limits/Results: 'Optimal' means 'feasible and dual feasible to 1e-7'; README §2.5: .optimal means within gap; SolutionAnalysis.primal/objectiveValue describe the incumbent. The package's own oracle isIntegralAndFeasible (Tests/ZTronLPBranchAndBoundTests/BranchAndBoundTests.swift:60-65) requires row violation <= 1e-6.",
+   "observed": "Fixed-charge model min 100y + x, x + 0*z >= 0.5, x - 1e6*y <= 0, y binary, x in [0,10]: all 11 configurations (Simplex primal/dual, InteriorPoint, deterministic and parallel, threads 1-8, engine presolve off, every branching rule, heuristics off) return .optimal, objective 0.50005, bound 0.50005, primal y=0, x=0.5 (row violation 0.5; c.x = 0.5, not the reported 0.50005), incumbent source 'lp'. The true optimum is y=1, x=0.5, objective 100.5. Second shape: min x1+x2, 1e7*x1 + 1e7*x2 >= 5, x integer -> .optimal 5e-7 at (0,0), row violation 5; true optimum 1.",
+   "whyWrong": "The root LP puts y = 5e-7, within the 1e-6 integrality tolerance, so expand() rounds every integer column to the nearest integer and offers the point with the LP objective, never checking the rounded point against the rows. With a big-M coefficient the rounding moves the row activity by 0.5 (or 5), so a point infeasible by 0.5 becomes the 'optimal' incumbent and the reported objective matches neither the true optimum nor c.x of the returned point. The rounding heuristic and the dive do call isFeasible; this path does not.",
+   "location": "Sources/ZTronLPBranchAndBound/TreeSearch.swift:200-204",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 bigm",
+   "evidence": "oracle optimum 100.5 at [1.0, 0.5, 0.0]\nP-default: status optimal obj 0.50005 bound 0.50005 x [0.0, 0.5, 0.0] viol (bounds: 0.0, rows: 0.5) c.x 0.5 src [\"lp\"]\n(identical for D-default, I-default, P-det, D-det, I-det-nopre, P-nopre-t8, D-mostfrac-noheur, P-strong-bestbound, D-depthfirst-t2, P-t1)\noracle2 optimum 1.0 at [1.0, 0.0]; P-default: status optimal obj 5e-07 x [0.0, 0.0] viol (rows: 5.0)",
+   "confidence": "reproduced",
+   "documented": "Not documented. README §4 says optimal means feasible to 1e-7 and Tolerances.integrality is 1e-6, but nothing says an integral-within-tolerance LP point is rounded and returned unchecked."
+  },
+  {
+   "id": "A4-02",
+   "title": "Heuristic incumbents are accepted by a feasibility test relative to the row bound (1e-7*(1+|bound|)): integer-data knapsack reported optimal at 10,000,000 when the optimum is 9,999,999",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "README §2.3 Tolerances primalFeasibility 1e-7 and README §4 Results 'feasible ... to 1e-7'; .optimal = within gap (README §2.5, risk 10). The package's own test oracle treats feasibility as an absolute violation of at most 1e-6 (BranchAndBoundTests.swift:60-65), and so does the MIPLIB test (rows <= 1e-5, CorpusTests.swift:139-140).",
+   "observed": "max x1 + x2 s.t. 3x1 + 3x2 <= 29,999,999, x integer in [0,1e7]: 10 of 11 configurations -> .optimal 10,000,000 (row violation 1, source 'rounding'); heuristics: .none -> 9,999,999 (violation 0). min x s.t. 2x - z >= 20,000,001, z in [0,0.5] -> .optimal 10,000,000 (violation 1) vs true 10,000,001. min x s.t. 3x + y >= 1e9+1 (y fixed 0) -> .optimal 333,333,333 (violation 2) vs 333,333,334.",
+   "whyWrong": "TreeSearch.isFeasible accepts a row activity s when s >= rl - 1e-7*(1+|rl|), i.e. an absolute slack of 3.0 on a bound of 3e7 and 100 on 1e9. A rounded integer point that violates an integer-data row by whole units is accepted as incumbent, and because the objective is integral (objectiveStep 1) the true optimum's node is pruned as 'no better'. The returned objective is better than any feasible integer point and the returned point is infeasible in exact arithmetic.",
+   "location": "Sources/ZTronLPBranchAndBound/TreeSearch.swift:325-340 (isFeasible), used by roundingHeuristic at 363-366/417-418 and by dive at 448",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 relviol   (also: .build/release/F4 special, case huge-integer-bounds)",
+   "evidence": "knapsack cents: max sum x s.t. 3x1+3x2 <= 3e7-1 [true optimum 9999999.0]: P-default=optimal/10000000/rowviol 1/[\"rounding\"] ... D-mostfrac-noheur=optimal/9999999/rowviol 0/[\"lp\"]\n2x-z>=2e7+1, z in [0,0.5] [true optimum 10000001.0]: P-default=optimal/10000000/rowviol 1/[\"rounding\"] ...\n3x+y>=1e9+1 (y fixed 0) [true optimum 333333334.0]: P-default=optimal/333333333/rowviol 2/[\"rounding\"]",
+   "confidence": "reproduced",
+   "documented": "Not documented. README never says the feasibility tolerance is relative to the bound; the measure it implies (and that the tests use) is absolute."
+  },
+  {
+   "id": "A4-03",
+   "title": "objectiveStep counts an integer column's cost of magnitude <= 1e-9 as an integral 0, so pruning by a whole objective step discards better solutions: reported optimal 1, true optimum 0.75",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "BranchAndBound.swift:378-379 and SearchTree.swift:139-141: objectiveStep is 'the smallest amount by which the objective can improve' when every costed column is integer and the costs share a common divisor; README §2.5 .optimal = within gap.",
+   "observed": "min x1 + 1e-9*x2, x1 + (1e-9/1.5)*x2 >= 0.5, x1 in {0,1}, x2 integer in [0,1e9]: 10 of 11 configurations -> .optimal, objective 1, bound 1, x=(1,0), 1 node, incumbent from rounding. The point (0, 7.5e8) is feasible (maxViolation 0) with objective 0.75, and it is the optimum (x1=0 forces x2 >= 7.5e8). Only BranchAndBound(engine: Simplex(.dual), branching: .mostFractional, heuristics: .none) returns 0.75.",
+   "whyWrong": "objectiveStep's integrality test |c*scale - round| <= 1e-9*max(1, c*scale) accepts c = 1e-9 as the integer 0, the gcd ignores it and the step becomes 1. The cutoff incumbent - 1 + 1e-9 then prunes every node whose bound is within 1 of the incumbent, including the one holding a solution better by 0.25, far outside the 1e-4 gap. The result is a false .optimal.",
+   "location": "Sources/ZTronLPBranchAndBound/BranchAndBound.swift:380-408 (tolerance at 395); cutoff use at SearchTree.swift:312-319 and TreeSearch.swift:83-89",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 misc   (lines starting 'tinycost')",
+   "evidence": "tinycost P-default: optimal obj 1 bound 1 x [1.0, 0.0] nodes 1 src [\"rounding\"]\n... (same for D-default, I-default, P-det, D-det, I-det-nopre, P-nopre-t8, P-strong-bestbound, D-depthfirst-t2, P-t1)\ntinycost D-mostfrac-noheur: optimal obj 0.75 bound 0.75 x [0.0, 750000000.0] nodes 3 src [\"lp\"]\ncheck point (0, 7.5e8): viol (bounds: 0.0, rows: 0.0) obj 0.75",
+   "confidence": "reproduced",
+   "documented": "Not documented. The trigger is narrow: a cost of at most 1e-9 (after the scale at which the other costs become integral) on an integer column with a range large enough for it to matter, as with tiny tie-breaking terms."
+  },
+  {
+   "id": "A4-04",
+   "title": "A search that completes after pruning by the gap reports bound = incumbent and gap = 0: with Gap(relative: 0.05) a 3% suboptimal incumbent is reported with gap 0; with the default gap, 35 of 60 runs report a bound past the true optimum",
+   "severity": "high",
+   "category": "certificate",
+   "claim": "SolutionAnalysis.bound 'Proven bound' (Sources/ZTronLPCore/Solve/Analysis.swift:22); BranchAndBoundAnalysis 'proven bound' and gap (BranchAndBound.swift:93-101); README §3 risk 3: 'read bound and BranchAndBoundAnalysis.gap to know how far the incumbent may be from the optimum'; SearchTree.swift:171-173: 'the proven bound can never exceed [prunedBound]'.",
+   "observed": "Near-tie knapsack (maximise, 14 binaries, non-integral profits so objectiveStep = 0), seed 15, enumerated optimum 3670.050618. BranchAndBound(gap: Gap(relative: 0.05)) -> .optimal, objective 3560.059532, bound 3560.059532, gap 0, 1 node (also D-det). Default gap: 35 of 60 runs over 30 seeds return an incumbent below the optimum (all within the slack, as designed), and in every one of them bound == incumbent < optimum, e.g. obj = bound = 3670.045785 with optimum 3670.050618. With integral profits (objectiveStep > 0) the bounds are valid.",
+   "whyWrong": "Nodes whose bound lies in [incumbent - slack, incumbent) are pruned by the cutoff. When the pool then empties, the tree closes .complete and BranchAndBound overwrites the bound with the incumbent, discarding prunedBound (nodes pruned inside a worker by process()/expand() are never reported to the tree at all). The returned bound is then not a bound: it claims no better solution exists while one does, and gap = 0 says the incumbent is exact when it is up to the whole gap away. The existing check of the reported bound (aLooseGapStopsEarlyAndReportsIt, BranchAndBoundTests.swift:265-275) uses an integral-cost instance and so cannot hit this path.",
+   "location": "Sources/ZTronLPBranchAndBound/BranchAndBound.swift:350-352 (boundValue = incumbent.objective on .complete); TreeSearch.swift:139,177,214 (prunes not recorded in prunedBound); SearchTree.swift:402-407",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 gaploose   (and: .build/release/F4 gap 30)",
+   "evidence": "seed 15 rel 0.05 P: optimal obj 3560.059532 bound 3560.059532 gap 0 opt 3670.050618 trueRelGap 2.997e-02 boundValid false nodes 1\nseed 15 rel 0.05 D-det: optimal obj 3560.059532 bound 3560.059532 gap 0 ... boundValid false\nseed 15 default: suboptimal within gap obj 3670.045785 opt 3670.050618 ... BAD BOUND 3670.045785 < opt 3670.050618\nSUMMARY gap instances=30 defaultSuboptWithinGap=35 defaultOutsideGap=0 tightWrong=0 badBoundDefault=35 badBoundTight=0",
+   "confidence": "reproduced",
+   "documented": "Not documented. README §3 risk 10 and HANDBOOK decision 8 say .optimal is 'within the gap' (which holds), but both present bound/gap as the measure of the remaining distance, which is what is misreported."
+  },
+  {
+   "id": "A4-05",
+   "title": "A time limit or cancellation that lands while the root is being expanded loses the root node: .feasible(timeLimit) reported with bound = incumbent and gap 0 when the incumbent is 14% below the optimum",
+   "severity": "high",
+   "category": "certificate",
+   "claim": "README §3 risk 3: 'Set timeLimit or nodeLimit, and read bound and BranchAndBoundAnalysis.gap to know how far the incumbent may be from the optimum'; SolutionAnalysis.bound 'Proven bound'; SolveStatus.feasible 'optimality was not proven'.",
+   "observed": "randomMILP(rows 30, columns 120, seed 77, upper 1), maximise; a 120 s dual run proves 1097, root LP 1120.53. timeLimit 0.0005, 0.001, 0.002, 0.003 s (8 and 1 threads), 0.005 s (1 thread), and Task.cancel after 0.2, 0.5, 1 and 2 ms all give .feasible(timeLimit|cancelled), objective 947, bound 947, gap 0, nodesProcessed 1, nodesOpen 0. When the stop lands after the root's children are queued (0.005 s, 8 threads) the bound is a valid 1118.8 with gap 0.18.",
+   "whyWrong": "When search.expand() of the root throws a StopSignal (it runs rounding, a dive and strong-branching probes at node 0), rootChildren stays empty and tree.begin() is called with no children, so the tree holds no open node. provenBound then collapses to the incumbent and the analysis says the incumbent is proven optimal (bound = objective, gap 0) under a status that says it is not. The 'how far from the optimum' reading that risk 3 recommends for exactly this situation reports 0 instead of about 18%.",
+   "location": "Sources/ZTronLPBranchAndBound/BranchAndBound.swift:307-322 (root not re-queued on StopSignal); SearchTree.swift:402-407",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 rootstop",
+   "evidence": "reference (120 s, dual): optimal obj 1097 bound 1097 nodes 45888\nT 0.001 P: feasible(stoppedBy: timeLimit) obj 947 bound 947 gap 0 nodes 1 open 0 rootLP 1120.525624 boundValid false incumbents [\"rounding@0\"]\nT 0.005 P-t1: feasible(stoppedBy: timeLimit) obj 947 bound 947 gap 0 nodes 1 open 0\ncancel after 1.0 ms: feasible(stoppedBy: cancelled) obj 947 bound 947 gap 0 nodes 1 rootLP 1120.525624",
+   "confidence": "reproduced",
+   "documented": "Not documented."
+  },
+  {
+   "id": "A4-06",
+   "title": "deterministic: true results depend on SolveContext.threads: threads 1 and threads >= 2 give different LP-iteration counts and, on one instance, a different event sequence and incumbent history",
+   "severity": "low",
+   "category": "contract-violation",
+   "claim": "BranchAndBound.swift:144-146: 'Single worker ... identical results and identical event sequences across runs (rule C9)'; README §3 risk 8 and §4: deterministic: true 'runs a single worker with a fixed seed'.",
+   "observed": "8 runs per engine at threads 4,4,4,4,1,8,2,8: runs at 2, 4 and 8 threads are identical in every field. threads 1 differs: randomMILP(10,40,s9) lpIterations 6102 vs 6111 (P), 5597 vs 5595 (D), 5587 vs 5585 (I); randomMILP(14,50,s21) 18912 vs 18914 (P); mixed(8,30,s5) with P: event sequence and incumbent history differ. Objective, bound and primal were equal in all of them.",
+   "whyWrong": "Deterministic mode runs one worker but still sizes the ConcurrencyBudget from context.threads. With a free slot, strong-branching probes run on fresh engines in child tasks; with threads 1 they run inline on the worker's own engine, which changes the engine state the next node LP starts from. The same model and seed therefore give different runs on machines or contexts with a different thread count, the default being the active processor count.",
+   "location": "Sources/ZTronLPBranchAndBound/TreeSearch.swift:582-598; BranchAndBound.swift:296 (budget built from threads, not workerCount)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 det",
+   "evidence": "randomMILP(10,40,s9) P det: run 4 threads 1: iterations 6102 vs 6111\nmixed(8,30,s5) P det: run 4 threads 1: events differ (13 vs 13), incumbent history differs\nmixed(8,30,s5) D det: IDENTICAL over 8 runs (threads 4,4,4,4,1,8,2,8)",
+   "confidence": "reproduced",
+   "documented": "Not documented. The package test twentyRunsAreIdentical fixes threads = 4, so it cannot see this."
+  },
+  {
+   "id": "A4-07",
+   "title": "BranchAndBoundAnalysis.lpIterations, published as 'LP pivots' in README §5, adds a fixed estimate of 25 pivots per strong-branched candidate instead of the probes' real pivots",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "README §5 MIP table, column 'LP pivots', and the derived ratio claim 'The primal node engine ... takes between 0.60 and 1.65 times the LP pivots of the dual one'; README §5 'How current': 'LP pivots summed over the set within 1 %'.",
+   "observed": "Two-column model min -x - 0.1y, 2x + y <= 1, x binary, y in [0,1] (root LP takes 1 pivot): mostFractional reports lpIterations 3 (P) / 2 (D) over 3 nodes; strong(1) and the default pseudocost(4) report 28 (P) / 27 (D) over 2 nodes. The 25 extra come from the probe estimate.",
+   "whyWrong": "runProbes returns candidates.count * 2 * 50 / 4 as its iteration count whatever the probes did ('count the cap's worth at most'). The published pivot counts and the primal/dual ratios therefore mix real pivots with a constant per probed candidate, and the probe term is identical for both engines.",
+   "location": "Sources/ZTronLPBranchAndBound/TreeSearch.swift:597 and :637",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 iters",
+   "evidence": "mostFractional P: optimal obj -0.1 nodes 3 lpIterations 3 (root LP alone: 1 pivots)\nstrong(1) P: optimal obj -0.1 nodes 2 lpIterations 28\npseudocost(4) D: optimal obj -0.1 nodes 2 lpIterations 27",
+   "confidence": "reproduced",
+   "documented": "The code comment admits the estimate (TreeSearch.swift:596); README §5 presents the numbers as pivots."
+  },
+  {
+   "id": "A4-08",
+   "title": "Test memoryBudgetDegradesThenStops cannot fail if the memory budget is ignored, and no test checks the 'degrades' step",
+   "severity": "low",
+   "category": "test-integrity",
+   "claim": "Test name (Tests/ZTronLPBranchAndBoundTests/BranchAndBoundTests.swift:241) and its comment: 'with a tiny budget the pool first drops parent states, then stops with .memoryBudget'.",
+   "observed": "The assertion is `analysis.status.stopReason == .memoryBudget || analysis.status == .optimal` (line 246). The second disjunct is exactly what a solve that ignores the budget returns: the same instance without a binding budget is .optimal (limits mode: 'memory budget 200000 det: optimal obj 593'). Today the first disjunct holds (2,000 B with that configuration -> noSolution(memoryBudget) after 18 nodes). Nothing asserts that parent states are dropped before the stop. The liveness test L7 aBudgetTooSmallForTheTreeStopsWithTheIncumbent (Tests/ZTronLPLivenessTests/L3ToL10Tests.swift:207) does assert .memoryBudget strictly, so the suite as a whole would still catch an ignored budget.",
+   "whyWrong": "The test named for the degrade-then-stop behaviour passes for a solver with no memory budget at all and never observes the degrade step.",
+   "location": "Tests/ZTronLPBranchAndBoundTests/BranchAndBoundTests.swift:246",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && sed -n 241,250p Tests/ZTronLPBranchAndBoundTests/BranchAndBoundTests.swift; then cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 limits   (memory lines)",
+   "evidence": "#expect(analysis.status.stopReason == .memoryBudget || analysis.status == .optimal)\nmemory budget 2000 test-config: noSolution(stoppedBy: memoryBudget) obj nil nodes 18 open 19\nmemory budget 200000 det: optimal obj 593 nodes 2119 open 0",
+   "confidence": "code-reading-only",
+   "documented": ""
+  },
+  {
+   "id": "A4-09",
+   "title": ".boundImproved events of a parallel search can arrive out of order (a later event reports a weaker bound)",
+   "severity": "low",
+   "category": "concurrency",
+   "claim": "SolverEvent.boundImproved names an improvement; EventSink 'serializes the events of one solve ... and enforces their order' (Sources/ZTronLPCore/Solve/Strategy.swift:222-224), which only promises .finished last.",
+   "observed": "20 parallel runs (8 threads) on mod008, p0201, misc03, lseu and randomMILP(14,50,s21): in 2 runs one .boundImproved event reports a lower bound than the one before it (mod008 run 0: 941 bound events, 1 drop; lseu run 2: 3382 events, 1 drop). newIncumbent events, the final event and the event counts were consistent.",
+   "whyWrong": "Each worker reads progressEvents() from the tree actor and emits them to the sink in a separate hop, so two workers can deliver their events in the opposite order to the one in which the tree produced them. A consumer plotting the bound sees it move backwards.",
+   "location": "Sources/ZTronLPBranchAndBound/TreeSearch.swift:119-120",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 events",
+   "evidence": "mod008 run 0: bound events 941 drops 1; incumbent events 4 non-improving 0; last event 307 final 307\nlseu run 2: bound events 3382 drops 1\nSUMMARY events runs=20 boundNonMonotone=2 incumbentNonImproving=0 lastIncumbentEventNotFinal=0",
+   "confidence": "reproduced",
+   "documented": "Not documented; no explicit monotonicity claim exists, hence low."
+  },
+  {
+   "id": "A4-10",
+   "title": "Every unbounded relaxation is answered .infeasibleOrUnbounded, even for an evidently unbounded integer model; the status's doc comment attributes it to the interior point only",
+   "severity": "info",
+   "category": "api",
+   "claim": "SolveStatus.infeasibleOrUnbounded: 'The solve could not tell infeasible from unbounded (interior point without a homogeneous self-dual embedding)' (Sources/ZTronLPCore/Solve/Status.swift:11-13).",
+   "observed": "min -x - y, x - y <= 1, x,y >= 0 integer (unbounded along x = y = k), a mixed model with an unbounded continuous column, and an LP-unbounded but integer-infeasible model (2x - 2y = 1): all 11 configurations -> .infeasibleOrUnbounded. No false .optimal or .unbounded.",
+   "whyWrong": "The answer is never wrong, but B&B is a second source of this status that its doc comment does not mention, and it does not try to find an integer point when one exists trivially.",
+   "location": "Sources/ZTronLPBranchAndBound/BranchAndBound.swift:255-261",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F4 -c release && perl -e 'alarm shift; exec @ARGV' 900 .build/release/F4 special",
+   "evidence": "milp-unbounded [expect unbounded|infeasibleOrUnbounded]: P-default=infeasibleOrUnbounded/nil ... P-t1=infeasibleOrUnbounded/nil",
+   "confidence": "reproduced",
+   "documented": "Tested as intended behaviour (BranchAndBoundTests.swift:110-111)."
+  }
+ ],
+ "claimsHeld": [
+  {
+   "claim": "P1: .optimal answers equal exhaustive enumeration (objective within gap; in practice exact), incumbent feasible to 1e-6 and integral, bound valid, objective = c.x. Covers binary, general integer with negative, asymmetric and fractional bounds, mixed integer (continuous part solved by independent vertex enumeration), equality-constrained, min and max; 11 configurations (Simplex primal/dual and InteriorPoint engines, deterministic and parallel, threads 1/2/4/8, engine presolve off, mostFractional/strong/pseudocost, bestBound/depthFirst/plunging, heuristics none)",
+   "howChecked": ".build/release/F4 enum all 60 0 and enum all 150 1000: 840 instances, 9,240 runs, 0 failures, 0 invalid bounds"
+  },
+  {
+   "claim": "P2: infeasible MILPs (random infeasible right-hand sides, parity 2x1+2x2+2x3+2x4=7, LP-infeasible, empty integer range) return .infeasible, never a solution",
+   "howChecked": "enum batches (100 infeasible instances x 11 configs) and .build/release/F4 special"
+  },
+  {
+   "claim": "P3: an unbounded relaxation never yields a false .optimal or .unbounded (MILP unbounded, LP-unbounded/MILP-infeasible, mixed unbounded continuous -> .infeasibleOrUnbounded)",
+   "howChecked": ".build/release/F4 special"
+  },
+  {
+   "claim": "Edge models solve correctly: a free integer column, no rows, all columns fixed, maximize with objective constant c0, integer column on [-0.5,0.5]",
+   "howChecked": ".build/release/F4 special, 11 configs, hand-derived optima"
+  },
+  {
+   "claim": "P4a (README risk 10/§2.5): the default gap never accepts an incumbent outside max(1e-6, 1e-4*max(1,|inc|)); it does accept suboptimal ones inside it, as documented",
+   "howChecked": ".build/release/F4 gap 30 on near-tie knapsacks vs enumeration: 60 default runs, 0 outside, 35 inside"
+  },
+  {
+   "claim": "P4b: a custom tight Gap (0/0, 1e-12/1e-12, IPM 0/1e-9) finds the true optimum",
+   "howChecked": ".build/release/F4 gap 30: 90 tight runs, 0 wrong"
+  },
+  {
+   "claim": "Bounds are valid when the objective is integral (objectiveStep > 0), including under loose gaps (Gap 0.01: bound 36757 >= optimum 36706), and in the gapReached path",
+   "howChecked": ".build/release/F4 gaploose (integral variant) and gap runs with rel 0.01"
+  },
+  {
+   "claim": "P5: nodeLimit gives .feasible(.nodeLimit) with a feasible incumbent and a valid bound, or .noSolution(.nodeLimit), or a correct .optimal; nodesProcessed <= limit + workers",
+   "howChecked": ".build/release/F4 limits: randomMILP(5x15) 12 seeds x L in {1,2,3,5,10,40} x 3 configs, 0 bad"
+  },
+  {
+   "claim": "P6: timeLimit is honoured (T = 0..0.5 s: wall within about 5 ms of T for P, D-det and I engines), status discipline holds, and cancellation stops in 0.2-0.5 ms with .cancelled",
+   "howChecked": ".build/release/F4 limits (scratch f4-limits.txt)"
+  },
+  {
+   "claim": "P7: memoryBudgetBytes stops the search with .memoryBudget (budgets 1 B to 200 KB, 0 and negative), keeping the incumbent, never a false .optimal",
+   "howChecked": ".build/release/F4 limits and edge"
+  },
+  {
+   "claim": "P8a (risk 8, rule C9): deterministic: true is identical run to run at a fixed thread count (objective, nodes, iterations, primal, bound, events, incumbent history) for the P, D and I engines; threads 2, 4 and 8 agree",
+   "howChecked": ".build/release/F4 det (3 instances x 3 engines x 8 runs)"
+  },
+  {
+   "claim": "P8b: parallel runs agree on the objective",
+   "howChecked": ".build/release/F4 det: 5 runs each at threads 2,4,8,8,8, spread 0"
+  },
+  {
+   "claim": "P9: ReferenceValues.miplib3 optima, row and column counts and pureInteger flags match the published MIPLIB 3 values",
+   "howChecked": "Independent knowledge of the MIPLIB 3 table (p0033 3089, stein27 18, stein45 30, enigma 0, lseu 1120, mod008 307, flugpl 1201500, egout 568.1007, misc03 3360, p0201 7615; flugpl, egout and misc03 mixed)"
+  },
+  {
+   "claim": "P9: all 10 MIPLIB 3 instances solve to the published optimum with both node engines (.optimal, relerr <= 3.6e-16, row violation <= 1.8e-12, bound == objective, incumbent events decreasing)",
+   "howChecked": ".build/release/F4 miplib all P,D 300: stein45 33.8 s (P) and 26.3 s (D) at load ~14, against README 19.6/15.9 s quiet; within the 60 s acceptance, and load explains the gap"
+  },
+  {
+   "claim": "README §2.5: a root LP that hits its iteration cap ends with .numericalFailure",
+   "howChecked": ".build/release/F4 misc: Simplex(.primal, maxIterations: 1/3/10) -> numericalFailure('the root LP did not finish within its iteration limit')"
+  },
+  {
+   "claim": "README §2.5: deterministic: true searches depth-first whatever nodeSelection says",
+   "howChecked": ".build/release/F4 misc: bestBound, depthFirst, plunging(32) and plunging(2) give identical objective, nodes, iterations, events and incumbent nodes"
+  },
+  {
+   "claim": "Event stream: .finished last and unique; newIncumbent events improving, last one equals the final objective, count equals incumbentHistory (parallel runs)",
+   "howChecked": ".build/release/F4 events: 20 runs"
+  },
+  {
+   "claim": "Robustness: odd parameters never trap or hang (nodeLimit 0/-1, odd Heuristics, strong 0/1000, pseudocost -5/1000, plunging -1, Gap negative/NaN/huge, threads 0/-3/64, seed UInt64.max, memory 0/-1, timeLimit -1/NaN/inf)",
+   "howChecked": ".build/release/F4 edge"
+  },
+  {
+   "claim": "Thread Sanitizer reports nothing on the B&B, CP-SAT, integration and liveness targets",
+   "howChecked": "verification/baseline/05-tsan.log: rc=0, 0 ThreadSanitizer lines, B&B suite 26 tests passed"
+  }
+ ],
+ "notChecked": [
+  "Metal batchedActivity screening of rounding batches: every probe ran with SolveContext.metal = .off.",
+  "BranchAndBound's own bound-only presolve cannot be switched off through the public API; 'presolve off' toggled only the engine flag (Simplex/InteriorPoint presolve: false), which affects the IPM root and the root analysis, not the node SimplexEngine.",
+  "The node-LP path 'fails three times -> .numericalFailure' (rule L5): Simplex(maxIterations:) stops the root first, so it could not be triggered from outside; L5LimitRetryTests in the package cover it.",
+  "Exact accounting of open-node bytes against memoryBudgetBytes: openBytes is internal; only status behaviour was checked.",
+  "A debug build (assertions enabled) of the enumeration batches; all probe runs used the release build.",
+  "Custom NodeLPStrategy conformers, and InteriorPoint as node engine on the full MIPLIB set (only P and D were run on it).",
+  "TSAN was not re-run by this agent; the baseline result was used.",
+  "Devices other than this M3 Mac; models larger than the MIPLIB 3 set."
+ ],
+ "overflow": [
+  "low doc: SolutionAnalysis.bound 'Proven bound; equals objectiveValue when optimal' (Sources/ZTronLPCore/Solve/Analysis.swift:22) is false for a B&B .optimal ended by gapReached, e.g. Gap(rel 0.01) seed 15: obj 3650.05, bound 3675.06 (F4 gaploose).",
+  "low test-tolerance: the MIPLIB B&B test accepts 1e-4 relative error (CorpusTests.swift:135-136), i.e. +-120 on flugpl, though both engines reach the reference to 3.6e-16; a wrong answer within one objective step on flugpl/egout would pass.",
+  "info: the 'lp' incumbent path reports the LP objective rather than c.x of the rounded point (0.50005 vs 0.5 in A4-01); harmless when rounding moves nothing, wrong otherwise.",
+  "info: debug builds skip stein45/lseu/enigma/mod008 (CorpusTests.swift:125) by returning, with no known issue recorded; HANDBOOK documents the reduced debug corpus, so this is not a finding."
+ ],
+ "summary": "9,240 runs on 840 random small MILPs, checked against exhaustive enumeration with an independent LP for the continuous part, found nothing wrong: every status, objective, point and bound was correct, across 11 configurations. Limits, determinism at a fixed thread count and all 10 MIPLIB 3 instances (exact optima, both node engines) also held. Targeted constructions broke three correctness paths, each giving a false .optimal. (1) An LP point whose integer columns sit within the 1e-6 integrality tolerance is rounded and returned without re-checking the rows: a big-M model reports 0.50005 at an infeasible point, against a true optimum of 100.5. (2) Heuristic incumbents pass a feasibility test relative to the row bound: a knapsack with rhs 29,999,999 reports 10,000,000, violating its row by 1. (3) objectiveStep reads a cost of 1e-9 as an integral 0: optimal 1 against 0.75. Two paths misreport the bound and gap. A search that completes after pruning by the gap sets bound = incumbent and gap = 0 (3% off with Gap 0.05). A stop during root expansion drops the root node (feasible, bound = incumbent, gap 0, 14% off). Four low items: determinism depends on the thread count, the published 'LP pivots' include estimates, one memory test is weak, and bound events can arrive out of order. One info item on the .infeasibleOrUnbounded status. Log: /Users/admin/Documents/ZTronLPOptimizer/verification/cycle-A/F4-bnb.md; probes: /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A/Slots/F4/."
+}

@@ -1,0 +1,6 @@
+knap N=10000000 ub=true: status=optimal obj=10000000 scaling=geometricEquilibration rowFactors=[0.25] colFactors=[1.0, 1.0] scaledRowViolation=0.25 vs primalFeasibility 1e-7 -> 2.5e+06x over
+knap N=10000000 ub=true: status=optimal obj=10000000 scaling=equilibration rowFactors=[0.25] colFactors=[1.0, 1.0] scaledRowViolation=0.25 vs primalFeasibility 1e-7 -> 2.5e+06x over
+production 7x+5y, 3x+2y<=20000001: status=optimal obj=50000005 scaling=geometricEquilibration rowFactors=[0.25] colFactors=[1.0, 1.0] scaledRowViolation=0.25 vs primalFeasibility 1e-7 -> 2.5e+06x over
+production 7x+5y, 3x+2y<=20000001: status=optimal obj=50000005 scaling=equilibration rowFactors=[0.25] colFactors=[1.0, 1.0] scaledRowViolation=0.25 vs primalFeasibility 1e-7 -> 2.5e+06x over
+mixed min x, 2x-z>=20000001, z<=0.5: status=optimal obj=10000000 scaling=geometricEquilibration rowFactors=[0.5] colFactors=[1.0, 2.0] scaledRowViolation=0.5 vs primalFeasibility 1e-7 -> 5.0e+06x over
+mixed min x, 2x-z>=20000001, z<=0.5: status=optimal obj=10000000 scaling=equilibration rowFactors=[0.5] colFactors=[1.0, 2.0] scaledRowViolation=0.5 vs primalFeasibility 1e-7 -> 5.0e+06x over

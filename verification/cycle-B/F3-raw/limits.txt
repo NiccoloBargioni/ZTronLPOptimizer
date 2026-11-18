@@ -1,0 +1,43 @@
+instance m=1500 n=2500 nnz=14869
+full lite: optimal it=19 xo=optimal/416 t=1.171 objErr=6.740e-15
+limit=0.001 InteriorPoint(crossover: .lite) -> noSolution(timeLimit) it=0 xo=- t=0.021 W=[]
+limit=0.001 InteriorPoint(crossover: .none) -> noSolution(timeLimit) it=0 xo=- t=0.025 W=[]
+limit=0.010 InteriorPoint(crossover: .lite) -> noSolution(timeLimit) it=0 xo=- t=0.039 W=[]
+limit=0.010 InteriorPoint(crossover: .none) -> noSolution(timeLimit) it=0 xo=- t=0.052 W=[]
+limit=0.050 InteriorPoint(crossover: .lite) -> noSolution(timeLimit) it=1 xo=- t=0.070 W=[]
+limit=0.050 InteriorPoint(crossover: .none) -> noSolution(timeLimit) it=1 xo=- t=0.061 W=[]
+limit=0.100 InteriorPoint(crossover: .lite) -> noSolution(timeLimit) it=6 xo=- t=0.104 W=[]
+limit=0.100 InteriorPoint(crossover: .none) -> noSolution(timeLimit) it=9 xo=- t=0.105 W=[]
+limit=0.200 InteriorPoint(crossover: .lite) -> noSolution(timeLimit) it=18 xo=- t=0.208 W=[]
+limit=0.200 InteriorPoint(crossover: .none) -> noSolution(timeLimit) it=19 xo=- t=0.213 W=[]
+limit=0.300 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/16 t=0.301 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.300 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.261 W=[]
+limit=0.398 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/74 t=0.399 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.398 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.205 W=[]
+limit=0.495 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/101 t=0.515 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.495 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.198 W=[]
+limit=0.593 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/177 t=0.594 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.593 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.253 W=[]
+limit=0.690 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/223 t=0.691 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.690 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.191 W=[]
+limit=0.788 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/270 t=0.790 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.788 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.203 W=[]
+limit=0.885 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/293 t=0.886 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.885 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.284 W=[]
+limit=0.983 InteriorPoint(crossover: .lite) -> optimal it=19 xo=noSolution(timeLimit)/290 t=0.984 W=["crossover-lite ended with noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit); returning the interior solution"]
+limit=0.983 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.230 W=[]
+limit=1.080 InteriorPoint(crossover: .lite) -> optimal it=19 xo=optimal/416 t=1.042 W=[]
+limit=1.080 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.181 W=[]
+limit=1.178 InteriorPoint(crossover: .lite) -> optimal it=19 xo=optimal/416 t=1.072 W=[]
+limit=1.178 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.220 W=[]
+limit=1.276 InteriorPoint(crossover: .lite) -> optimal it=19 xo=optimal/416 t=1.193 W=[]
+limit=1.276 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.226 W=[]
+limit=1.373 InteriorPoint(crossover: .lite) -> optimal it=19 xo=optimal/416 t=1.032 W=[]
+limit=1.373 InteriorPoint(crossover: .none) -> optimal it=19 xo=- t=0.206 W=[]
+maxIterations=1 -> noSolution(iterationLimit) it=1
+maxIterations=3 -> noSolution(iterationLimit) it=3
+maxIterations=10 -> noSolution(iterationLimit) it=10
+cancel after 0.005s -> noSolution(cancelled) solveSeconds=0.014 latency=0.005
+cancel after 0.05s -> noSolution(cancelled) solveSeconds=0.056 latency=0.004
+cancel after 0.2s -> optimal solveSeconds=0.220 latency=0.009
+rc=0

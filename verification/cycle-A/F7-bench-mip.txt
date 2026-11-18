@@ -1,0 +1,17 @@
+# ZTronLPOptimizer benchmarks (specification §14.3)
+machine: arm64, 8 cores, 24 GB; build: release
+
+## MIPLIB 3 set, branch and bound, primal vs dual node strategy
+acceptance for v1: both solve every instance in ≤ 60 s on M1; the table reports the ratio
+instance primal: status  nodes   LP it    s       dual: status  nodes   LP it    s       it ratio objective (reference)
+p0033    optimal         773     8502     0.01    optimal       462     4929     0.01    1.72     3089.0000 (3089.0)
+stein27  optimal         4155    26152    0.24    optimal       4251    17969    0.22    1.46     18.0000 (18.0)
+stein45  optimal         55638   549457   35.92   optimal       56557   338862   32.57   1.62     30.0000 (30.0)
+enigma   optimal         6630    187990   0.44    optimal       813     36819    0.07    5.11     -0.0000 (0.0)
+lseu     optimal         27176   108434   0.90    optimal       29823   78386    0.80    1.38     1120.0000 (1120.0)
+mod008   optimal         6374    43174    0.26    optimal       6603    28710    0.33    1.50     307.0000 (307.0)
+flugpl   optimal         3326    3908     0.07    optimal       4126    4129     0.09    0.95     1201500.0000 (1201500.0)
+egout    optimal         6633    69896    1.41    optimal       6102    42157    1.13    1.66     568.1007 (568.1007)
+misc03   optimal         754     36187    0.71    optimal       1075    33333    0.73    1.09     3360.0000 (3360.0)
+p0201    optimal         275     24652    0.47    optimal       406     20894    0.48    1.18     7615.0000 (7615.0)
+(mip: 76.891 s wall, peak memory so far 949 MB)

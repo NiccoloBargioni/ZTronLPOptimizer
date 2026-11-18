@@ -1,0 +1,6 @@
+instance m 30 n 120 sense maximize integer columns 120
+B&B dual 150 s: optimal obj 1097.000000 bound 1097.000000 gap 0.000000 nodes 48368 open 0 rootLP 1120.525624 wall 0.995455
+  point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1097.000000
+CPSAT 150 s: optimal obj 1097.000000 bound 1097.000000 wall 6.268130
+  point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 1097.000000
+exit 0

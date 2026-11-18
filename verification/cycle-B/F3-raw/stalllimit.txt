@@ -1,0 +1,33 @@
+seed=1 full: optimal it=38 xo=optimal/414 stalled=true t=0.047
+seed=2 full: optimal it=44 xo=optimal/333 stalled=true t=0.050
+seed=3 full: optimal it=38 xo=optimal/489 stalled=true t=0.052
+   limit=0.016 -> noSolution(timeLimit) it=36 xo=-
+   limit=0.018 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/7
+   limit=0.021 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/19
+   limit=0.023 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/71
+   limit=0.026 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/115 <-- .feasible from InteriorPoint
+   limit=0.029 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/187 <-- .feasible from InteriorPoint
+   limit=0.031 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/203 <-- .feasible from InteriorPoint
+   limit=0.034 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/251 <-- .feasible from InteriorPoint
+   limit=0.036 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/275 <-- .feasible from InteriorPoint
+   limit=0.039 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/315 <-- .feasible from InteriorPoint
+   limit=0.042 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/379 <-- .feasible from InteriorPoint
+   limit=0.044 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/419 <-- .feasible from InteriorPoint
+   limit=0.047 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/451 <-- .feasible from InteriorPoint
+   limit=0.050 -> optimal it=38 xo=optimal/489
+seed=4 full: optimal it=64 xo=optimal/524 stalled=true t=0.060
+   limit=0.018 -> noSolution(timeLimit) it=44 xo=-
+   limit=0.021 -> noSolution(timeLimit) it=54 xo=-
+   limit=0.024 -> noSolution(timeLimit) it=63 xo=-
+   limit=0.027 -> noSolution(timeLimit) it=64 xo=noSolution(timeLimit)/19
+   limit=0.030 -> noSolution(timeLimit) it=64 xo=noSolution(timeLimit)/55
+   limit=0.033 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/103 <-- .feasible from InteriorPoint
+   limit=0.036 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/139 <-- .feasible from InteriorPoint
+   limit=0.039 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/191 <-- .feasible from InteriorPoint
+   limit=0.042 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/231 <-- .feasible from InteriorPoint
+   limit=0.045 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/303 <-- .feasible from InteriorPoint
+   limit=0.048 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/367 <-- .feasible from InteriorPoint
+   limit=0.051 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/391 <-- .feasible from InteriorPoint
+   limit=0.054 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/431 <-- .feasible from InteriorPoint
+   limit=0.057 -> feasible(timeLimit) it=64 xo=feasible(timeLimit)/503 <-- .feasible from InteriorPoint
+seed=5 full: optimal it=42 xo=optimal/318 stalled=true t=0.039

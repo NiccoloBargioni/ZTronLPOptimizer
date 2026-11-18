@@ -1,0 +1,355 @@
+Building for debugging...
+[Computing dependencies]
+[Provisioning 4 / 49]
+[Using on-disk description]
+[1 / 4]
+[3 / 5] OrderedCollections
+[7 / 9] ZTronLPConditioningTests-product
+[12 / 14] ZTronLPIntegrationTests-product
+[20 / 22] ZTronLPMetalTests-product
+[29 / 31] ZTronLPTestSupportTests-product
+Build complete! (1,74 s)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite SmallPivotTests started.
+◇ Suite SimplexConstructedOptimaTests started.
+◇ Suite ToleranceConsistencyTests started.
+◇ Suite RefinementTests started.
+◇ Suite SimplexTerminationTests started.
+◇ Suite SimplexEngineTests started.
+◇ Suite NetlibSimplexTests started.
+◇ Test badlyScaledInstances() started.
+◇ Test aRowNothingCanRepairStillProvesInfeasibility(_:) started.
+◇ Test everyConfigurationAgreesOnConstructedOptima() started.
+◇ Test constructedOptima(_:) started.
+◇ Test lowerFeasibilityTolerancesPullTheOthersDown() started.
+◇ Test timeLimitIsAResult(_:) started.
+◇ Suite SimplexBasicsTests started.
+◇ Test iterationLimitOnTheEngineReturnsLimit() started.
+◇ Test engineHotPathKeepsTheFactorization() started.
+◇ Test theDefaultsAreConsistentAsTheyAre() started.
+◇ Test threeResidualFailuresEndTheSolve(_:) started.
+◇ Test case passing 1 argument method → .primal to aRowNothingCanRepairStillProvesInfeasibility(_:) started.
+◇ Test cancellationIsAResultAndTheStrategyIsReusable(_:) started.
+◇ Test eventsAreOrderedAndFinishOnce(_:) started.
+◇ Test dualReachesThePublishedOptimum(_:) started.
+◇ Suite KernelSeamTests started.
+◇ Test dualWithoutPresolveOrScaling(_:) started.
+◇ Test primalWithoutPresolveOrScaling(_:) started.
+◇ Test aRowThatOnlyASmallEntryCanRepairIsNotAProofOfInfeasibility(_:) started.
+◇ Test case passing 1 argument method → .primal to constructedOptima(_:) started.
+◇ Test case passing 1 argument method → .dual to aRowNothingCanRepairStillProvesInfeasibility(_:) started.
+◇ Test primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument method → .dual to constructedOptima(_:) started.
+◇ Test iterationLimitIsAResult(_:) started.
+◇ Test bealeCyclingExampleTerminates(_:) started.
+◇ Test degenerateInstanceTerminates(_:) started.
+◇ Test kleeMintyTerminates(_:) started.
+◇ Test case passing 1 argument method → .primal to timeLimitIsAResult(_:) started.
+◇ Suite WarmStartTests started.
+◇ Test case passing 1 argument method → .dual to timeLimitIsAResult(_:) started.
+◇ Test case passing 1 argument method → .primal to threeResidualFailuresEndTheSolve(_:) started.
+◇ Test case passing 1 argument method → .dual to threeResidualFailuresEndTheSolve(_:) started.
+◇ Test case passing 1 argument method → .primal to cancellationIsAResultAndTheStrategyIsReusable(_:) started.
+◇ Test case passing 1 argument method → .dual to cancellationIsAResultAndTheStrategyIsReusable(_:) started.
+◇ Test case passing 1 argument method → .primal to eventsAreOrderedAndFinishOnce(_:) started.
+◇ Test case passing 1 argument method → .dual to eventsAreOrderedAndFinishOnce(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "afiro", rows: 27, columns: 32, optimalObjective: -464.75314286, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50a", rows: 50, columns: 48, optimalObjective: -64.575077059, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50b", rows: 50, columns: 48, optimalObjective: -70.0, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "afiro", rows: 27, columns: 32, optimalObjective: -464.75314286, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50a", rows: 50, columns: 48, optimalObjective: -64.575077059, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc105", rows: 105, columns: 103, optimalObjective: -52.202061212, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50b", rows: 50, columns: 48, optimalObjective: -70.0, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc105", rows: 105, columns: 103, optimalObjective: -52.202061212, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "kb2", rows: 43, columns: 41, optimalObjective: -1749.9001299, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "kb2", rows: 43, columns: 41, optimalObjective: -1749.9001299, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "adlittle", rows: 56, columns: 97, optimalObjective: 225494.96316, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "adlittle", rows: 56, columns: 97, optimalObjective: 225494.96316, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "blend", rows: 74, columns: 83, optimalObjective: -30.812149846, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "blend", rows: 74, columns: 83, optimalObjective: -30.812149846, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "share2b", rows: 96, columns: 79, optimalObjective: -415.73224074, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stocfor1", rows: 117, columns: 111, optimalObjective: -41131.976219, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "scagr7", rows: 129, columns: 140, optimalObjective: -2331389.8243, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "beaconfd", rows: 173, columns: 262, optimalObjective: 33592.485807, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "israel", rows: 174, columns: 142, optimalObjective: -896644.82186, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "degen2", rows: 444, columns: 534, optimalObjective: -1435.178, pureInteger: false) to dualWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "afiro", rows: 27, columns: 32, optimalObjective: -464.75314286, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50a", rows: 50, columns: 48, optimalObjective: -64.575077059, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50b", rows: 50, columns: 48, optimalObjective: -70.0, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc105", rows: 105, columns: 103, optimalObjective: -52.202061212, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "share2b", rows: 96, columns: 79, optimalObjective: -415.73224074, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "kb2", rows: 43, columns: 41, optimalObjective: -1749.9001299, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stocfor1", rows: 117, columns: 111, optimalObjective: -41131.976219, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "adlittle", rows: 56, columns: 97, optimalObjective: 225494.96316, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "scagr7", rows: 129, columns: 140, optimalObjective: -2331389.8243, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "blend", rows: 74, columns: 83, optimalObjective: -30.812149846, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "beaconfd", rows: 173, columns: 262, optimalObjective: 33592.485807, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "share2b", rows: 96, columns: 79, optimalObjective: -415.73224074, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "israel", rows: 174, columns: 142, optimalObjective: -896644.82186, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stocfor1", rows: 117, columns: 111, optimalObjective: -41131.976219, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "scagr7", rows: 129, columns: 140, optimalObjective: -2331389.8243, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "beaconfd", rows: 173, columns: 262, optimalObjective: 33592.485807, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "israel", rows: 174, columns: 142, optimalObjective: -896644.82186, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "degen2", rows: 444, columns: 534, optimalObjective: -1435.178, pureInteger: false) to primalWithoutPresolveOrScaling(_:) started.
+◇ Test case passing 1 argument method → .primal to aRowThatOnlyASmallEntryCanRepairIsNotAProofOfInfeasibility(_:) started.
+◇ Test case passing 1 argument method → .dual to aRowThatOnlyASmallEntryCanRepairIsNotAProofOfInfeasibility(_:) started.
+◇ Test aPassThatCannotFinishLeavesTheAnswerAsItWas(_:) started.
+◇ Test aStopInsideThePassKeepsTheAnswerAndRefactorsNothing(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "afiro", rows: 27, columns: 32, optimalObjective: -464.75314286, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50a", rows: 50, columns: 48, optimalObjective: -64.575077059, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50b", rows: 50, columns: 48, optimalObjective: -70.0, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc105", rows: 105, columns: 103, optimalObjective: -52.202061212, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "kb2", rows: 43, columns: 41, optimalObjective: -1749.9001299, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "adlittle", rows: 56, columns: 97, optimalObjective: 225494.96316, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "blend", rows: 74, columns: 83, optimalObjective: -30.812149846, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "share2b", rows: 96, columns: 79, optimalObjective: -415.73224074, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stocfor1", rows: 117, columns: 111, optimalObjective: -41131.976219, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "scagr7", rows: 129, columns: 140, optimalObjective: -2331389.8243, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "beaconfd", rows: 173, columns: 262, optimalObjective: 33592.485807, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "israel", rows: 174, columns: 142, optimalObjective: -896644.82186, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "degen2", rows: 444, columns: 534, optimalObjective: -1435.178, pureInteger: false) to primalReachesThePublishedOptimum(_:) started.
+◇ Test withoutThePassTheVertexIsOnlyOptimalWithinTheTolerances(_:) started.
+◇ Test runsWithAnIterationBudgetAreNotRefined() started.
+◇ Test theConditionEstimateDoesNotNeedADenseBasis() started.
+◇ Test wellConditionedProblemsAreLeftAlone() started.
+✔ Test aRowNothingCanRepairStillProvesInfeasibility(_:) with 2 test cases passed after 0.904 seconds.
+◇ Test case passing 1 argument method → .primal to iterationLimitIsAResult(_:) started.
+◇ Test case passing 1 argument method → .dual to iterationLimitIsAResult(_:) started.
+◇ Test case passing 1 argument method → .primal to bealeCyclingExampleTerminates(_:) started.
+◇ Test case passing 1 argument method → .dual to bealeCyclingExampleTerminates(_:) started.
+◇ Test case passing 1 argument method → .primal to degenerateInstanceTerminates(_:) started.
+◇ Test case passing 1 argument method → .dual to degenerateInstanceTerminates(_:) started.
+◇ Test case passing 1 argument method → .primal to kleeMintyTerminates(_:) started.
+◇ Test case passing 1 argument method → .dual to kleeMintyTerminates(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "degen2", rows: 444, columns: 534, optimalObjective: -1435.178, pureInteger: false) to dualReachesThePublishedOptimum(_:) started.
+✔ Test lowerFeasibilityTolerancesPullTheOthersDown() passed after 1.061 seconds.
+◇ Test infeasibilityFoundByPresolveStillCarriesARay(_:) started.
+◇ Test textbookProblem(_:) started.
+◇ Test emptyColumnWithImprovingCostIsUnbounded(_:) started.
+◇ Test unboundedProblemCarriesAPrimalRay(_:) started.
+◇ Test problemWithoutRows(_:) started.
+◇ Test infeasibleProblemCarriesADualRay(_:) started.
+◇ Test integerColumnsAreRelaxedWithAWarning() started.
+◇ Test boundsRangesAndFreeColumns(_:) started.
+✔ Test theDefaultsAreConsistentAsTheyAre() passed after 1.062 seconds.
+✔ Test timeLimitIsAResult(_:) with 2 test cases passed after 1.062 seconds.
+◇ Test aLyingKernelIsDisabledAndTheSolveIsStillRight() started.
+◇ Test anHonestKernelLeadsToTheSameOptimum(_:) started.
+◇ Test thePolicyGatesTheKernel() started.
+◇ Test parallelPricingGivesTheSameAnswer(_:) started.
+✔ Test aRowThatOnlyASmallEntryCanRepairIsNotAProofOfInfeasibility(_:) with 2 test cases passed after 1.105 seconds.
+◇ Test case passing 1 argument method → .primal to aPassThatCannotFinishLeavesTheAnswerAsItWas(_:) started.
+◇ Test case passing 1 argument method → .dual to aPassThatCannotFinishLeavesTheAnswerAsItWas(_:) started.
+◇ Test case passing 1 argument method → .primal to aStopInsideThePassKeepsTheAnswerAndRefactorsNothing(_:) started.
+◇ Test case passing 1 argument method → .dual to aStopInsideThePassKeepsTheAnswerAndRefactorsNothing(_:) started.
+◇ Test case passing 1 argument method → .primal to withoutThePassTheVertexIsOnlyOptimalWithinTheTolerances(_:) started.
+◇ Test case passing 1 argument method → .dual to withoutThePassTheVertexIsOnlyOptimalWithinTheTolerances(_:) started.
+✔ Test bealeCyclingExampleTerminates(_:) with 2 test cases passed after 1.219 seconds.
+◇ Test triangularCrashCutsPhase1OnAStructuredModel() started.
+◇ Test aSingularWarmBasisIsRepaired() started.
+◇ Test primalPointWarmStart(_:) started.
+◇ Test basisWarmStartAfterEditingRightHandSides(_:) started.
+◇ Test basisWarmStartAfterEditingCosts(_:) started.
+◇ Test aBasisThatDoesNotFitIsIgnoredWithAWarning() started.
+◇ Test incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test triangularCrashStillSolves(_:) started.
+◇ Test case passing 1 argument method → .primal to infeasibilityFoundByPresolveStillCarriesARay(_:) started.
+◇ Test case passing 1 argument method → .dual to infeasibilityFoundByPresolveStillCarriesARay(_:) started.
+◇ Test case passing 1 argument method → .primal to textbookProblem(_:) started.
+◇ Test case passing 1 argument method → .dual to textbookProblem(_:) started.
+◇ Test case passing 1 argument method → .primal to emptyColumnWithImprovingCostIsUnbounded(_:) started.
+◇ Test case passing 1 argument method → .dual to emptyColumnWithImprovingCostIsUnbounded(_:) started.
+◇ Test case passing 1 argument method → .primal to unboundedProblemCarriesAPrimalRay(_:) started.
+◇ Test case passing 1 argument method → .dual to unboundedProblemCarriesAPrimalRay(_:) started.
+◇ Test case passing 1 argument method → .primal to problemWithoutRows(_:) started.
+◇ Test case passing 1 argument method → .dual to problemWithoutRows(_:) started.
+◇ Test case passing 1 argument method → .primal to infeasibleProblemCarriesADualRay(_:) started.
+◇ Test case passing 1 argument method → .dual to infeasibleProblemCarriesADualRay(_:) started.
+◇ Test case passing 1 argument method → .primal to boundsRangesAndFreeColumns(_:) started.
+◇ Test case passing 1 argument method → .dual to boundsRangesAndFreeColumns(_:) started.
+◇ Test case passing 1 argument name → "share2b" to anHonestKernelLeadsToTheSameOptimum(_:) started.
+◇ Test case passing 1 argument name → "israel" to anHonestKernelLeadsToTheSameOptimum(_:) started.
+◇ Test case passing 1 argument name → "scagr7" to anHonestKernelLeadsToTheSameOptimum(_:) started.
+◇ Test case passing 1 argument method → .primal to parallelPricingGivesTheSameAnswer(_:) started.
+◇ Test case passing 1 argument method → .dual to parallelPricingGivesTheSameAnswer(_:) started.
+✔ Test aPassThatCannotFinishLeavesTheAnswerAsItWas(_:) with 2 test cases passed after 0.774 seconds.
+✔ Test runsWithAnIterationBudgetAreNotRefined() passed after 0.602 seconds.
+✔ Suite SmallPivotTests passed after 1.507 seconds.
+◇ Test case passing 1 argument name → "share2b" to primalPointWarmStart(_:) started.
+◇ Test case passing 1 argument name → "scagr7" to primalPointWarmStart(_:) started.
+◇ Test case passing 1 argument name → "israel" to primalPointWarmStart(_:) started.
+◇ Test case passing 1 argument name → "beaconfd" to primalPointWarmStart(_:) started.
+◇ Test case passing 1 argument name → "share2b" to basisWarmStartAfterEditingRightHandSides(_:) started.
+◇ Test case passing 1 argument name → "scagr7" to basisWarmStartAfterEditingRightHandSides(_:) started.
+◇ Test case passing 1 argument name → "israel" to basisWarmStartAfterEditingRightHandSides(_:) started.
+◇ Test case passing 1 argument name → "beaconfd" to basisWarmStartAfterEditingRightHandSides(_:) started.
+◇ Test case passing 1 argument name → "share2b" to basisWarmStartAfterEditingCosts(_:) started.
+◇ Test case passing 1 argument name → "scagr7" to basisWarmStartAfterEditingCosts(_:) started.
+◇ Test case passing 1 argument name → "israel" to basisWarmStartAfterEditingCosts(_:) started.
+◇ Test case passing 1 argument name → "beaconfd" to basisWarmStartAfterEditingCosts(_:) started.
+◇ Test case passing 2 arguments name → "share2b", method → .primal to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 2 arguments name → "share2b", method → .dual to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 2 arguments name → "scagr7", method → .primal to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 2 arguments name → "scagr7", method → .dual to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 2 arguments name → "israel", method → .primal to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 2 arguments name → "israel", method → .dual to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 2 arguments name → "beaconfd", method → .primal to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 2 arguments name → "beaconfd", method → .dual to incrementalWarmStartAfterABoundChange(_:_:) started.
+◇ Test case passing 1 argument name → "sc105" to triangularCrashStillSolves(_:) started.
+◇ Test case passing 1 argument name → "scagr7" to triangularCrashStillSolves(_:) started.
+◇ Test case passing 1 argument name → "stocfor1" to triangularCrashStillSolves(_:) started.
+◇ Test case passing 1 argument name → "share2b" to triangularCrashStillSolves(_:) started.
+◇ Test case passing 1 argument name → "afiro" to triangularCrashStillSolves(_:) started.
+✔ Suite ToleranceConsistencyTests passed after 1.847 seconds.
+✔ Test infeasibilityFoundByPresolveStillCarriesARay(_:) with 2 test cases passed after 0.784 seconds.
+✔ Test theConditionEstimateDoesNotNeedADenseBasis() passed after 0.941 seconds.
+✔ Test textbookProblem(_:) with 2 test cases passed after 0.784 seconds.
+✔ Test emptyColumnWithImprovingCostIsUnbounded(_:) with 2 test cases passed after 0.784 seconds.
+✔ Test unboundedProblemCarriesAPrimalRay(_:) with 2 test cases passed after 0.784 seconds.
+✔ Test problemWithoutRows(_:) with 2 test cases passed after 0.784 seconds.
+✔ Test infeasibleProblemCarriesADualRay(_:) with 2 test cases passed after 0.784 seconds.
+✔ Test integerColumnsAreRelaxedWithAWarning() passed after 0.784 seconds.
+✔ Test boundsRangesAndFreeColumns(_:) with 2 test cases passed after 0.784 seconds.
+✔ Test aStopInsideThePassKeepsTheAnswerAndRefactorsNothing(_:) with 2 test cases passed after 1.368 seconds.
+✔ Suite SimplexBasicsTests passed after 2.126 seconds.
+✔ Test iterationLimitIsAResult(_:) with 2 test cases passed after 2.135 seconds.
+✔ Test aBasisThatDoesNotFitIsIgnoredWithAWarning() passed after 0.915 seconds.
+✔ Test withoutThePassTheVertexIsOnlyOptimalWithinTheTolerances(_:) with 2 test cases passed after 1.393 seconds.
+✔ Test iterationLimitOnTheEngineReturnsLimit() passed after 2.813 seconds.
+✔ Test thePolicyGatesTheKernel() passed after 1.909 seconds.
+✔ Test aSingularWarmBasisIsRepaired() passed after 1.899 seconds.
+✔ Test triangularCrashCutsPhase1OnAStructuredModel() passed after 6.813 seconds.
+✔ Test aLyingKernelIsDisabledAndTheSolveIsStillRight() passed after 13.974 seconds.
+✔ Test engineHotPathKeepsTheFactorization() passed after 15.189 seconds.
+✔ Test kleeMintyTerminates(_:) with 2 test cases passed after 16.983 seconds.
+✔ Test threeResidualFailuresEndTheSolve(_:) with 2 test cases passed after 18.354 seconds.
+✔ Test primalPointWarmStart(_:) with 4 test cases passed after 20.657 seconds.
+✔ Test anHonestKernelLeadsToTheSameOptimum(_:) with 3 test cases passed after 21.546 seconds.
+✔ Test triangularCrashStillSolves(_:) with 5 test cases passed after 23.759 seconds.
+✔ Test basisWarmStartAfterEditingRightHandSides(_:) with 4 test cases passed after 27.075 seconds.
+✔ Test basisWarmStartAfterEditingCosts(_:) with 4 test cases passed after 32.768 seconds.
+✔ Test incrementalWarmStartAfterABoundChange(_:_:) with 8 test cases passed after 36.946 seconds.
+✔ Suite WarmStartTests passed after 38.243 seconds.
+✔ Test parallelPricingGivesTheSameAnswer(_:) with 2 test cases passed after 39.067 seconds.
+✔ Suite KernelSeamTests passed after 40.176 seconds.
+✔ Test dualWithoutPresolveOrScaling(_:) with 13 test cases passed after 62.413 seconds.
+✔ Test dualReachesThePublishedOptimum(_:) with 13 test cases passed after 62.808 seconds.
+✔ Test badlyScaledInstances() passed after 64.862 seconds.
+✔ Test everyConfigurationAgreesOnConstructedOptima() passed after 97.891 seconds.
+✔ Test wellConditionedProblemsAreLeftAlone() passed after 97.899 seconds.
+✔ Suite RefinementTests passed after 98.806 seconds.
+✔ Test eventsAreOrderedAndFinishOnce(_:) with 2 test cases passed after 103.613 seconds.
+✔ Test primalWithoutPresolveOrScaling(_:) with 13 test cases passed after 103.821 seconds.
+✔ Test cancellationIsAResultAndTheStrategyIsReusable(_:) with 2 test cases passed after 104.936 seconds.
+✔ Suite SimplexEngineTests passed after 104.936 seconds.
+✔ Test primalReachesThePublishedOptimum(_:) with 13 test cases passed after 105.204 seconds.
+✔ Suite NetlibSimplexTests passed after 105.206 seconds.
+✔ Test constructedOptima(_:) with 2 test cases passed after 129.492 seconds.
+✔ Suite SimplexConstructedOptimaTests passed after 129.493 seconds.
+✔ Test degenerateInstanceTerminates(_:) with 2 test cases passed after 184.860 seconds.
+✔ Suite SimplexTerminationTests passed after 184.863 seconds.
+✔ Test run with 47 tests in 10 suites passed after 184.864 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite ReadmeExampleTests started.
+◇ Suite WorkedExampleTests started.
+◇ Suite ConditionedTests started.
+◇ Suite AutomaticTests started.
+◇ Test eventsFinishOnceAfterTheInnerSolve() started.
+◇ Suite PortfolioTests started.
+◇ Test theIntegerPlanIsSolvedToOptimality() started.
+◇ Test runsTheChosenEngineAndErasesItsAnalysis() started.
+◇ Test choiceFollowsTheShapeOfTheProblem() started.
+◇ Test eventsFinishExactlyOnce() started.
+◇ Test attachesAReportAndForwardsTheAnalysis() started.
+◇ Suite PortfolioWithCPSATTests started.
+◇ Test theFirstToConcludeWinsAndTheOthersAreReported() started.
+◇ Test theRelaxationHasShadowPrices() started.
+◇ Test aStrategyThatCannotRunDoesNotWin() started.
+◇ Test mixedIntegerPortfolio() started.
+◇ Test theStrategiesOfSection11Compose() started.
+◇ Test facilityLocation() started.
+◇ Test transportLPWithNamedDuals() started.
+✔ Test theRelaxationHasShadowPrices() passed after 0.005 seconds.
+✔ Test transportLPWithNamedDuals() passed after 0.123 seconds.
+✔ Test aStrategyThatCannotRunDoesNotWin() passed after 0.190 seconds.
+✔ Test facilityLocation() passed after 0.238 seconds.
+✔ Test theIntegerPlanIsSolvedToOptimality() passed after 0.336 seconds.
+✔ Suite ReadmeExampleTests passed after 0.387 seconds.
+✔ Test theStrategiesOfSection11Compose() passed after 0.516 seconds.
+✔ Suite WorkedExampleTests passed after 0.560 seconds.
+✔ Test eventsFinishOnceAfterTheInnerSolve() passed after 0.628 seconds.
+✔ Test eventsFinishExactlyOnce() passed after 0.630 seconds.
+✔ Test runsTheChosenEngineAndErasesItsAnalysis() passed after 0.896 seconds.
+✔ Test mixedIntegerPortfolio() passed after 1.417 seconds.
+✔ Suite PortfolioWithCPSATTests passed after 1.423 seconds.
+✔ Test choiceFollowsTheShapeOfTheProblem() passed after 1.767 seconds.
+✔ Suite AutomaticTests passed after 1.767 seconds.
+✔ Test theFirstToConcludeWinsAndTheOthersAreReported() passed after 2.888 seconds.
+✔ Suite PortfolioTests passed after 2.889 seconds.
+✔ Test attachesAReportAndForwardsTheAnalysis() passed after 2.966 seconds.
+✔ Suite ConditionedTests passed after 2.966 seconds.
+✔ Test run with 13 tests in 6 suites passed after 2.967 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite NetlibInteriorPointTests started.
+◇ Suite InteriorPointTests started.
+◇ Test textbookProblemWithDualsAndBounds() started.
+◇ Test infeasibleAndUnboundedAreReportedWithoutLooping() started.
+◇ Test crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test cancellationAndTimeLimitAreResults() started.
+◇ Test convergesWithinFortyIterations(_:) started.
+◇ Test eventsReportEveryIterationAndFinishOnce() started.
+◇ Test iterationCapIsAResult() started.
+◇ Test constructedOptima() started.
+◇ Test crossoverLeavesAnOptimalBasisOnADegenerateFace() started.
+◇ Test sparsePathAgreesWithTheSimplex() started.
+◇ Test choleskyFailuresFallBackToLDLT() started.
+◇ Test denseColumnsAreDetectedAndWarnedAbout() started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "afiro", rows: 27, columns: 32, optimalObjective: -464.75314286, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "afiro", rows: 27, columns: 32, optimalObjective: -464.75314286, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test freeColumnsRangesAndUpperBounds() started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50a", rows: 50, columns: 48, optimalObjective: -64.575077059, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50a", rows: 50, columns: 48, optimalObjective: -64.575077059, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50b", rows: 50, columns: 48, optimalObjective: -70.0, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc105", rows: 105, columns: 103, optimalObjective: -52.202061212, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50b", rows: 50, columns: 48, optimalObjective: -70.0, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "kb2", rows: 43, columns: 41, optimalObjective: -1749.9001299, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "adlittle", rows: 56, columns: 97, optimalObjective: 225494.96316, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc105", rows: 105, columns: 103, optimalObjective: -52.202061212, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "blend", rows: 74, columns: 83, optimalObjective: -30.812149846, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "kb2", rows: 43, columns: 41, optimalObjective: -1749.9001299, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "share2b", rows: 96, columns: 79, optimalObjective: -415.73224074, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stocfor1", rows: 117, columns: 111, optimalObjective: -41131.976219, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "adlittle", rows: 56, columns: 97, optimalObjective: 225494.96316, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "scagr7", rows: 129, columns: 140, optimalObjective: -2331389.8243, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "beaconfd", rows: 173, columns: 262, optimalObjective: 33592.485807, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "blend", rows: 74, columns: 83, optimalObjective: -30.812149846, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "israel", rows: 174, columns: 142, optimalObjective: -896644.82186, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "share2b", rows: 96, columns: 79, optimalObjective: -415.73224074, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "degen2", rows: 444, columns: 534, optimalObjective: -1435.178, pureInteger: false) to convergesWithinFortyIterations(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stocfor1", rows: 117, columns: 111, optimalObjective: -41131.976219, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "scagr7", rows: 129, columns: 140, optimalObjective: -2331389.8243, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "beaconfd", rows: 173, columns: 262, optimalObjective: 33592.485807, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "israel", rows: 174, columns: 142, optimalObjective: -896644.82186, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "degen2", rows: 444, columns: 534, optimalObjective: -1435.178, pureInteger: false) to crossoverLiteReachesAVertexCheaply(_:) started.
+✔ Test infeasibleAndUnboundedAreReportedWithoutLooping() passed after 1.150 seconds.
+✔ Test textbookProblemWithDualsAndBounds() passed after 1.150 seconds.
+✔ Test freeColumnsRangesAndUpperBounds() passed after 1.590 seconds.
+✔ Test denseColumnsAreDetectedAndWarnedAbout() passed after 3.068 seconds.
+✔ Test eventsReportEveryIterationAndFinishOnce() passed after 3.335 seconds.
+✔ Test iterationCapIsAResult() passed after 3.847 seconds.
+✔ Test crossoverLeavesAnOptimalBasisOnADegenerateFace() passed after 5.626 seconds.
+✔ Test convergesWithinFortyIterations(_:) with 13 test cases passed after 12.519 seconds.
+✔ Test cancellationAndTimeLimitAreResults() passed after 19.462 seconds.
+✔ Test constructedOptima() passed after 31.321 seconds.
+✔ Test choleskyFailuresFallBackToLDLT() passed after 33.204 seconds.
+✔ Test sparsePathAgreesWithTheSimplex() passed after 76.995 seconds.
+✔ Suite InteriorPointTests passed after 76.997 seconds.
+✔ Test crossoverLiteReachesAVertexCheaply(_:) with 13 test cases passed after 93.363 seconds.
+✔ Suite NetlibInteriorPointTests passed after 93.364 seconds.
+✔ Test run with 13 tests in 2 suites passed after 93.364 seconds.

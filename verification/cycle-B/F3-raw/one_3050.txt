@@ -1,0 +1,32 @@
+instance known seed=3050 m=30 n=50 known=785976.9903495781 |a| in [8.573e-06, 2.143e+05] |c| max 1.360e+05
+analyzer: matrix coefficients span 8.57e-06 to 2.14e+05 (ratio 2.5e+10); 1 severe and 0 warning finding; worst: the matrix coefficients span 8.57e-06 to 2.14e+05, a ratio of 2.5e+10
+InteriorPoint(crossover: .lite) presolve=true scaling=geometricEquilibration -> infOrUnb obj=nil it=46 pr=1.319e-04 dr=6.198e-15
+  it=43 mu=9.268e-07 pr=9.309e-05 dr=4.557e-14
+  it=44 mu=4.484e-07 pr=1.268e-04 dr=1.706e-13
+  it=45 mu=4.796e-09 pr=1.307e-04 dr=2.966e-14
+  it=46 mu=5.061e-11 pr=1.319e-04 dr=6.198e-15
+InteriorPoint(crossover: .none) presolve=true scaling=geometricEquilibration -> infOrUnb obj=nil it=46 pr=1.319e-04 dr=6.198e-15
+  it=43 mu=9.268e-07 pr=9.309e-05 dr=4.557e-14
+  it=44 mu=4.484e-07 pr=1.268e-04 dr=1.706e-13
+  it=45 mu=4.796e-09 pr=1.307e-04 dr=2.966e-14
+  it=46 mu=5.061e-11 pr=1.319e-04 dr=6.198e-15
+InteriorPoint(crossover: .lite) presolve=false scaling=geometricEquilibration -> optimal obj=785976.9903495782 it=47 pr=7.190e-05 dr=6.178e-15
+  it=45 mu=8.242e-08 pr=7.295e-05 dr=5.735e-14
+  it=46 mu=3.160e-09 pr=7.191e-05 dr=1.857e-14
+  it=47 mu=3.206e-11 pr=7.190e-05 dr=6.178e-15
+  WARN the interior point stalled (primal residual 7.189969821036523e-05, dual residual 6.177682730459997e-15, tolerance 1e-08): the problem is ill-conditioned; the simplex finished from its last iterate
+   pviol=4.143e-14 dsign=1.070e-16 compl=1.173e-16 gap=1.481e-16 rc=1.518e-16 objRep=0.000e+00 objKnown=1.481e-16
+InteriorPoint(crossover: .lite) presolve=true scaling=none -> optimal obj=785976.9903495783 it=12 pr=3.279e-06 dr=7.888e-17
+  it=11 mu=1.795e-10 pr=3.182e-06 dr=2.458e-16
+  it=12 mu=1.857e-12 pr=3.279e-06 dr=7.888e-17
+  WARN the interior point stalled (primal residual 3.27949129755684e-06, dual residual 7.888286898657924e-17, tolerance 1e-08): the problem is ill-conditioned; the simplex finished from its last iterate
+  WARN the optimal basis is ill-conditioned (condition estimate 124097001415.48416): the values may be wrong by about 2.755506965168223e-05 relative
+   pviol=5.750e-15 dsign=1.337e-17 compl=7.226e-17 gap=4.443e-16 rc=1.405e-16 objRep=0.000e+00 objKnown=2.962e-16
+InteriorPoint(crossover: .lite) presolve=true scaling=equilibration -> optimal obj=785976.9903495781 it=21 pr=7.134e-05 dr=1.580e-16
+  it=19 mu=1.970e-09 pr=7.626e-05 dr=2.744e-16
+  it=20 mu=1.749e-09 pr=7.561e-05 dr=5.818e-16
+  it=21 mu=6.760e-11 pr=7.134e-05 dr=1.580e-16
+  WARN the interior point stalled (primal residual 7.133650814969579e-05, dual residual 1.58009093296724e-16, tolerance 1e-08): the problem is ill-conditioned; the simplex finished from its last iterate
+   pviol=8.252e-15 dsign=1.070e-16 compl=2.655e-16 gap=4.443e-16 rc=2.140e-16 objRep=0.000e+00 objKnown=0.000e+00
+Simplex(.dual) -> optimal obj=785976.9903495781
+Simplex(.primal) -> optimal obj=785976.990349578

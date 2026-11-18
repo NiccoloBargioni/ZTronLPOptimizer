@@ -1,0 +1,144 @@
+Building for debugging...
+[Computing dependencies]
+[Provisioning 1 / 49]
+[Using on-disk description]
+[1 / 157] ZTronLPSimplexTests-product
+[17 / 100] InternalCollectionsUtilities
+[28 / 122]
+[31 / 116] CLAPACKShim
+[34 / 117] OrderedCollections
+[38 / 113] ZTronLPCore
+[41 / 150] ZTronLPNumerics
+[50 / 159] ZTronLPNumerics
+[56 / 183] ZTronLPTestSupport
+[61 / 195] ZTronLPMetal
+[63 / 208] ZTronLPSimplex
+[63 / 208] ZTronLPTestSupport
+[69 / 202] ZTronLPTestSupport
+[71 / 202] ZTronLPNumerics
+[74 / 202] ZTronLPNumerics
+[80 / 197] ZTronLPMetal
+[83 / 197] ZTronLPTestSupport
+[85 / 197] ZTronLPMetal
+[87 / 193] ZTronLPMetal
+[89 / 206] ZTronLPMetal
+[90 / 206] ZTronLPConditioning
+[93 / 202] ZTronLPCPSAT
+[98 / 195] ZTronLPInteriorPoint
+[100 / 199] ZTronLPTestSupportTests-product
+[101 / 207] ZTronLPNumericsTests-product
+[102 / 210] ZTronLPNumericsTests-product
+[105 / 216] ZTronLPTestSupportTests-product
+[110 / 216]
+[114 / 222] ZTronLPTestSupportTests-product
+[116 / 232] ZTronLPCoreTests-product
+[119 / 232] ZTronLPNumericsTests-product
+[119 / 232] ZTronLPConditioning
+[121 / 228] ZTronLPMetalTests-product
+[124 / 228] ZTronLPNumericsTests-product
+[126 / 228] ZTronLPNumericsTests-product
+[128 / 228] ZTronLPNumericsTests-product
+[129 / 229] ZTronLPNumericsTests-product
+[130 / 229] ZTronLPNumericsTests-product
+[131 / 229] ZTronLPMetalTests-product
+[132 / 229] ZTronLPNumericsTests-product
+[133 / 229] ZTronLPCoreTests-product
+[135 / 236] ZTronLPCoreTests-product
+[136 / 236] ZTronLPNumericsTests-product
+[138 / 236] ZTronLPNumericsTests-product
+[139 / 238] ZTronLPMetalTests-product
+[141 / 238] ZTronLPCoreTests-product
+[143 / 238] ZTronLPMetalTests-product
+[144 / 239] ZTronLPCoreTests-product
+[145 / 239] ZTronLPNumericsTests-product
+[146 / 239] ZTronLPMetalTests-product
+[150 / 239] ZTronLPCoreTests-product
+[151 / 239] ZTronLPNumericsTests-product
+[152 / 244] ZTronLPMetalTests-product
+[154 / 242] ZTronLPCPSAT
+[157 / 243] ZTronLPCPSAT
+[158 / 243] ZTronLPInteriorPoint
+[159 / 243] ZTronLPCPSAT
+[161 / 243] ZTronLPCPSAT
+[163 / 240] ZTronLPTestSupport-product
+[168 / 237] ZTronLPConditioning-product
+[173 / 242] ZTronLPBranchAndBound
+[174 / 242] ZTronLPBranchAndBound
+[179 / 244] ZTronLPSimplexTests-product
+[180 / 251] ZTronLPConditioningTests-product
+[181 / 256] ZTronLPCoreTests-product
+[182 / 256] ZTronLPCoreTests-product
+[184 / 256] ZTronLPSimplexTests-product
+[185 / 256] ZTronLPSimplexTests-product
+[186 / 256] ZTronLPConditioningTests-product
+[189 / 256] ZTronLPSimplexTests-product
+[190 / 256] ZTronLPMetal-product
+[191 / 256] ZTronLPSimplexTests-product
+[193 / 257] ZTronLPSimplexTests-product
+[198 / 258]
+[200 / 257] ZTronLPInteriorPointTests-product
+[200 / 262] ZTronLPInteriorPointTests-product
+[201 / 265] ZTronLPOptimizer
+[203 / 265] ZTronLPOptimizer
+[208 / 260] ZTronLPInteriorPointTests-product
+[210 / 260] ZTronLPOptimizer
+[212 / 261] ZTronLPInteriorPointTests-product
+[214 / 259] ZTronLPConditioning-product
+[217 / 258] ZTronLPOptimizer
+[219 / 259] ZTronLPBranchAndBoundTests-product
+[220 / 259] ZTronLPBenchmarks-product
+[221 / 268] ZTronLPBranchAndBoundTests-product
+[224 / 271] ZTronLPSimplexTests-product
+[226 / 272] ZTronLPBranchAndBoundTests-product
+[228 / 272] ZTronLPBenchmarks-product
+[230 / 272] ZTronLPCPSATTests-product
+[231 / 272] ZTronLPCPSATTests-product
+[232 / 272] ZTronLPCPSATTests-product
+[234 / 272] ZTronLPCPSATTests-product
+[235 / 274] ZTronLPInteriorPointTests-product
+[240 / 274] ZTronLPCPSATTests-product
+[241 / 274] ZTronLPInteriorPointTests-product
+[242 / 275] ZTronLPCPSATTests-product
+[246 / 276] ZTronLPCoreTests-product
+[247 / 277] ZTronLPBranchAndBoundTests-product
+[248 / 277] ZTronLPBranchAndBoundTests-product
+[250 / 277] ZTronLPBenchmarks-product
+[251 / 278] ZTronLPTestSupportTests-product
+[254 / 279] ZTronLPCPSATTests-product
+[259 / 284] ZTronLPOptimizerTests-product
+[262 / 290] ZTronLPLivenessTests-product
+[263 / 294] ZTronLPIntegrationTests-product
+[265 / 294] ZTronLPLivenessTests-product
+[267 / 294] ZTronLPOptimizerTests-product
+[268 / 294] ZTronLPIntegrationTests-product
+[271 / 294] ZTronLPOptimizerTests-product
+[273 / 294] ZTronLPLivenessTests-product
+[274 / 296] ZTronLPLivenessTests-product
+[283 / 300] ZTronLPInteriorPointTests-product
+[285 / 300] ZTronLPConditioningTests-product
+[285 / 298] ZTronLPBranchAndBoundTests-product
+[289 / 302] ZTronLPBranchAndBoundTests-product
+[289 / 302] ZTronLPCPSATTests-product
+[291 / 302] ZTronLPCPSATTests-product
+[293 / 303] ZTronLPOptimizerTests-product
+[295 / 303] ZTronLPOptimizerTests-product
+[297 / 304] ZTronLPOptimizerTests-product
+[297 / 304] ZTronLPLivenessTests-product
+[301 / 304] ZTronLPLivenessTests-product
+[305 / 307] ZTronLPLivenessTests-product
+Build complete! (37,60 s)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite MIPLIBCorpusTests started.
+◇ Test cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0033", rows: 16, columns: 33, optimalObjective: 3089.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein27", rows: 118, columns: 27, optimalObjective: 18.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein45", rows: 331, columns: 45, optimalObjective: 30.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "enigma", rows: 21, columns: 100, optimalObjective: 0.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "mod008", rows: 6, columns: 319, optimalObjective: 307.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "lseu", rows: 28, columns: 89, optimalObjective: 1120.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+✔ Test cpSatWithoutTheLPPropagator(_:) with 6 test cases passed after 4.107 seconds.
+✔ Suite MIPLIBCorpusTests passed after 4.107 seconds.
+✔ Test run with 1 test in 1 suite passed after 4.107 seconds.
+rc=0

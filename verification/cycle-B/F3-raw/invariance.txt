@@ -1,0 +1,2 @@
+invariance bad=0
+rc=0

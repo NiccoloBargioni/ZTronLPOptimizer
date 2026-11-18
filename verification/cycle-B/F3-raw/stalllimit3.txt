@@ -1,0 +1,15 @@
+seed=3 full: optimal it=38 xo=optimal/489 stalled=true t=0.056
+   limit=0.017 -> noSolution(timeLimit) it=37 xo=-
+   limit=0.020 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/15
+   limit=0.022 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/47
+   limit=0.025 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/71
+   limit=0.028 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/123 <-- .feasible from InteriorPoint obj=82474.26182629992 bound=nil known=82472.74357123986 pviol=3.761e-13
+   limit=0.031 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/147 <-- .feasible from InteriorPoint obj=82473.39532396873 bound=nil known=82472.74357123986 pviol=3.761e-13
+   limit=0.034 -> feasible(timeLimit) it=38 xo=feasible(timeLimit)/115 <-- .feasible from InteriorPoint obj=82475.48472309735 bound=nil known=82472.74357123986 pviol=3.761e-13
+   limit=0.036 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/51
+   limit=0.039 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/31
+   limit=0.042 -> noSolution(timeLimit) it=27 xo=-
+   limit=0.045 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/8
+   limit=0.048 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/0
+   limit=0.050 -> noSolution(timeLimit) it=34 xo=-
+   limit=0.053 -> noSolution(timeLimit) it=38 xo=noSolution(timeLimit)/47

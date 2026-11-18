@@ -1,0 +1,12 @@
+== START 01-build-warnings-as-errors: swift build --build-tests -Xswiftc -warnings-as-errors (11:14:19)
+== END 01-build-warnings-as-errors rc=0 elapsed=31s
+== START 02-lint: Scripts/lint.sh (11:14:50)
+== END 02-lint rc=0 elapsed=0s
+== START 03-test-debug: swift test (11:14:50)
+== END 03-test-debug rc=0 elapsed=250s
+== START 04-test-release-integration-liveness: swift test -c release --filter ZTronLPIntegrationTests|ZTronLPLivenessTests (11:19:00)
+== END 04-test-release-integration-liveness rc=0 elapsed=246s
+== TIMING-SENSITIVE-DONE (11:23:06)
+== START 05-tsan: env ZTRONLP_LATENCY_SCALE=20 swift test --sanitize=thread --scratch-path /private/tmp/claude-501/-Users-admin--claude-spares-spare-zzrljs/7aab57cc-e0cf-4457-93b0-57da6847eb38/scratchpad/build-tsan --filter ZTronLPIntegrationTests|ZTronLPLivenessTests|ZTronLPBranchAndBoundTests|ZTronLPCPSATTests (11:23:06)
+== END 05-tsan rc=0 elapsed=838s
+== ALL-DONE (11:37:04)

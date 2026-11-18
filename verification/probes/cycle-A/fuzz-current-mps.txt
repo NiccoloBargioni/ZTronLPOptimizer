@@ -1,0 +1,25 @@
+NAME TEST
+OBJSENSE
+    MAX
+ROWS
+ N COST
+ E e1
+ L l1
+ G g1
+COLUMNS
+    m1 'MARKER' 'INTORG'
+    m1 'MARKER' 'INTORG'
+    x COST 1 e1 1
+    x l1 2 g1 -1
+    m2 'MARKER' 'INTEND'
+    y COST -1 e1 3
+RHS
+    RHS e1 5 l1 4
+    RHS COST 2
+RANGES
+    RNG e1 -2 l1 3
+BOUNDS
+ UP BND x 4
+ MI BND y
+ UP BND y 3
+ENDATA

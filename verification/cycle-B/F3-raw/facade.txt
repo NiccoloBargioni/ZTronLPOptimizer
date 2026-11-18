@@ -1,0 +1,5 @@
+seed=1 ipm-lite report basis=analyzed est=1.971e+02 findings=21
+seed=1 ipm-none report basis=noBasis est=nil findings=20
+seed=1 dual report basis=analyzed est=4.557e+02 findings=21
+facade diffs=0
+rc=0

@@ -1,0 +1,8 @@
+started Wed Nov 18 11:14:19 CET 2026
+d9afebe5d452dfe86def6e063e0a1249de829f49
+?? verification/
+swift-driver version: 1.168.6 Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)
+Target: arm64-apple-macosx27.0.0
+Apple M3
+8
+25769803776

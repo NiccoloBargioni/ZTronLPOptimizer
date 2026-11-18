@@ -1,0 +1,59 @@
+warm start 11:23:13
+B debug rc=0 11:23:58
+A debug rc=0 11:23:58
+B release rc=0 11:24:54
+A release rc=0 11:24:54
+Building for debugging...
+[Computing dependencies]
+[Pre-planning 1 / 595]
+[Planning deferred tasks]
+[23 / 78]
+[32 / 92] Atomics
+[38 / 87] BitCollections
+[45 / 76] ZTronLPNumerics
+[54 / 85] ZTronLPNumerics
+[60 / 103] ZTronLPTestSupport
+[68 / 128] ZTronLPTestSupport
+[70 / 128] ZTronLPTestSupport
+[77 / 120] ZTronLPSimplex
+[80 / 120] ZTronLPSimplex
+[83 / 120] ZTronLPTestSupport
+[89 / 122] ZTronLPMetal
+[90 / 122] ZTronLPMetal
+[93 / 122] ZTronLPConditioning
+[95 / 123] ZTronLPCPSAT
+[97 / 126] ZTronLPNumerics
+[100 / 126] ZTronLPCPSAT
+[107 / 129] ZTronLPInteriorPoint
+[111 / 135] ZTronLPConditioning
+[112 / 137] ZTronLPCPSAT
+[114 / 136] ZTronLPBranchAndBound
+[115 / 141] ZTronLPCPSAT
+[116 / 141] ZTronLPBranchAndBound
+[117 / 141] ZTronLPBranchAndBound
+[119 / 137] ZTronLPCPSAT
+[125 / 146] ZTronLPCPSAT
+[129 / 151] ZTronLPOptimizer
+[130 / 151] ZTronLPOptimizer
+[135 / 148] ZTronLPOptimizer
+[136 / 148] ZTronLPBranchAndBound
+[137 / 148] ZTronLPBranchAndBound
+[138 / 151]
+[140 / 151] V199-product
+[142 / 151] ZTronLPCPSAT
+[143 / 150] ZTronLPInteriorPoint
+[145 / 147] V199-product
+[147 / 147] V199-product
+Build complete! (7,46 s)
+2600.0
+56.0
+1.0
+2725.0
+3.1666666666666665
+2
+smoke rc=0 11:25:02
+slot F1 is empty
+slot F1 is empty
+slot F1 is empty
+slot F1 is empty
+WARM-DONE 11:25:03

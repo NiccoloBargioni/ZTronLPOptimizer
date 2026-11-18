@@ -1,0 +1,75 @@
+Building for production...
+[Computing dependencies]
+[Provisioning 1 / 26]
+[Pre-planning 1 / 595]
+[Planning deferred tasks]
+[46 / 238] ZTronLPCore
+[122 / 238]
+[129 / 244]
+[143 / 265]
+[148 / 265]
+[151 / 265]
+[152 / 265]
+[154 / 265] CLAPACKShim
+[165 / 305]
+[172 / 305]
+[173 / 305]
+[181 / 305]
+[186 / 305]
+[192 / 305]
+[194 / 305]
+[195 / 305]
+[197 / 305] CLAPACKShim
+[197 / 305] InternalCollectionsUtilities
+[206 / 308] HeapModule
+[212 / 311] HeapModule
+[218 / 311] Atomics
+[225 / 312] ZTronLPCore
+[234 / 346]
+[236 / 346]
+[242 / 346]
+[244 / 346]
+[247 / 346]
+[248 / 346]
+[249 / 346]
+[250 / 346]
+[253 / 346]
+[256 / 346]
+[262 / 346] OrderedCollections
+[264 / 346] BitCollections
+[270 / 346]
+[271 / 346]
+[272 / 346] ZTronLPCore
+[279 / 347] ZTronLPNumerics
+[289 / 360]
+[290 / 360]
+[292 / 360]
+[293 / 360] ZTronLPNumerics
+[303 / 364] ZTronLPTestSupport
+[309 / 368] ZTronLPMetal
+[311 / 368] ZTronLPMetal
+[317 / 368] ZTronLPTestSupport
+[323 / 368] ZTronLPConditioning
+[329 / 368] ZTronLPSimplex
+[337 / 370] ZTronLPInteriorPoint
+[341 / 372] ZTronLPInteriorPoint
+[348 / 373] ZTronLPBranchAndBound
+[350 / 374] ZTronLPBranchAndBound
+[356 / 374] ZTronLPCPSAT
+[363 / 375] ZTronLPOptimizer
+[365 / 376] ZTronLPOptimizer
+[372 / 377] F1-product
+[383 / 413]
+[385 / 413]
+[386 / 413]
+[390 / 413]
+[392 / 413]
+[395 / 413]
+[399 / 413]
+[402 / 413]
+[403 / 413]
+[406 / 413]
+[408 / 413]
+[411 / 413] F1-product
+[412 / 413] F1-product
+Build complete! (52,92 s)

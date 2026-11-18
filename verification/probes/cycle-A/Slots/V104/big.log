@@ -1,0 +1,16 @@
+randomMILP(300x3000,s3,u1) T 0.1: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0 rootLP -0.000000 incumbents [] wall 0.108441
+randomMILP(300x3000,s3,u1) T 0.2: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0 rootLP -0.000000 incumbents [] wall 0.207085
+randomMILP(300x3000,s3,u1) T 0.5: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0 rootLP -0.000000 incumbents [] wall 0.507467
+randomMILP(300x3000,s3,u1) T 1.0: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 27795.000000 bound 27795.000000 gap 0.000000 nodes 1 open 0 rootLP 28881.128588 incumbents ["rounding@0"] wall 1.008245
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 27795.000000
+randomMILP(300x3000,s3,u1) T 2.0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 27831.000000 bound 28880.889716 gap 0.037724 nodes 3 open 4 rootLP 28881.128588 incumbents ["rounding@0", "rounding@4", "rounding@6"] wall 2.001476
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 27831.000000
+randomMILP(300x3000,s3,u1) T 4.0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 27908.000000 bound 28880.756298 gap 0.034856 nodes 24 open 25 rootLP 28881.128588 incumbents ["rounding@0", "rounding@4", "rounding@6", "rounding@15", "rounding@39"] wall 4.001018
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 27908.000000
+randomMILP(300x3000,s3,u1) T 0.7: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0 rootLP -0.000000 incumbents [] wall 0.708289
+randomMILP(300x3000,s3,u1) T 1.0: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 27795.000000 bound 27795.000000 gap 0.000000 nodes 1 open 0 rootLP 28881.128588 incumbents ["rounding@0"] wall 1.009034
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 27795.000000
+randomMILP(300x3000,s3,u1) T 1.0: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 27795.000000 bound 27795.000000 gap 0.000000 nodes 1 open 0 rootLP 28881.128588 incumbents ["rounding@0"] wall 1.008909
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 27795.000000
+randomMILP(300x3000,s3,u1) T 1.3: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 27795.000000 bound 28881.128588 gap 0.039076 nodes 1 open 2 rootLP 28881.128588 incumbents ["rounding@0"] wall 1.309121
+    incumbent point: viol(bounds 0.000000, rows 0.000000) frac 0.000000 objective(at:) 27795.000000

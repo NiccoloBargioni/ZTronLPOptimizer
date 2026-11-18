@@ -1,0 +1,51 @@
+Building for debugging...
+[Computing dependencies]
+[Using on-disk description]
+[1 / 1]
+[1 / 45] ZTronLPLivenessTests-product
+Build complete! (1,02 s)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite MIPLIBCorpusTests started.
+◇ Test branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "enigma", rows: 21, columns: 100, optimalObjective: 0.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0033", rows: 16, columns: 33, optimalObjective: 3089.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "flugpl", rows: 18, columns: 18, optimalObjective: 1201500.0, pureInteger: false) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein45", rows: 331, columns: 45, optimalObjective: 30.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein27", rows: 118, columns: 27, optimalObjective: 18.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "egout", rows: 98, columns: 141, optimalObjective: 568.1007, pureInteger: false) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "lseu", rows: 28, columns: 89, optimalObjective: 1120.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "mod008", rows: 6, columns: 319, optimalObjective: 307.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+━ Test branchAndBoundWithBothStrategies(_:) recorded a known issue with 1 argument instance → ReferenceInstance(name: "flugpl", rows: 18, columns: 18, optimalObjective: 1201500.0, pureInteger: false) at CorpusTests.swift:116:29: Issue recorded
+↳ missing corpus file
+↳ flugpl has not been fetched; run Scripts/fetch-miplib.sh
+━ Test branchAndBoundWithBothStrategies(_:) recorded a known issue with 1 argument instance → ReferenceInstance(name: "stein27", rows: 118, columns: 27, optimalObjective: 18.0, pureInteger: true) at CorpusTests.swift:116:29: Issue recorded
+↳ missing corpus file
+↳ stein27 has not been fetched; run Scripts/fetch-miplib.sh
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "misc03", rows: 96, columns: 160, optimalObjective: 3360.0, pureInteger: false) to branchAndBoundWithBothStrategies(_:) started.
+━ Test branchAndBoundWithBothStrategies(_:) recorded a known issue with 1 argument instance → ReferenceInstance(name: "egout", rows: 98, columns: 141, optimalObjective: 568.1007, pureInteger: false) at CorpusTests.swift:116:29: Issue recorded
+↳ missing corpus file
+↳ egout has not been fetched; run Scripts/fetch-miplib.sh
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0201", rows: 133, columns: 201, optimalObjective: 7615.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+━ Test branchAndBoundWithBothStrategies(_:) recorded a known issue with 1 argument instance → ReferenceInstance(name: "p0033", rows: 16, columns: 33, optimalObjective: 3089.0, pureInteger: true) at CorpusTests.swift:116:29: Issue recorded
+↳ missing corpus file
+↳ p0033 has not been fetched; run Scripts/fetch-miplib.sh
+━ Test branchAndBoundWithBothStrategies(_:) recorded a known issue with 1 argument instance → ReferenceInstance(name: "misc03", rows: 96, columns: 160, optimalObjective: 3360.0, pureInteger: false) at CorpusTests.swift:116:29: Issue recorded
+↳ missing corpus file
+↳ misc03 has not been fetched; run Scripts/fetch-miplib.sh
+━ Test branchAndBoundWithBothStrategies(_:) recorded a known issue with 1 argument instance → ReferenceInstance(name: "p0201", rows: 133, columns: 201, optimalObjective: 7615.0, pureInteger: true) at CorpusTests.swift:116:29: Issue recorded
+↳ missing corpus file
+↳ p0201 has not been fetched; run Scripts/fetch-miplib.sh
+━ Test branchAndBoundWithBothStrategies(_:) with 10 test cases passed after 0.001 seconds with 6 known issues.
+━ Suite MIPLIBCorpusTests passed after 0.001 seconds with 6 known issues.
+━ Test run with 1 test in 1 suite passed after 0.001 seconds with 6 known issues.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite SATTests started.
+➜ Test satlibUF50AllSatisfiable() skipped: "SATLIB is not bundled: run Scripts/fetch-satlib.sh to fetch uf50-218 and uuf50-218"
+➜ Test satlibPortfolioAgrees() skipped: "SATLIB is not bundled: run Scripts/fetch-satlib.sh to fetch uf50-218 and uuf50-218"
+➜ Test satlibUUF50AllUnsatisfiable() skipped: "SATLIB is not bundled: run Scripts/fetch-satlib.sh to fetch uf50-218 and uuf50-218"
+✔ Suite SATTests passed after 0.001 seconds.
+✔ Test run with 3 tests in 1 suite passed after 0.001 seconds.

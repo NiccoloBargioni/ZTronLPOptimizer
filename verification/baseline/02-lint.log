@@ -1,0 +1,4 @@
+@unchecked Sendable occurrences (rule C3):
+  Sources/ZTronLPNumerics/Sparse.swift:329
+  1 in total
+lint: all rules hold

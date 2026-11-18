@@ -1,0 +1,72 @@
+T0 test data 1e9*x0 + x1 >= 2e9, x0<=1e6, min x0 [det] expect opt=2 x=[2, 0] | optimal obj=2 x=[2, 0] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test data 1e9*x0 + x1 >= 2e9, x0<=1e6, min x0 [par] expect opt=2 x=[2, 0] | optimal obj=2 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test data 1e9*x0 + x1 >= 2e9, x0<=1e6, min x0 [detnolp] expect opt=2 x=[2, 0] | optimal obj=2 x=[2, 0] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test value a=123456789012.5: a*x + y >= a+0.5, min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test value a=123456789012.5: a*x + y >= a+0.5, min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test value a=123456789012.5: a*x + y >= a+0.5, min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^36+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^36+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^36+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^44+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^44+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^44+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^48+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^48+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^48+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^49+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=2^49+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=2^49+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=7e14+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=7e14+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=7e14+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=2^50+0.5 (10a >= 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=2^50+0.5 (10a >= 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T2 a=2^50+0.5 (10a >= 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => INFEASIBLE-POINT
+T3 (a) a=2^30+1, a*x+y >= 2a+1, min y [det] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^30+1, a*x+y >= 2a+1, min y [par] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^30+1, a*x+y >= 2a+1, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^30+1, a*x-y <= 2a-1, x=2, min y [det] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^30+1, a*x-y <= 2a-1, x=2, min y [par] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^30+1, a*x-y <= 2a-1, x=2, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^47+1, a*x+y >= 2a+1, min y [det] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^47+1, a*x+y >= 2a+1, min y [par] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^47+1, a*x+y >= 2a+1, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^47+1, a*x-y <= 2a-1, x=2, min y [det] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^47+1, a*x-y <= 2a-1, x=2, min y [par] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^47+1, a*x-y <= 2a-1, x=2, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^48+1, a*x+y >= 2a+1, min y [det] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^48+1, a*x+y >= 2a+1, min y [par] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^48+1, a*x+y >= 2a+1, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^48+1, a*x-y <= 2a-1, x=2, min y [det] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^48+1, a*x-y <= 2a-1, x=2, min y [par] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (b) a=2^48+1, a*x-y <= 2a-1, x=2, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=1 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T3 (a) a=2^49+1, a*x+y >= 2a+1, min y [det] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^49+1, a*x+y >= 2a+1, min y [par] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^49+1, a*x+y >= 2a+1, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^49+1, a*x-y <= 2a-1, x=2, min y [det] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^49+1, a*x-y <= 2a-1, x=2, min y [par] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^49+1, a*x-y <= 2a-1, x=2, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^50+1, a*x+y >= 2a+1, min y [det] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^50+1, a*x+y >= 2a+1, min y [par] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^50+1, a*x+y >= 2a+1, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^50+1, a*x-y <= 2a-1, x=2, min y [det] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^50+1, a*x-y <= 2a-1, x=2, min y [par] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^50+1, a*x-y <= 2a-1, x=2, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^51+1, a*x+y >= 2a+1, min y [det] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^51+1, a*x+y >= 2a+1, min y [par] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (a) a=2^51+1, a*x+y >= 2a+1, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^51+1, a*x-y <= 2a-1, x=2, min y [det] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^51+1, a*x-y <= 2a-1, x=2, min y [par] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T3 (b) a=2^51+1, a*x-y <= 2a-1, x=2, min y [detnolp] expect opt=1 x=[2, 1] | optimal obj=0 x=[2, 0] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T4 a=2^40+1, a*x <= 1099511627776768 (a*M - 232), M=1000, x in [M-6, M+5], max x [det] expect opt=-999 x=[999] | optimal obj=-1000 x=[1000] exactViolation(bounds=0.0, rows=232.0) => INFEASIBLE-POINT
+T4 a=2^40+1, a*x <= 1099511627776768 (a*M - 232), M=1000, x in [M-6, M+5], max x [par] expect opt=-999 x=[999] | optimal obj=-1000 x=[1000] exactViolation(bounds=0.0, rows=232.0) => INFEASIBLE-POINT
+T4 a=2^40+1, a*x <= 1099511627776768 (a*M - 232), M=1000, x in [M-6, M+5], max x [detnolp] expect opt=-999 x=[999] | optimal obj=-1000 x=[1000] exactViolation(bounds=0.0, rows=232.0) => INFEASIBLE-POINT
+T4 a=2^40+1, a*x <= 1152288185910295808 (a*M - 192), M=1048000, x in [M-6, M+5], max x [det] expect opt=-1047999 x=[1047999] | optimal obj=-1048000 x=[1048000] exactViolation(bounds=0.0, rows=192.0) => INFEASIBLE-POINT
+T4 a=2^40+1, a*x <= 1152288185910295808 (a*M - 192), M=1048000, x in [M-6, M+5], max x [par] expect opt=-1047999 x=[1047999] | optimal obj=-1048000 x=[1048000] exactViolation(bounds=0.0, rows=192.0) => INFEASIBLE-POINT
+T4 a=2^40+1, a*x <= 1152288185910295808 (a*M - 192), M=1048000, x in [M-6, M+5], max x [detnolp] expect opt=-1047999 x=[1047999] | optimal obj=-1047995 x=[1047995] exactViolation(bounds=0.0, rows=0.0) => WITHIN-DOCUMENTED-GAP
+
+SUMMARY (per group: ok-or-within-documented-gap / wrong (infeasible point or objective beyond gap) / rejected unsupported / other)
+  T0: ok=6 wrong=0 rejected=0 other=0  first wrong: -
+  T2: ok=9 wrong=9 rejected=0 other=0  first wrong: a=2^49+0.5 (10a < 2^53), min y [det]
+  T3: ok=18 wrong=18 rejected=0 other=0  first wrong: (a) a=2^49+1, a*x+y >= 2a+1, min y [det]
+  T4: ok=1 wrong=5 rejected=0 other=0  first wrong: a=2^40+1, a*x <= 1099511627776768 (a*M - 232), M=1000, x in [M-6, M+5], max x [det]

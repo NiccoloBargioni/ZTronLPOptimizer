@@ -1,0 +1,185 @@
+{
+ "area": "F2 Simplex engine and the numerics under it (cycle A, claims first)",
+ "findings": [
+  {
+   "id": "A2-01",
+   "title": "Crossed bounds (xl > xu or rl > ru) are reported .optimal at an infeasible point, even after presolve has diagnosed infeasibility",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "README 2.2: CompiledLP is 'min or max of cᵀx + c0 with rl ≤ Ax ≤ ru and xl ≤ x ≤ xu'; README 2.5: Simplex returns a ray when the answer is .infeasible; Simplex.swift:156-157 comment: 'The unpresolved problem gives one [certificate], and settles the status'; README 3 Risk 1: read the status before the values.",
+   "observed": "CompiledLP(a: 0x1, c: [1], xl: [2], xu: [1]) -> Simplex(.dual) and Simplex(.primal), with and without presolve: status optimal, x = [2], objective 2, maxViolation bounds 1.0, warning 'presolve found the model infeasible (column x1 has lower bound 2.0 above upper bound 1.0); solving without presolve for the certificate'. One row with rl = 3 > ru = 1 over x, y in [0, 5]: optimal x = [3, 0], row violation 2.0. Same through WarmStart.incremental with BoundChange(column 0, lower 2.5, upper 1.5), CompiledLP.withColumnBounds, SimplexEngine.applyBoundChanges and Automatic(). All 40 configurations of the probe grid answer optimal on four such cases. InteriorPoint answers infeasibleOrUnbounded.",
+   "whyWrong": "The problem has no feasible point; .optimal with a point that violates its bounds by 1.0 is a wrong answer with a success status. Presolve detected the infeasibility and the final status overrides it.",
+   "location": "Sources/ZTronLPSimplex/SimplexEngine.swift:664-677 (primalInfeasibility measures basic variables only; a nonbasic column placed at a crossed bound by placeNonbasic, SimplexEngine.swift:382-389, is never measured); Sources/ZTronLPSimplex/Simplex.swift:155-161 (presolve's .infeasible verdict is replaced by the unpresolved engine run)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F2 crossed   (grid version: perl -e 'alarm shift; exec @ARGV' 300 .build/release/F2 edge)",
+   "evidence": "1 crossed column dual: status optimal x [2.0] obj 2.0 maxViolation (bounds 1.0, rows 0.0) warnings [\"presolve found the model infeasible (column x1 has lower bound 2.0 above upper bound 1.0); solving without presolve for the certificate\"]\n2 crossed row dual: status optimal x [3.0, 0.0] obj 3.0 maxViolation (bounds 0.0, rows 2.0)\n3 incremental crossed change: status optimal x [1.5, 1.25] obj -2.75 maxViolation (bounds 1.0, rows 0.0)\n4 engine applyBoundChanges crossed: status optimal x [1.5, 1.25] obj -2.75 maxViolation (bounds 1.0, rows 0.0)\nedge: CASE xl>xu no rows expected infeasible: [\"optimal\": 40]; CASE rl>ru row expected infeasible: [\"optimal\": 40]",
+   "confidence": "reproduced",
+   "documented": "Not documented. README 4 'Misuse of the building blocks traps' covers inconsistent dimensions only. The DSL compile and the MPS/LP readers reject crossed bounds, but CompiledLP's public initializer, withColumnBounds/withRowBounds/applying, WarmStart.incremental and SimplexEngine.applyBoundChanges accept them."
+  },
+  {
+   "id": "A2-02",
+   "title": "Primal simplex declares a feasible LP with condition number 1.5e9 infeasible, without a warning and with a dual ray that does not certify",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "README 3 Risk 1: 'up to a condition number of about 1e10 the solution is recovered'; README 4 defect 8 (fixed): the simplex 'takes a small pivot before it concludes \"infeasible\"'; HANDBOOK decision 18; README 2.5: a ray when the answer is .infeasible; HANDBOOK Testing: every infeasible result's dual ray is checked numerically.",
+   "observed": "Instance k15 of a random L·D·U equality family (n = 11, D spans 1e-7, κ₁ = 1.50e9, rows rl = ru = A·1, columns in [-10, 10]). x = 1 satisfies every row exactly in floating point (maxViolation 0); a dense solve recovers x to 2.2e-8. Simplex(.primal) default: infeasible, warnings [], Farkas margin of its dualRay -1.89e-7, which is negative, so the ray certifies nothing. The same holds in all 22 primal configurations of the grid (dense and QR, presolve on and off, scaling none and geometric, Dantzig, steepest-edge and partial pricing, perturbation off and always). InteriorPoint(), whose crossover runs the simplex, also answers infeasible. Simplex(.dual) and Automatic() answer optimal, 2.1e-8 from x = 1. Across the family: 19 more false .infeasible at κ 1e10-1e12 and 22 at κ 1e12-1e14.",
+   "whyWrong": "The LP is feasible, so .infeasible is a false conclusive verdict. It comes with no warning, at a condition number the README calls safe, and its certificate fails the independent check.",
+   "location": "Sources/ZTronLPSimplex/SimplexEngine+Primal.swift:697-706 (phase 1 finds no entering column above the tolerance and no weak candidate, and returns .infeasible); farkasRay(from:) at SimplexEngine+Primal.swift:584-590 picks the better sign but never checks that farkasValue > 0",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 100 .build/release/F2 illone 15   (family sweep: perl -e 'alarm shift; exec @ARGV' 300 .build/release/F2 illrandom)",
+   "evidence": "instance k15: n 11, D spans 1e-7.0, kappa1 1.50e+09; x = 1 violates rows by 0.00e+00, bounds by 0.00e+00; dense solve distance from 1: 2.21e-08; optimum 11.884433253052967\n  Simplex(.primal): infeasible obj nil dist 9.00e+00 farkas margin -1.8900381828682925e-07 warnings []\n  Simplex(.dual): optimal obj 11.884433256540472 dist 2.08e-08 warnings [ill-conditioned basis, estimate 2.1e9]\n  InteriorPoint(): infeasible obj nil (stalled; the simplex finished from its last iterate)",
+   "confidence": "reproduced",
+   "documented": "Not documented. Defect 8 says the false 'infeasible' found on the Hilbert family is fixed. Defect 9 speaks of condition numbers above about 1e11 and says the answer then stays optimal."
+  },
+  {
+   "id": "A2-03",
+   "title": "After a failed refinement pass, .optimal stands although the refactorized vertex violates feasibility by up to 8e3; the same badly scaled inputs also get false .infeasible verdicts",
+   "severity": "medium",
+   "category": "wrong-result",
+   "claim": "README 4 Results limit: 'Optimal' means 'feasible and dual feasible to 1e-7'; doc comment of SimplexEngine.refine and HANDBOOK 16: 'The pass can only replace an optimal answer by a better one'; the engine's own warning: 'the solution is optimal within the tolerances'.",
+   "observed": "KKT-constructed LP (seed 1273, 7x10, |a| in [2.2e-8, 1.0e6]) with Simplex(.primal, factorization: .sparseQR, scaling: .none): optimal, objective 3.94e7 against the constructed -3.07e8 (relative error 1.13), row violation 496, warning 'the solution is optimal within the tolerances, but a violation of 8186.179927012323 remains that pivoting at tighter tolerances could not remove: the problem is ill-conditioned'. The sweep at row and column scales of 10^±4 gave 27 .optimal answers whose own warning reports a violation above 1e-6, and 9 false .infeasible verdicts whose rays have negative Farkas margins and carry no warning. All of these use scaling: .none; the default geometric scaling is right on every instance, and spreads up to 10^±3 are clean in every configuration.",
+   "whyWrong": "On a fresh factorization the engine measured a violation 8e10 times its tolerance and still returned the status that promises feasibility to 1e-7. refine() restores the basis from before the pass and treats it as optimal, although that re-measurement showed it is not, and the warning text misstates it.",
+   "location": "Sources/ZTronLPSimplex/SimplexEngine+Driver.swift:649-671 (fallback branch of refine(): restores `start` and only warns; a `remaining` above tol.primalFeasibility is neither turned into a non-optimal status nor sent back to the main loop)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 100 .build/release/F2 one 1273 7 10 0 0 4 primal/qr/pretrue/none primal/qr/pretrue/geo   (sweep: perl -e 'alarm shift; exec @ARGV' 500 .build/release/F2 kkt 400 1000 4 1)",
+   "evidence": "primal/qr/pretrue/none: optimal obj 39435549.925776005 viol 0.00e+00/4.96e+02 iters 114 warnings [\"the solution is optimal within the tolerances, but a violation of 8186.179927012323 remains that pivoting at tighter tolerances could not remove: the problem is ill-conditioned\"]\nprimal/qr/pretrue/geo: optimal obj -307388095.1768795 viol 0/0\nsweep: optimal answers whose own warning reports a remaining violation > 1e-6: 27; FALSE-VERDICT ... primal/auto/pretrue/none: infeasible farkas margin -0.000122 warnings []",
+   "confidence": "reproduced",
+   "documented": "Partly. README 3 Risk 1 warns of wrong answers on models unlike the tested ones. Nothing says .optimal can stand when the vertex's own re-measured violation exceeds the tolerance, and the warning calls it 'optimal within the tolerances'."
+  },
+  {
+   "id": "A2-04",
+   "title": "'Beyond a condition number of about 1e11 only the objective can be trusted' holds only for the Hilbert family's objective",
+   "severity": "medium",
+   "category": "doc-claim-false",
+   "claim": "README 3 Risk 1: 'up to a condition number of about 1e10 the solution is recovered, beyond it only the objective is (defect 9)'; README 4 defect 9 title: 'Beyond a condition number of about 1e11 only the objective can be trusted'.",
+   "observed": "Random L·D·U equality LPs (x = 1 unique, generic objective c = Aᵀ1 + 1, 24 instances x 40 configurations). At κ₁ 1e10-1e12 the objective is right (worst 8.1e-8). At κ₁ 1e12-1e14, 165 of 167 .optimal answers have the objective off by more than 1e-6 (worst 1.85 relative); above 1e14, 244 of 244 (worst 3.43). All carry the ill-conditioning warning. In the Hilbert family c = H·1, so cᵀx = 1ᵀHx is pinned by the rows and the objective is right whatever point is returned; that is why the README's measurements look good.",
+   "whyWrong": "The general statement tells users to trust the objective of an ill-conditioned answer. With a generic objective it is as wrong as the point.",
+   "location": "README.md:408 (Risk 1), README.md:461-468 (defect 9)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 300 .build/release/F2 illrandom | grep BUCKET",
+   "evidence": "BUCKET 1e10-1e12: optimal 101, objective off by > 1e-6: 0, worst 8.08e-08\nBUCKET 1e12-1e14: optimal 167, objective off by > 1e-6: 165, worst 1.85e+00\nBUCKET >1e14: optimal 244, objective off by > 1e-6: 244, worst 3.43e+00\n(unwarned far-off optimal answers: 0)",
+   "confidence": "reproduced",
+   "documented": "Misstated: defect 9 generalises from the Hilbert family, whose objective is constant on the near-feasible set."
+  },
+  {
+   "id": "A2-05",
+   "title": "README 5 ill-conditioned table under-counts the warned answers at orders 4 and 5",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "README 5 table, column 'Answers with a warning': order 4 '0 of 12', order 5 '3 of 12'; text: 'The warnings at orders 5 and 6 are the interior point's, whose normal equations stall there'.",
+   "observed": "Order 4: 4 of 12, order 5: 4 of 12. From order 4 on, every InteriorPoint() answer carries the warning '4 column(s) have more than 30% nonzeros; the normal equations will be dense (§8.3)'. At order 5 the stall warning appears on 3 forms. Every other column of the table reproduces (distances, objective errors, all statuses optimal, 12 of 12 warned from order 7).",
+   "whyWrong": "The table counts only the stall warnings, while an answer with any warning is what its column header names.",
+   "location": "README.md:615-616",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 100 .build/release/F2 hilbert 12 ; perl -e 'alarm shift; exec @ARGV' 100 .build/release/F2 hwarn 4",
+   "evidence": "4 | 5.30e-13 | 5.30e-13 | 6.12e-13 | 5.30e-13 | 3.50e-16 | 4 of 12 | []\n5 | 5.77e-12 | 5.84e-12 | 8.21e-12 | 5.77e-12 | 1.38e-16 | 4 of 12 | []\norder 4 equality ipm: optimal warnings [\"4 column(s) have more than 30% nonzeros; the normal equations will be dense (§8.3)\"]",
+   "confidence": "reproduced",
+   "documented": ""
+  },
+  {
+   "id": "A2-06",
+   "title": "SparseQRBasis doc comment says it is chosen when the basis density is below 2%; no code does that",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "Sources/ZTronLPNumerics/BasisFactorization.swift:204-205: 'Chosen when m > 1,500 or the basis density is below 2%.'",
+   "observed": "Simplex.makeFactorization(rows:) picks by m only: rows 100 and 1500 give DenseLUBasis, 1501 gives SparseQRBasis. basisDensity(basic:lp:) is called by no engine, as README 2.7 says.",
+   "whyWrong": "The doc comment describes a selection rule that does not exist.",
+   "location": "Sources/ZTronLPNumerics/BasisFactorization.swift:204-205; Sources/ZTronLPSimplex/Simplex.swift:78-90",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 300 .build/release/F2 engine | tail -1",
+   "evidence": "makeFactorization(rows: 100) is DenseLUBasis: true; rows 1500: true; rows 1501: true",
+   "confidence": "reproduced",
+   "documented": "README 2.7 states it correctly ('What Simplex uses above 1,500 rows'); the doc comment does not."
+  },
+  {
+   "id": "A2-07",
+   "title": "No simplex test checks returned duals or reduced costs beyond one textbook LP, and no test covers crossed bounds",
+   "severity": "low",
+   "category": "test-integrity",
+   "claim": "README 4 Results limit: 'feasible and dual feasible to 1e-7'; the sign convention in Analysis.swift (dual = sensitivity of the reported objective, logical reduced cost = dual); HANDBOOK Testing: oracle 1, constructed optima.",
+   "observed": "ConstructedInstance.dual is used only by ZTronLPCoreTests/ScalingTests and ZTronLPTestSupportTests/FixtureTests. SimplexConstructedOptimaTests, ConstructedOptimaCorpusTests, NetlibCorpusTests and IllConditionedTests assert status, objective and primal feasibility only. The one dual check is SimplexBasicsTests.textbookProblem, a single 2x3 maximisation. A wrong dual sign or dual-infeasible reduced costs would pass the suite. My probes found the duals right: 20800 KKT solves, dual-sign violation at most 8.8e-14. IllConditionedTests asserts a distance of at most 2e-5 for a README claim of 'about 1e-6', and no test exercises crossed bounds (A2-01).",
+   "whyWrong": "Half of the 'optimal' contract, dual feasibility and complementary slackness, has no test that could fail.",
+   "location": "Tests/ZTronLPSimplexTests/SimplexTests.swift:237-290; Tests/ZTronLPIntegrationTests/CorpusTests.swift:211-252; Tests/ZTronLPIntegrationTests/IllConditionedTests.swift:55",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && grep -rn 'instance\\.dual\\|analysis.dual\\|reducedCosts' Tests/ZTronLPSimplexTests Tests/ZTronLPIntegrationTests",
+   "evidence": "grep: instance.dual only in Tests/ZTronLPCoreTests/ScalingTests.swift:164-173 and Tests/ZTronLPTestSupportTests/FixtureTests.swift:45; analysis.dual! only in SimplexBasicsTests.textbookProblem",
+   "confidence": "code-reading-only",
+   "documented": ""
+  }
+ ],
+ "claimsHeld": [
+  {
+   "claim": "C1/C2: every Simplex configuration returns .optimal at the right objective on KKT-constructed LPs (free, negative, fixed and boxed columns; equality, ranged, inactive and free rows; degenerate vertices and alternative optima; min and max). The returned point is feasible, the duals satisfy the sign conditions and complementary slackness, the duality gap is closed, the logical reduced cost equals the dual, and dual = sensitivity of the reported objective, maximize included.",
+   "howChecked": "F2 kkt 400 1000 0 (own generator and checker, Slots/F2/KKT.swift, Common.swift): 20800 solves over 52 configs (method x factorization auto/dense/QR x presolve x scaling none/equil/geo, Dantzig/steepest/partial pricing, perturbation off/always, tolerances 1e-9). 0 failures; worst objErr 8.8e-14, primal violation 1.2e-12, dual sign 8.8e-14, gap 1.3e-13."
+  },
+  {
+   "claim": "C1 on badly scaled data (row and column scales 10^±1 to 10^±3).",
+   "howChecked": "F2 kkt 400 1000 {1,2,3} 1: no .optimal answer with objErr > 1e-6 or primal violation > 1e-6 relative. At ±3, 8 numericalFailure and 2 noSolution(iterationLimit), all honest statuses."
+  },
+  {
+   "claim": "C3: infeasible LPs give .infeasible with a dual ray that is a valid Farkas certificate and no objective.",
+   "howChecked": "F2 infeas 300 1: 12000 solves (40 configs) of Farkas-constructed LPs with infinite sides, min and max. All infeasible; minimum normalised margin 0.086 under an independent check. Edge cases certified in all 40 configs: no columns, all fixed, an infeasibility of 1e-6, presolve-detected infeasibility."
+  },
+  {
+   "claim": "C4: unbounded LPs give .unbounded with an improving recession ray, and the returned point is feasible.",
+   "howChecked": "F2 unbdd 300 1: 12000 solves, all unbounded, rays checked independently (recession within 1e-7, negative slope). An empty improving column in a max model, and a problem with no rows, are also right."
+  },
+  {
+   "claim": "C5: the netlib reference optima in ReferenceValues.swift equal the published netlib optima, and every configuration reaches them, with the README figure of at most 1.3e-11.",
+   "howChecked": "All 13 values compared with the netlib README values I know independently (AFIRO -464.75314286, ..., DEGEN2 -1435.178; SCAGR7 uses the CPLEX value as documented); row and column counts match. F2 netlib: 40 configs x 13 instances optimal, worst relative error 1.33e-11, primal violation <= 1.2e-9, dual sign violation <= 1.6e-13."
+  },
+  {
+   "claim": "C6: up to Hilbert order 8 every LP strategy recovers x to about 1e-6. From order 9 the answer is still optimal, feasible and right in its objective. Ill-conditioned optimal bases are warned, and no configuration reports .optimal at a wrong objective (README 5 table, defects 8 and 9).",
+   "howChecked": "F2 hilbert 12: order 8 dual 4.0e-7, primal 8.7e-7, IPM 7.6e-7, dense solve 1.0e-6. Orders 9-12: distance 1.0-3.1, objective error <= 7.9e-12, 12 of 12 warned. F2 hilbertcfg {7,8,9,10,12} over 52 configs x 4 forms: worst distance at order 8 2.0e-6; orders 9-12 all optimal with violation <= 9.8e-11; 0 far-off answers without a warning."
+  },
+  {
+   "claim": "An ill-conditioned optimal basis is reported with a warning.",
+   "howChecked": "F2 illrandom: 399 .optimal answers more than 1e-3 from the solution, all warned. IllConditioned order-8 warning reproduced."
+  },
+  {
+   "claim": "C7: an iteration limit gives .feasible or .noSolution(stoppedBy: .iterationLimit) with iterations <= maxIterations; a .feasible point is feasible, objectiveValue = objective(at: x), and the bound is valid.",
+   "howChecked": "F2 limits: 5 netlib LPs x 2 methods x presolve on/off x caps 0/1/3/10/40 = 100 runs, 0 violations."
+  },
+  {
+   "claim": "C7: time limits are honoured.",
+   "howChecked": "F2 limits on transport 540x20000, 4 configs, timeLimit 0/0.01/0.05 s: noSolution(stoppedBy: .timeLimit) after 0.002-0.054 s wall."
+  },
+  {
+   "claim": "The refinement pass may exceed maxIterations, as README 2 symbol I documents ('may each add up to 500').",
+   "howChecked": "F2 cap: Simplex(.dual, maxIterations: 14) on Hilbert-8 covering ends optimal after 16 iterations; documented, so not a finding."
+  },
+  {
+   "claim": "C8: a warm start from an optimal basis takes (nearly) no iterations, and primal-point, triangular and slack crash starts and .incremental warm starts are correct.",
+   "howChecked": "F2 warm 40 1: 1632 warm runs (KKT x 40 configs, 8 netlib x methods x presolve), maximum warm iterations 0. .incremental equals a cold solve of the changed LP, and its point is feasible."
+  },
+  {
+   "claim": "C9: degenerate problems terminate without cycling.",
+   "howChecked": "F2 degen: Klee-Minty n = 8 and 15 optimal in all 2 x 4 pricings x 3 perturbations x presolve. At n = 20, Dantzig stops at the 50,000 cap with .feasible(iterationLimit), exponential by design (README 'Search has no polynomial bound'); the other pricings solve it. 1152 assignment LPs (n 6-40, tied integer costs, min and max, 2 factorizations) match the Hungarian optimum with valid KKT."
+  },
+  {
+   "claim": "C10: the numerical building blocks agree with naive references.",
+   "howChecked": "F2 numerics: dense products <= 1.3e-15; weightedGram lower triangle 3.6e-15, upper left zero as documented; sparse products including the Accelerate path at 135,142 nnz with accumulate <= 3.7e-16; 8 triangularSolve variants <= 7.2e-15; DenseLU dense and leading-zero right-hand sides, transposed, <= 8.9e-14; dgecon within x1.77 of exact κ₁; Cholesky, QR, denseSolve nil on singular; DenseLU and DenseLUBasis .singular(positions, rows) whose named logical repairs the basis; SparseQRBasis .singular([], []); ftran and btran after up to 43 product-form updates <= 6.7e-14."
+  },
+  {
+   "claim": "C11: Tolerances.consistent keeps pivot <= min feasibility tolerance and harris <= 0.01 x it.",
+   "howChecked": "Covered by the tol1e-9 configs in the kkt, netlib and hilbertcfg sweeps (all right), and by RefinementTests.ToleranceConsistencyTests, which passed in the baseline."
+  },
+  {
+   "claim": "C12: SimplexEngine's public API: on a Scaler-scaled LP it reports unscaled values; applyBoundChanges takes unscaled units; cutoff semantics.",
+   "howChecked": "F2 engine: 240 runs with KKT checked on the original problem, bound change plus warm basis equal to a cold solve, 40 cutoff checks (gapReached with a valid bound below the optimum, optimal above it). 0 bad."
+  },
+  {
+   "claim": "Gates: build with -warnings-as-errors, lint, debug suite, release integration+liveness suite, TSAN.",
+   "howChecked": "verification/baseline/progress.txt: every step rc=0 (TSAN rc=0, 838 s)."
+  }
+ ],
+ "notChecked": [
+  "Larger LPs (above ~540 rows) in the KKT sweep; the sparse QR path above 1,500 rows was checked only for time limits.",
+  "Event-stream claims (simplex iterations reported at most every 100) and EventSink ordering.",
+  "Metal/kernel-seam behaviour inside the simplex (KernelSeamTests, MetalPolicy.forced).",
+  "The perturbation clean-up limit of 500 iterations (EngineFailure path) and the fragile-pivot limit m + 50; not provoked deliberately.",
+  "Cancellation latency inside the refinement pass (covered by RefinementTests; not re-measured).",
+  "SimplexAnalysis.degeneracy, phase1Iterations and refactorizations counts against an independent count.",
+  "Whether BranchAndBound or CPSAT can generate crossed BoundChanges that reach A2-01 (other areas).",
+  "InteriorPoint's own handling of the A2-02 instance beyond its status (area of another finder)."
+ ],
+ "summary": "Cycle A, F2 (Simplex engine and numerics), claims first. On well-posed inputs the claims held: about 75,000 probe solves found no error in the 52-configuration grid on KKT-constructed LPs (objective, primal feasibility, dual signs, complementary slackness, sign conventions, maximize), on Farkas and recession certificates, on netlib (worst 1.33e-11), on the README Hilbert table, warm starts, limits, degeneracy or the LAPACK/BLAS blocks. There are two critical findings. A2-01: an LP with crossed bounds (xl > xu or rl > ru, reachable through the public CompiledLP initializer and derivations, WarmStart.incremental and SimplexEngine.applyBoundChanges) is answered .optimal at a point that violates its bounds by 1.0, even after presolve has said it is infeasible. A2-02: the primal simplex calls a feasible 11x11 LP with κ₁ = 1.5e9 infeasible, with no warning and a ray that fails the Farkas check. There are two medium ones. A2-03: refine() keeps .optimal when its own re-measurement shows a violation 8e10 times the tolerance; this needs scaling .none on 10^±4 data, which also gives false .infeasible verdicts. A2-04: 'beyond κ ≈ 1e11 only the objective can be trusted' fails for non-Hilbert objectives. Three are low: a README 5 warning count, the SparseQRBasis density doc comment, and no test checking duals or crossed bounds. Probe sources are in verification/probes/cycle-A/Slots/F2, and the log is in verification/cycle-A/F2-simplex.md.",
+ "overflow": [
+  "info: Simplex(.dual) on Klee-Minty starts primal feasible and hands over to the primal method, so the Pricing setting decides its iteration count (n = 20 Dantzig hits the cap); consistent with 'Pricing applies to the primal method'.",
+  "info: from κ ≥ 1e12 the random L·D·U family also gives 87 noSolution(iterationLimit) after 50,000 pivots on n ≤ 12 (stalling, honest status).",
+  "info: DenseLUBasis.ftran/btran silently leave the right-hand side unchanged before the first refactor or after a refactor that threw (guard let lu else return), BasisFactorization.swift:171-181."
+ ]
+}

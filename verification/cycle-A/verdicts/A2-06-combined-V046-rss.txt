@@ -1,0 +1,10 @@
+rss automatic m=1500 n=29600: status optimal pivots 1527 refactorizations 17 obj 229070.000000 2.31s | peak RSS before 10.6 MB after 56.2 MB, growth 45.7 MB (8m^2 = 18.0 MB) | slack-basis density 0.0667%, final basis density 0.1327%
+exit 0
+rss denseLU m=1500 n=29600: status optimal pivots 1527 refactorizations 17 obj 229070.000000 1.98s | peak RSS before 10.6 MB after 56.2 MB, growth 45.7 MB (8m^2 = 18.0 MB) | slack-basis density 0.0667%, final basis density 0.1327%
+exit 0
+rss sparseQR m=1500 n=29600: status optimal pivots 1530 refactorizations 32 obj 229070.000000 0.65s | peak RSS before 10.6 MB after 18.4 MB, growth 7.9 MB (8m^2 = 18.0 MB) | slack-basis density 0.0667%, final basis density 0.1327%
+exit 0
+rss automatic m=1501 n=29620: status optimal pivots 1552 refactorizations 33 obj 241231.000000 0.64s | peak RSS before 10.6 MB after 18.4 MB, growth 7.8 MB (8m^2 = 18.0 MB) | slack-basis density 0.0666%, final basis density 0.1326%
+exit 0
+rss denseLU m=1501 n=29620: status optimal pivots 1554 refactorizations 17 obj 241231.000000 2.02s | peak RSS before 10.6 MB after 56.2 MB, growth 45.7 MB (8m^2 = 18.0 MB) | slack-basis density 0.0666%, final basis density 0.1326%
+exit 0

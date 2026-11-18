@@ -1,0 +1,8 @@
+TALLY dual: [(key: "infeasible", value: 100)]
+TALLY dual-farkas: [(key: "valid", value: 100)]
+TALLY ipm-lite: [(key: "infOrUnb", value: 100)]
+TALLY ipm-lite-nopre: [(key: "infOrUnb", value: 100)]
+TALLY ipm-none: [(key: "infOrUnb", value: 100)]
+TALLY ipm-none-nopre: [(key: "infOrUnb", value: 100)]
+TALLY primal: [(key: "infeasible", value: 100)]
+TALLY primal-farkas: [(key: "valid", value: 100)]

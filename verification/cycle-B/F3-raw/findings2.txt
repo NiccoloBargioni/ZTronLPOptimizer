@@ -1,0 +1,14 @@
+degeneracy seed=700 own=0.08 reported=0.08 severity=info (warning iff > 0.3: false)
+degeneracy seed=701 own=0.04 reported=0.04 severity=info (warning iff > 0.3: false)
+degeneracy seed=702 own=0.4 reported=0.4 severity=warning (warning iff > 0.3: true)
+degeneracy worst |own-reported| = 0.0
+suggestedScaling powers of two: true; equals Scaler.factors: true; scalingIsApplied=false
+on scaled copy: scalingIsApplied=true equals stored: true
+  finding: severe emptyRow(1)
+  finding: warning emptyColumn(2)
+  finding: info emptyRow(2)
+  finding: info freeColumn(2)
+  finding: info denseColumn(0, density: 0.3333333333333333)
+  finding: info denseColumn(1, density: 0.3333333333333333)
+bigM M=9999.0: 0 finding(s)
+bigM M=10000.0: 1 finding(s)

@@ -1,0 +1,13 @@
+p0033 CPSAT(det): [optimal obj 3089.0 relerr 0.0e+00 conflicts 402 lpSolves 588 workers 1 s 0.01] [optimal obj 3089.0 relerr 0.0e+00 conflicts 402 lpSolves 588 workers 1 s 0.01]
+p0033 CPSAT(lp:false,det): [optimal obj 3089.0 relerr 0.0e+00 conflicts 518 lpSolves 0 workers 1 s 0.00] [optimal obj 3089.0 relerr 0.0e+00 conflicts 518 lpSolves 0 workers 1 s 0.00]
+stein27 CPSAT(det): [optimal obj 18.0 relerr 0.0e+00 conflicts 20498 lpSolves 812 workers 1 s 0.13] [optimal obj 18.0 relerr 0.0e+00 conflicts 20498 lpSolves 812 workers 1 s 0.12]
+stein27 CPSAT(lp:false,det): [optimal obj 18.0 relerr 0.0e+00 conflicts 20498 lpSolves 0 workers 1 s 0.10] [optimal obj 18.0 relerr 0.0e+00 conflicts 20498 lpSolves 0 workers 1 s 0.10]
+enigma CPSAT(det): [optimal obj 0.0 relerr 0.0e+00 conflicts 183 lpSolves 337 workers 1 s 0.01] [optimal obj 0.0 relerr 0.0e+00 conflicts 183 lpSolves 337 workers 1 s 0.01]
+enigma CPSAT(lp:false,det): [optimal obj 0.0 relerr 0.0e+00 conflicts 508 lpSolves 0 workers 1 s 0.01] [optimal obj 0.0 relerr 0.0e+00 conflicts 508 lpSolves 0 workers 1 s 0.01]
+lseu CPSAT(det): [optimal obj 1120.0 relerr 0.0e+00 conflicts 6593 lpSolves 14712 workers 1 s 0.38] [optimal obj 1120.0 relerr 0.0e+00 conflicts 6593 lpSolves 14712 workers 1 s 0.38]
+lseu CPSAT(lp:false,det): [optimal obj 1120.0 relerr 0.0e+00 conflicts 390501 lpSolves 0 workers 1 s 4.40] [optimal obj 1120.0 relerr 0.0e+00 conflicts 390501 lpSolves 0 workers 1 s 4.40]
+mod008 CPSAT(det): [optimal obj 307.0 relerr 0.0e+00 conflicts 2908 lpSolves 6616 workers 1 s 0.40] [optimal obj 307.0 relerr 0.0e+00 conflicts 2908 lpSolves 6616 workers 1 s 0.32]
+mod008 CPSAT(lp:false,det): [feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 372.0 relerr 2.1e-01 conflicts 669025 lpSolves 0 workers 1 s 40.00] [feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 372.0 relerr 2.1e-01 conflicts 676188 lpSolves 0 workers 1 s 40.00]
+p0201 CPSAT(det): [optimal obj 7615.0 relerr 0.0e+00 conflicts 1140 lpSolves 3822 workers 1 s 0.65] [optimal obj 7615.0 relerr 0.0e+00 conflicts 1140 lpSolves 3822 workers 1 s 0.69]
+p0201 CPSAT(lp:false,det): [feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 9345.0 relerr 2.3e-01 conflicts 3101890 lpSolves 0 workers 1 s 40.00] [feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 9345.0 relerr 2.3e-01 conflicts 3069747 lpSolves 0 workers 1 s 40.00]
+rc=0

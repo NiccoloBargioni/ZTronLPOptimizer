@@ -1,0 +1,32 @@
+A52 x=4503599627370497 fixed, x+y<=4503599627370497, max y det [CPSAT]: optimal obj=8 x=4503599627370493 y=8 maxViolation(bounds=4.0, rows=4.0) | exact: max y = 0
+A52 x=4503599627370497 fixed, x+y<=4503599627370497, max y par [CPSAT]: optimal obj=8 x=4503599627370493 y=8 maxViolation(bounds=4.0, rows=4.0) | exact: max y = 0
+A52 x=4503599627370497 fixed, x+y<=4503599627370497, max y det-noLP [CPSAT]: optimal obj=8 x=4503599627370493 y=8 maxViolation(bounds=4.0, rows=4.0) | exact: max y = 0
+A52 x=4503599627370497 fixed, x+y<=4503599627370497, max y (context) [BranchAndBound<Simplex(.primal)>]: optimal obj=10 x=4503599577830908 y=10 maxViolation(bounds=49539589.0, rows=0.0) | exact: max y = 0
+A50 x=1125899906842625 fixed, x+y<=1125899906842625, max y det [CPSAT]: optimal obj=2 x=1125899906842624 y=2 maxViolation(bounds=1.0, rows=1.0) | exact: max y = 0
+A50 x=1125899906842625 fixed, x+y<=1125899906842625, max y par [CPSAT]: optimal obj=2 x=1125899906842624 y=2 maxViolation(bounds=1.0, rows=1.0) | exact: max y = 0
+A50 x=1125899906842625 fixed, x+y<=1125899906842625, max y det-noLP [CPSAT]: optimal obj=2 x=1125899906842624 y=2 maxViolation(bounds=1.0, rows=1.0) | exact: max y = 0
+A50 x=1125899906842625 fixed, x+y<=1125899906842625, max y (context) [BranchAndBound<Simplex(.primal)>]: optimal obj=10 x=1125899894457736 y=10 maxViolation(bounds=12384889.0, rows=0.0) | exact: max y = 0
+A48-control x=281474976710657 fixed, x+y<=281474976710657, max y det [CPSAT]: optimal obj=-0 x=281474976710657 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: max y = 0
+A48-control x=281474976710657 fixed, x+y<=281474976710657, max y par [CPSAT]: optimal obj=-0 x=281474976710657 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: max y = 0
+A48-control x=281474976710657 fixed, x+y<=281474976710657, max y det-noLP [CPSAT]: optimal obj=-0 x=281474976710657 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: max y = 0
+A48-control x=281474976710657 fixed, x+y<=281474976710657, max y (context) [BranchAndBound<Simplex(.primal)>]: optimal obj=10 x=281474973614443 y=10 maxViolation(bounds=3096214.0, rows=0.0) | exact: max y = 0
+B (1e15+0.5)x+y>=1e15+1, min y det [CPSAT]: optimal obj=0 x=1 y=0 maxViolation(bounds=0.0, rows=0.5) | exact: min y = 1
+B (1e15+0.5)x+y>=1e15+1, min y par [CPSAT]: optimal obj=0 x=1 y=0 maxViolation(bounds=0.0, rows=0.5) | exact: min y = 1
+B (1e15+0.5)x+y>=1e15+1, min y det-noLP [CPSAT]: optimal obj=0 x=1 y=0 maxViolation(bounds=0.0, rows=0.5) | exact: min y = 1
+B (1e15+0.5)x+y>=1e15+1, min y (context) [BranchAndBound<Simplex(.primal)>]: optimal obj=0 x=1 y=0 maxViolation(bounds=0.0, rows=0.5) | exact: min y = 1
+C x<=2^52+1, max x det [CPSAT]: feasible(timeLimit) obj=1902485 x=1902485 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: 4503599627370497
+C x<=2^52+1, max x par [CPSAT]: optimal obj=4503599627370501 x=4503599627370501 y=0 maxViolation(bounds=4.0, rows=0.0) | exact: 4503599627370497
+C x<=2^52+1, max x det-noLP [CPSAT]: feasible(timeLimit) obj=1954731 x=1954731 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: 4503599627370497
+D row x<=2^49+0.5, max x det [CPSAT]: optimal obj=562949953421313 x=562949953421313 y=0 maxViolation(bounds=0.0, rows=0.5) | exact: 562949953421312 (inward rounding)
+D row x<=2^49+0.5, max x par [CPSAT]: optimal obj=562949953421313 x=562949953421313 y=0 maxViolation(bounds=0.0, rows=0.5) | exact: 562949953421312 (inward rounding)
+D row x<=2^49+0.5, max x det-noLP [CPSAT]: feasible(timeLimit) obj=1984185 x=1984185 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: 562949953421312 (inward rounding)
+E x<=2^53-1, max x det [CPSAT]: THROW unsupported: the bounds of column x are too large for exact integer arithmetic | exact: 9007199254740991 (README: accepted below 2^53)
+E x<=2^53-1, max x par [CPSAT]: THROW unsupported: the bounds of column x are too large for exact integer arithmetic | exact: 9007199254740991 (README: accepted below 2^53)
+E x<=2^53-1, max x det-noLP [CPSAT]: THROW unsupported: the bounds of column x are too large for exact integer arithmetic | exact: 9007199254740991 (README: accepted below 2^53)
+E x<=2^53-4, max x det [CPSAT]: THROW unsupported: the bounds of column x are too large for exact integer arithmetic | exact: 9007199254740988 (README: accepted below 2^53)
+E x<=2^53-4, max x par [CPSAT]: THROW unsupported: the bounds of column x are too large for exact integer arithmetic | exact: 9007199254740988 (README: accepted below 2^53)
+E x<=2^53-4, max x det-noLP [CPSAT]: THROW unsupported: the bounds of column x are too large for exact integer arithmetic | exact: 9007199254740988 (README: accepted below 2^53)
+E x<=2^53-5, max x det [CPSAT]: feasible(timeLimit) obj=1833093 x=1833093 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: 9007199254740987 (README: accepted below 2^53)
+E x<=2^53-5, max x par [CPSAT]: optimal obj=9007199254740991 x=9007199254740991 y=0 maxViolation(bounds=4.0, rows=0.0) | exact: 9007199254740987 (README: accepted below 2^53)
+E x<=2^53-5, max x det-noLP [CPSAT]: feasible(timeLimit) obj=1757669 x=1757669 y=0 maxViolation(bounds=0.0, rows=0.0) | exact: 9007199254740987 (README: accepted below 2^53)
+done

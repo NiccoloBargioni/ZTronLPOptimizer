@@ -1,0 +1,134 @@
+Building for debugging...
+[Computing dependencies]
+[Pre-planning 1 / 595]
+[Planning deferred tasks]
+[136 / 272] ZTronLPOptimizer_ZTronLPTestSupport
+[139 / 272]
+[143 / 274] _AtomicsShims
+[150 / 283] InternalCollectionsUtilities
+[157 / 315]
+[162 / 315]
+[168 / 315] InternalCollectionsUtilities
+[171 / 315] _AtomicsShims
+[174 / 355]
+[176 / 355]
+[180 / 355]
+[190 / 355] InternalCollectionsUtilities
+[194 / 355]
+[201 / 355]
+[205 / 355]
+[208 / 355] Atomics
+[209 / 355]
+[211 / 356]
+[213 / 365] OrderedCollections
+[213 / 365] Atomics
+[215 / 365] OrderedCollections
+[217 / 365]
+[223 / 365] OrderedCollections
+[226 / 365] Atomics
+[238 / 365] OrderedCollections
+[239 / 365] OrderedCollections
+[242 / 365]
+[243 / 365]
+[245 / 365]
+[248 / 366] ZTronLPCore
+[252 / 375]
+[255 / 384] HeapModule
+[258 / 384]
+[262 / 384] BitCollections
+[264 / 384] BitCollections
+[267 / 384] HeapModule
+[273 / 384] BitCollections
+[274 / 384] OrderedCollections
+[289 / 384] BitCollections-product
+[292 / 385]
+[294 / 385]
+[296 / 385] BitCollections
+[296 / 387] ZTronLPCore
+[303 / 427]
+[304 / 427]
+[306 / 427]
+[312 / 427]
+[313 / 427]
+[314 / 427] BitCollections
+[316 / 427]
+[320 / 427]
+[322 / 427]
+[325 / 427]
+[328 / 427]
+[330 / 427]
+[331 / 427]
+[340 / 427] ZTronLPCore
+[347 / 428] ZTronLPNumerics
+[352 / 448]
+[354 / 448]
+[354 / 448] ZTronLPCore
+[356 / 448]
+[357 / 448]
+[358 / 448]
+[359 / 448] ZTronLPCore
+[359 / 448]
+[366 / 448] ZTronLPNumerics
+[367 / 448] ZTronLPNumerics
+[367 / 448] ZTronLPCore
+[369 / 448] ZTronLPNumerics
+[379 / 452]
+[382 / 459] ZTronLPMetal
+[385 / 477] ZTronLPSimplex
+[386 / 477] ZTronLPConditioning
+[398 / 477] ZTronLPMetal
+[399 / 477] ZTronLPTestSupport
+[401 / 477] ZTronLPTestSupport
+[407 / 477] ZTronLPMetal
+[410 / 477] ZTronLPSimplex
+[411 / 477] ZTronLPTestSupport
+[419 / 477] ZTronLPNumerics
+[423 / 477] ZTronLPTestSupport
+[427 / 477] ZTronLPMetal
+[428 / 477] ZTronLPMetal
+[429 / 477] ZTronLPConditioning
+[431 / 477] ZTronLPConditioning
+[431 / 477] ZTronLPMetal
+[432 / 478] ZTronLPMetal
+[434 / 478] ZTronLPTestSupport
+[436 / 479] ZTronLPInteriorPoint
+[438 / 482] ZTronLPInteriorPoint
+[439 / 482] ZTronLPInteriorPoint
+[441 / 490] ZTronLPInteriorPoint
+[442 / 490] ZTronLPCPSAT
+[455 / 490] ZTronLPSimplex
+[457 / 490] ZTronLPCPSAT
+[458 / 490] ZTronLPConditioning
+[460 / 490] ZTronLPInteriorPoint
+[464 / 491] ZTronLPInteriorPoint
+[466 / 496] ZTronLPBranchAndBound
+[467 / 496] ZTronLPBranchAndBound
+[468 / 496] ZTronLPCPSAT
+[475 / 496] ZTronLPBranchAndBound
+[476 / 497]
+[476 / 497] ZTronLPOptimizer
+[478 / 502] ZTronLPCPSAT
+[480 / 502] ZTronLPOptimizer
+[483 / 502] ZTronLPOptimizer
+[490 / 503] ZTronLPOptimizer
+[491 / 503] F1-product
+[495 / 540]
+[500 / 540]
+[502 / 540]
+[503 / 540]
+[504 / 540] ZTronLPBranchAndBound
+[505 / 540]
+[509 / 540]
+[513 / 540]
+[516 / 540]
+[520 / 540]
+[523 / 540]
+[525 / 540] ZTronLPInteriorPoint
+[527 / 540]
+[528 / 540]
+[531 / 540]
+[532 / 540]
+[533 / 540]
+[535 / 540] F1-product
+[538 / 540] F1-product
+Build complete! (40,83 s)

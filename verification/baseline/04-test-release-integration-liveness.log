@@ -1,0 +1,251 @@
+Building for production...
+[Computing dependencies]
+[Using on-disk description]
+[20 / 72] InternalCollectionsUtilities
+[24 / 74] CLAPACKShim
+[25 / 74] CLAPACKShim
+[26 / 74] InternalCollectionsUtilities
+[37 / 91] HeapModule
+[39 / 87] Atomics
+[44 / 90] OrderedCollections
+[48 / 82] ZTronLPCore
+[51 / 83] ZTronLPNumerics
+[54 / 85] ZTronLPNumerics
+[61 / 102] ZTronLPTestSupport
+[66 / 106] ZTronLPMetal
+[70 / 103] ZTronLPTestSupport
+[77 / 113] ZTronLPTestSupportTests-product
+[82 / 118] ZTronLPConditioning
+[87 / 118] ZTronLPConditioningTests-product
+[88 / 119] ZTronLPTestSupportTests-product
+[91 / 119] ZTronLPTestSupportTests-product
+[93 / 120] ZTronLPTestSupportTests-product
+[94 / 121] ZTronLPMetalTests-product
+[96 / 121] ZTronLPSimplex
+[102 / 129] ZTronLPInteriorPoint
+[105 / 132] ZTronLPConditioningTests-product
+[107 / 132] ZTronLPConditioningTests-product
+[107 / 132] ZTronLPNumericsTests-product
+[109 / 132] ZTronLPNumericsTests-product
+[109 / 132] ZTronLPInteriorPoint
+[115 / 137] ZTronLPInteriorPointTests-product
+[117 / 139] ZTronLPInteriorPointTests-product
+[119 / 139] ZTronLPBranchAndBound
+[124 / 139] ZTronLPBranchAndBoundTests-product
+[125 / 140] ZTronLPSimplexTests-product
+[129 / 147] ZTronLPSimplexTests-product
+[131 / 147] ZTronLPSimplexTests-product
+[132 / 146] ZTronLPBranchAndBoundTests-product
+[134 / 146] ZTronLPBranchAndBoundTests-product
+[134 / 146] ZTronLPCPSAT
+[139 / 150] ZTronLPOptimizer
+[142 / 152] ZTronLPOptimizer
+[149 / 160] ZTronLPBenchmarks-product
+[154 / 164] ZTronLPBenchmarks-product
+[156 / 164] ZTronLPIntegrationTests-product
+[158 / 165] ZTronLPBenchmarks-product
+[158 / 165] ZTronLPIntegrationTests-product
+[158 / 165] ZTronLPOptimizerTests-product
+[163 / 173] ZTronLPOptimizerTests-product
+[165 / 173] ZTronLPOptimizerTests-product
+[168 / 174] ZTronLPNumericsTests-product
+[171 / 177] ZTronLPMetalTests-product
+[171 / 178] ZTronLPLivenessTests-product
+[176 / 181] ZTronLPCoreTests-product
+[183 / 184] ZTronLPCoreTests-product
+[183 / 184] ZTronLPLivenessTests-product
+[186 / 187] ZTronLPInteriorPointTests-product
+[189 / 192] ZTronLPIntegrationTests-product
+[191 / 194] ZTronLPCoreTests-product
+[194 / 195] ZTronLPConditioningTests-product
+[195 / 196] ZTronLPCPSATTests-product
+[199 / 203] ZTronLPCPSATTests-product
+[201 / 203] ZTronLPCPSATTests-product
+[204 / 204] ZTronLPBranchAndBoundTests-product
+[205 / 205] ZTronLPBenchmarks-product
+Build complete! (48,12 s)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite L6SafeguardTests started.
+◇ Suite L5LimitRetryTests started.
+◇ Suite L10EventOrderTests started.
+◇ Suite L2ReuseAfterStoppingTests started.
+◇ Suite L9FailFastTests started.
+◇ Suite L1CancellationLatencyTests started.
+◇ Suite L8PoolStarvationTests started.
+◇ Suite L4SearchTreeTests started.
+◇ Suite L3TerminationTests started.
+◇ Suite L7MemoryBudgetTests started.
+◇ Test residualFailuresExhaustIntoNumericalFailure() started.
+◇ Test perturbationCleanupIsBounded() started.
+◇ Test choleskyRetriesAreBoundedAndEndInLDLT() started.
+◇ Test theLimitPathDoesNotHangWithManyWorkers() started.
+◇ Test aNodeThatAlwaysHitsItsLimitEndsInNumericalFailure() started.
+◇ Test everyExitPathOfEveryEngine() started.
+◇ Test aThrowingSolveStillFinishesOnce() started.
+◇ Test cancelThenSolveAgainWithTheSameStrategyValue() started.
+◇ Test cancellationLatencyAcrossEngines() started.
+◇ Test closeResumesEveryWaiter() started.
+◇ Test aTimerKeepsTickingWhileEveryCoreSolves() started.
+◇ Test noMemoryBudgetStopsInsteadOfWaiting() started.
+◇ Test cpSatTerminatesOnSatisfiableAndUnsatisfiableModels() started.
+◇ Test anUnsupportedModelThrowsAtOnce() started.
+◇ Test kleeMintyAndBealeTerminate() started.
+◇ Test stressRandomTreesWithRandomCancellation() started.
+◇ Test iterationAndNodeLimitsBoundEverySolve() started.
+◇ Test withoutAGPUTheSolveRunsOnTheCPU() started.
+◇ Test degenerateNetlibInstanceTerminates() started.
+◇ Test sixteenMegabytesIsEnoughAndIsRespected() started.
+◇ Test aBudgetTooSmallForTheTreeStopsWithTheIncumbent() started.
+✔ Test aNodeThatAlwaysHitsItsLimitEndsInNumericalFailure() passed after 0.009 seconds.
+✔ Test perturbationCleanupIsBounded() passed after 0.009 seconds.
+✔ Test aThrowingSolveStillFinishesOnce() passed after 0.012 seconds.
+✔ Test kleeMintyAndBealeTerminate() passed after 0.012 seconds.
+✔ Test anUnsupportedModelThrowsAtOnce() passed after 0.012 seconds.
+✔ Test choleskyRetriesAreBoundedAndEndInLDLT() passed after 0.013 seconds.
+✔ Test residualFailuresExhaustIntoNumericalFailure() passed after 0.015 seconds.
+✔ Test theLimitPathDoesNotHangWithManyWorkers() passed after 0.015 seconds.
+✔ Test noMemoryBudgetStopsInsteadOfWaiting() passed after 0.015 seconds.
+✔ Suite L6SafeguardTests passed after 0.018 seconds.
+✔ Suite L5LimitRetryTests passed after 0.018 seconds.
+✔ Test cpSatTerminatesOnSatisfiableAndUnsatisfiableModels() passed after 0.028 seconds.
+✔ Test closeResumesEveryWaiter() passed after 0.028 seconds.
+✔ Test withoutAGPUTheSolveRunsOnTheCPU() passed after 0.029 seconds.
+✔ Suite L9FailFastTests passed after 0.030 seconds.
+✔ Test aBudgetTooSmallForTheTreeStopsWithTheIncumbent() passed after 0.030 seconds.
+✔ Test everyExitPathOfEveryEngine() passed after 0.085 seconds.
+✔ Suite L10EventOrderTests passed after 0.085 seconds.
+✔ Test iterationAndNodeLimitsBoundEverySolve() passed after 0.085 seconds.
+✔ Test sixteenMegabytesIsEnoughAndIsRespected() passed after 0.268 seconds.
+✔ Suite L7MemoryBudgetTests passed after 0.269 seconds.
+✔ Test degenerateNetlibInstanceTerminates() passed after 0.418 seconds.
+✔ Suite L3TerminationTests passed after 0.418 seconds.
+✔ Test aTimerKeepsTickingWhileEveryCoreSolves() passed after 0.721 seconds.
+✔ Suite L8PoolStarvationTests passed after 0.721 seconds.
+✔ Test stressRandomTreesWithRandomCancellation() passed after 1.212 seconds.
+✔ Suite L4SearchTreeTests passed after 1.212 seconds.
+✔ Test cancelThenSolveAgainWithTheSameStrategyValue() passed after 1.291 seconds.
+◇ Test concurrentSolvesOnOneStrategyValue() started.
+✔ Test concurrentSolvesOnOneStrategyValue() passed after 0.008 seconds.
+✔ Suite L2ReuseAfterStoppingTests passed after 1.300 seconds.
+✔ Test cancellationLatencyAcrossEngines() passed after 23.111 seconds.
+◇ Test cancellationReachesBothKindsOfCPSATWorker(_:) started.
+◇ Test case passing 1 argument lpPropagator → true to cancellationReachesBothKindsOfCPSATWorker(_:) started.
+◇ Test case passing 1 argument lpPropagator → false to cancellationReachesBothKindsOfCPSATWorker(_:) started.
+✔ Test cancellationReachesBothKindsOfCPSATWorker(_:) with 2 test cases passed after 57.532 seconds.
+◇ Test timeLimitsAreHonouredPromptly() started.
+✔ Test timeLimitsAreHonouredPromptly() passed after 0.500 seconds.
+✔ Suite L1CancellationLatencyTests passed after 81.145 seconds.
+✔ Test run with 24 tests in 10 suites passed after 81.145 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite ConstructedOptimaCorpusTests started.
+◇ Suite MIPLIBCorpusTests started.
+◇ Suite CertificateTests started.
+◇ Suite NetlibCorpusTests started.
+◇ Test primalSimplex() started.
+◇ Test dualSimplex() started.
+◇ Test cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test interiorPoint() started.
+◇ Test interiorPointRootOnAMixedInstance() started.
+◇ Test cpSatWithoutTheLPPropagator(_:) started.
+◇ Test infeasibleResultsCarryADualRay() started.
+◇ Suite IllConditionedTests started.
+◇ Test unboundedResultsCarryAPrimalRay() started.
+◇ Test warmStartsBeatColdStartsOnModifiedInstances(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0033", rows: 16, columns: 33, optimalObjective: 3089.0, pureInteger: true) to cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein45", rows: 331, columns: 45, optimalObjective: 30.0, pureInteger: true) to cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein27", rows: 118, columns: 27, optimalObjective: 18.0, pureInteger: true) to cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "enigma", rows: 21, columns: 100, optimalObjective: 0.0, pureInteger: true) to cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0033", rows: 16, columns: 33, optimalObjective: 3089.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "lseu", rows: 28, columns: 89, optimalObjective: 1120.0, pureInteger: true) to cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein27", rows: 118, columns: 27, optimalObjective: 18.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "mod008", rows: 6, columns: 319, optimalObjective: 307.0, pureInteger: true) to cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein45", rows: 331, columns: 45, optimalObjective: 30.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0201", rows: 133, columns: 201, optimalObjective: 7615.0, pureInteger: true) to cpSatClosesEveryPureIntegerInstance(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "enigma", rows: 21, columns: 100, optimalObjective: 0.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "lseu", rows: 28, columns: 89, optimalObjective: 1120.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "mod008", rows: 6, columns: 319, optimalObjective: 307.0, pureInteger: true) to cpSatWithoutTheLPPropagator(_:) started.
+◇ Test case passing 1 argument name → "share2b" to warmStartsBeatColdStartsOnModifiedInstances(_:) started.
+◇ Test case passing 1 argument name → "scagr7" to warmStartsBeatColdStartsOnModifiedInstances(_:) started.
+◇ Test case passing 1 argument name → "israel" to warmStartsBeatColdStartsOnModifiedInstances(_:) started.
+◇ Test case passing 1 argument name → "beaconfd" to warmStartsBeatColdStartsOnModifiedInstances(_:) started.
+◇ Test case passing 1 argument name → "stocfor1" to warmStartsBeatColdStartsOnModifiedInstances(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0033", rows: 16, columns: 33, optimalObjective: 3089.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein27", rows: 118, columns: 27, optimalObjective: 18.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stein45", rows: 331, columns: 45, optimalObjective: 30.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "enigma", rows: 21, columns: 100, optimalObjective: 0.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "lseu", rows: 28, columns: 89, optimalObjective: 1120.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "mod008", rows: 6, columns: 319, optimalObjective: 307.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "flugpl", rows: 18, columns: 18, optimalObjective: 1201500.0, pureInteger: false) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "egout", rows: 98, columns: 141, optimalObjective: 568.1007, pureInteger: false) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "misc03", rows: 96, columns: 160, optimalObjective: 3360.0, pureInteger: false) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "p0201", rows: 133, columns: 201, optimalObjective: 7615.0, pureInteger: true) to branchAndBoundWithBothStrategies(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "afiro", rows: 27, columns: 32, optimalObjective: -464.75314286, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50a", rows: 50, columns: 48, optimalObjective: -64.575077059, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc50b", rows: 50, columns: 48, optimalObjective: -70.0, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "sc105", rows: 105, columns: 103, optimalObjective: -52.202061212, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "kb2", rows: 43, columns: 41, optimalObjective: -1749.9001299, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "adlittle", rows: 56, columns: 97, optimalObjective: 225494.96316, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "blend", rows: 74, columns: 83, optimalObjective: -30.812149846, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "share2b", rows: 96, columns: 79, optimalObjective: -415.73224074, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "stocfor1", rows: 117, columns: 111, optimalObjective: -41131.976219, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "scagr7", rows: 129, columns: 140, optimalObjective: -2331389.8243, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "beaconfd", rows: 173, columns: 262, optimalObjective: 33592.485807, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "israel", rows: 174, columns: 142, optimalObjective: -896644.82186, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test case passing 1 argument instance → ReferenceInstance(name: "degen2", rows: 444, columns: 534, optimalObjective: -1435.178, pureInteger: false) to everyEngineReachesThePublishedOptimumAndTheyAgree(_:) started.
+◇ Test anIllConditionedOptimalBasisIsReported() started.
+◇ Test everyLPStrategyFindsTheOnlyOptimum(_:) started.
+◇ Test branchAndBoundFindsTheIntegerPoint(_:) started.
+◇ Test beyondDoublePrecisionNothingIsCalledInfeasible(_:) started.
+◇ Test theInteriorPointDoesNotMistakeAStallForInfeasibility() started.
+◇ Test loweringOnlyTheFeasibilityTolerancesWorks(_:) started.
+✔ Test infeasibleResultsCarryADualRay() passed after 0.285 seconds.
+✔ Test unboundedResultsCarryAPrimalRay() passed after 0.286 seconds.
+◇ Test case passing 1 argument order → 3 to everyLPStrategyFindsTheOnlyOptimum(_:) started.
+◇ Test case passing 1 argument order → 4 to everyLPStrategyFindsTheOnlyOptimum(_:) started.
+◇ Test case passing 1 argument order → 5 to everyLPStrategyFindsTheOnlyOptimum(_:) started.
+◇ Test case passing 1 argument order → 6 to everyLPStrategyFindsTheOnlyOptimum(_:) started.
+◇ Test case passing 1 argument order → 7 to everyLPStrategyFindsTheOnlyOptimum(_:) started.
+◇ Test case passing 1 argument order → 8 to everyLPStrategyFindsTheOnlyOptimum(_:) started.
+◇ Test case passing 1 argument order → 4 to branchAndBoundFindsTheIntegerPoint(_:) started.
+◇ Test case passing 1 argument order → 6 to branchAndBoundFindsTheIntegerPoint(_:) started.
+◇ Test case passing 1 argument order → 7 to branchAndBoundFindsTheIntegerPoint(_:) started.
+◇ Test case passing 1 argument order → 8 to branchAndBoundFindsTheIntegerPoint(_:) started.
+◇ Test case passing 1 argument order → 10 to beyondDoublePrecisionNothingIsCalledInfeasible(_:) started.
+◇ Test case passing 1 argument order → 12 to beyondDoublePrecisionNothingIsCalledInfeasible(_:) started.
+◇ Test case passing 1 argument method → .dual to loweringOnlyTheFeasibilityTolerancesWorks(_:) started.
+◇ Test case passing 1 argument method → .primal to loweringOnlyTheFeasibilityTolerancesWorks(_:) started.
+◇ Test case passing 1 argument order → 5 to branchAndBoundFindsTheIntegerPoint(_:) started.
+✔ Test anIllConditionedOptimalBasisIsReported() passed after 0.143 seconds.
+✔ Test loweringOnlyTheFeasibilityTolerancesWorks(_:) with 2 test cases passed after 0.147 seconds.
+✔ Suite CertificateTests passed after 0.426 seconds.
+✔ Test theInteriorPointDoesNotMistakeAStallForInfeasibility() passed after 0.166 seconds.
+✔ Test warmStartsBeatColdStartsOnModifiedInstances(_:) with 5 test cases passed after 0.434 seconds.
+✔ Test everyLPStrategyFindsTheOnlyOptimum(_:) with 6 test cases passed after 0.728 seconds.
+✔ Test beyondDoublePrecisionNothingIsCalledInfeasible(_:) with 2 test cases passed after 0.780 seconds.
+✔ Test branchAndBoundFindsTheIntegerPoint(_:) with 5 test cases passed after 1.320 seconds.
+✔ Suite IllConditionedTests passed after 1.670 seconds.
+✔ Test everyEngineReachesThePublishedOptimumAndTheyAgree(_:) with 13 test cases passed after 4.291 seconds.
+✔ Suite NetlibCorpusTests passed after 4.342 seconds.
+✔ Test interiorPoint() passed after 5.526 seconds.
+✔ Test primalSimplex() passed after 34.404 seconds.
+✔ Test dualSimplex() passed after 37.063 seconds.
+✔ Suite ConstructedOptimaCorpusTests passed after 37.080 seconds.
+━ Test cpSatWithoutTheLPPropagator(_:) recorded a known issue with 1 argument instance → ReferenceInstance(name: "mod008", rows: 6, columns: 319, optimalObjective: 307.0, pureInteger: true) at CorpusTests.swift:184:17: Expectation failed: analysis.status == .optimal
+↳ mod008: .feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit), incumbent 333.0 vs 307.0
+↳ CP-SAT without the LP propagator does not prove mod008 optimal within 60 s
+↳ analysis.status == .optimal → false
+↳   analysis.status → .feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit)
+↳     feasible → (stoppedBy: ZTronLPCore.StopReason.timeLimit)
+↳       stoppedBy → .timeLimit
+━ Test cpSatWithoutTheLPPropagator(_:) with 6 test cases passed after 75.888 seconds with 1 known issue.
+✔ Test cpSatClosesEveryPureIntegerInstance(_:) with 7 test cases passed after 76.347 seconds.
+✔ Test interiorPointRootOnAMixedInstance() passed after 78.115 seconds.
+✔ Test branchAndBoundWithBothStrategies(_:) with 10 test cases passed after 113.548 seconds.
+━ Suite MIPLIBCorpusTests passed after 113.548 seconds with 1 known issue.
+━ Test run with 17 tests in 5 suites passed after 113.548 seconds with 1 known issue.

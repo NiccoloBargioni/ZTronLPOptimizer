@@ -1,0 +1,15 @@
+ipm-lite optimal obj=3.75 x=[-1.0, 1.25, 0.75] status=[ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.atUpper, ZTronLPCore.BasisSt
+    basis primalInf=0.000e+00 dualInf=8.333e-01 xDiff=0.000e+00 objDiff=0.000e+00   <-- basis not optimal
+    warm start Simplex(primal, presolve: false) from it: optimal iterations=1
+    warm start Simplex(dual, presolve: false) from it: optimal iterations=1
+ipm-lite-nopre optimal obj=3.75 x=[-1.0, 1.25, 0.75] status=[ZTronLPCore.BasisStatus.atUpper, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.B
+    basis primalInf=0.000e+00 dualInf=0.000e+00 xDiff=0.000e+00 objDiff=0.000e+00 
+    warm start Simplex(primal, presolve: false) from it: optimal iterations=0
+    warm start Simplex(dual, presolve: false) from it: optimal iterations=0
+dual optimal obj=3.75 x=[-1.0, 1.25, 0.75] status=[ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.basic, ZTronLPCore.BasisStatus.atUpper, ZTronLPCore.BasisStatus
+    basis primalInf=0.000e+00 dualInf=8.333e-01 xDiff=0.000e+00 objDiff=0.000e+00   <-- basis not optimal
+    warm start Simplex(primal, presolve: false) from it: optimal iterations=1
+    warm start Simplex(dual, presolve: false) from it: optimal iterations=1
+    basis primalInf=0.000e+00 dualInf=8.333e-01 xDiff=0.000e+00 objDiff=0.000e+00   <-- basis not optimal
+    warm start Simplex(primal, presolve: false) from it: optimal iterations=1
+    warm start Simplex(dual, presolve: false) from it: optimal iterations=1

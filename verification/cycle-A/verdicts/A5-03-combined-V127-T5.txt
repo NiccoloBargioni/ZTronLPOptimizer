@@ -1,0 +1,39 @@
+T5 a=99999999, a*x <= 5a-1, max x [det] expect opt=-4 x=[4] | optimal obj=-4 x=[4] exactViolation(bounds=0.0, rows=0.0) => OK
+T5 a=99999999, a*x <= 5a-1, max x [par] expect opt=-4 x=[4] | optimal obj=-4 x=[4] exactViolation(bounds=0.0, rows=0.0) => OK
+T5 a=99999999, a*x <= 5a-1, max x [detnolp] expect opt=-4 x=[4] | optimal obj=-4 x=[4] exactViolation(bounds=0.0, rows=0.0) => OK
+T5 a=99999999, a*x >= 5a+1, min x [det] expect opt=6 x=[6] | optimal obj=6 x=[6] exactViolation(bounds=0.0, rows=0.0) => OK
+T5 a=99999999, a*x >= 5a+1, min x [par] expect opt=6 x=[6] | optimal obj=6 x=[6] exactViolation(bounds=0.0, rows=0.0) => OK
+T5 a=99999999, a*x >= 5a+1, min x [detnolp] expect opt=6 x=[6] | optimal obj=6 x=[6] exactViolation(bounds=0.0, rows=0.0) => OK
+T5 a=999999999, a*x <= 5a-1, max x [det] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=999999999, a*x <= 5a-1, max x [par] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=999999999, a*x <= 5a-1, max x [detnolp] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=999999999, a*x >= 5a+1, min x [det] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=999999999, a*x >= 5a+1, min x [par] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=999999999, a*x >= 5a+1, min x [detnolp] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000000, a*x <= 5a-1, max x [det] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000000, a*x <= 5a-1, max x [par] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000000, a*x <= 5a-1, max x [detnolp] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000000, a*x >= 5a+1, min x [det] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000000, a*x >= 5a+1, min x [par] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000000, a*x >= 5a+1, min x [detnolp] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000001, a*x <= 5a-1, max x [det] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000001, a*x <= 5a-1, max x [par] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000001, a*x <= 5a-1, max x [detnolp] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000001, a*x >= 5a+1, min x [det] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000001, a*x >= 5a+1, min x [par] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1000000001, a*x >= 5a+1, min x [detnolp] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=10000000001, a*x <= 5a-1, max x [det] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=10000000001, a*x <= 5a-1, max x [par] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=10000000001, a*x <= 5a-1, max x [detnolp] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=10000000001, a*x >= 5a+1, min x [det] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=10000000001, a*x >= 5a+1, min x [par] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=10000000001, a*x >= 5a+1, min x [detnolp] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1099511627777, a*x <= 5a-1, max x [det] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1099511627777, a*x <= 5a-1, max x [par] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1099511627777, a*x <= 5a-1, max x [detnolp] expect opt=-4 x=[4] | optimal obj=-5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1099511627777, a*x >= 5a+1, min x [det] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1099511627777, a*x >= 5a+1, min x [par] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+T5 a=1099511627777, a*x >= 5a+1, min x [detnolp] expect opt=6 x=[6] | optimal obj=5 x=[5] exactViolation(bounds=0.0, rows=1.0) => INFEASIBLE-POINT
+
+SUMMARY (per group: ok-or-within-documented-gap / wrong (infeasible point or objective beyond gap) / rejected unsupported / other)
+  T5: ok=6 wrong=30 rejected=0 other=0  first wrong: a=999999999, a*x <= 5a-1, max x [det]

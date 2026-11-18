@@ -1,0 +1,192 @@
+{
+ "area": "F5 CP-SAT (cycle B, oracles first)",
+ "findings": [
+  {
+   "id": "B5-01",
+   "title": "Integer bounds and row bounds of magnitude >= 2^50 are widened by 1 to 4 units; CP-SAT returns .optimal at a point that violates them",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "README §2.5 (CPSAT row) and §4 'Limits by design': CP-SAT accepts bounds and scaled coefficients below 2^53 and rejects only magnitudes of 2^53 or more; CPModel.swift header: 'CP-SAT works on pure integer programs in exact Int64 arithmetic', 'Root domains, rounded inward to integers'.",
+   "observed": "With default CPSAT(): x integer in [2^52+1, 2^52+10], min x -> .optimal x = 4503599627370493 (= 2^52-3), CompiledLP.maxViolation bounds = 4.0. x in [2^50+3, 2^50+8] -> .optimal x = 2^50+2 (violation 1.0). x - y = 2^52+1, x in [0,2^52+3], y in [0,10], min x -> .optimal (2^52-3, 0), row violation 4.0. x in [0, 2^53-5], max x -> .optimal 2^53-1 (violation 4.0). With CPSAT(deterministic: true): max x s.t. row x <= 2^50+5 -> .optimal x = 2^50+6. 127x - 125y >= 1 over [-2^52, 2^52] -> y = -(2^52+4).",
+   "whyWrong": "The bounds are exact integers, exactly representable in Double and inside the accepted range; the returned point is infeasible in exact arithmetic (and by the package's own maxViolation), yet labelled .optimal. CPSAT.violation's relative 1e-6 safety net cannot see a violation of 4 at 4.5e15.",
+   "location": "Sources/ZTronLPCPSAT/CPModel.swift:117-119 (snapTolerance = max(1e-9, 4*ulp)) applied as (xl - tol).rounded(.up) / (xu + tol).rounded(.down) at CPModel.swift:173-174 and to row bounds at CPModel.swift:335 and :347; same at LPRelaxation.swift:95 and :99. For |v| >= 2^50, 4 ulp >= 1, so an integral bound moves outward by floor(4 ulp) = 1, 2 or 4.",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F5 -c release && .build/release/F5 min   (lines M1, M1b, M2b, M8b); .build/release/F5 domain   (lines D4d, D4e, D4f, D4g', D4h, D7c, D7d)",
+   "evidence": "[M1 x in [2^52+1, 2^52+10], min x, CPSAT()] optimal obj=4503599627370493.0 bound=4503599627370493.0 x=(4503599627370493) maxViolation(bounds 4.0, rows 0.0); [M2b x - y = 2^52+1 ...] optimal x=(4503599627370493,0) maxViolation(bounds 0.0, rows 4.0); [M8b x in [0, 2^53-5], max x] optimal x=(9007199254740991) maxViolation(bounds 4.0, rows 0.0); [D4g' max x s.t. x <= 2^50+5, det LP] optimal x=1125899906842630",
+   "confidence": "reproduced",
+   "documented": ""
+  },
+  {
+   "id": "B5-02",
+   "title": "Coefficients that no power of 10 up to 1e6 makes integral (or whose scaling passes 2^53) are silently rounded instead of rejected: false optimum, or SolverError.internalInconsistency",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "README §2.5 CPSAT row: 'Throws .unsupported for ... data that no power of 10 up to 1e6 makes integral, bounds or scaled coefficients of magnitude 2^53 or more'; §4 Limits: data must become integral when multiplied by a power of 10 up to 10^6. SolverError.internalInconsistency doc (Status.swift): 'A bug in the solver; never caused by user data.'",
+   "observed": "(2^49+0.375)x + (2^49+0.375)y - (2^50+0.75)z = 0 over binaries, max x+y+z -> CPSAT() .optimal 0 at (0,0,0), although (1,1,1) satisfies the row exactly (CompiledLP.maxViolation 0) with objective 3. 1e-10 x0 + 1e-10 x1 >= 1e-10, min x0+x1 -> .optimal 0 (coefficients zeroed; true 1). max (2^49+0.5)x -> objective 562949953421313 (cost rounded). x - 1.0000000009 y >= 0 with y = 1e6, and (2^48+0.1875)x - 2^48 y <= 0 -> SolverError.internalInconsistency('CP-SAT returned a point that violates row c1') instead of .unsupported. By contrast 1e-7 and 1.0000001 are rejected correctly.",
+   "whyWrong": "The README promises rejection for this data. 0.375 at 2^49 needs scale 1000 (5.6e17 >= 2^53), 1e-10 and 1.0000000009 need 10^10; instead they are accepted at scale 1 and rounded, which changes the feasible set (false optimum 0 vs 3, labelled .optimal) or trips the final violation check, so valid input gets an error documented as never caused by user data.",
+   "location": "Sources/ZTronLPCPSAT/CPModel.swift:122-139 integralScale: a value counts as integral when within snapTolerance = max(1e-9, 4 ulp) (CPModel.swift:117-119), so fractions <= 1e-9, or <= 4 ulp (0.25 at 2^48, 0.5 at 2^49), pass at scale 1; CPModel.swift:302 (rows) and :366 (objective) then round them. CPSAT.swift:286-290 turns the resulting violation into internalInconsistency.",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F5 -c release && .build/release/F5 min   (lines M3, M4, M7, M7b); .build/release/F5 domain   (lines D2, D2b, D5a, D5b, D5b', D5d)",
+   "evidence": "[M3 (2^49+.375)x + (2^49+.375)y - (2^50+.75)z = 0, binaries, max x+y+z, CPSAT()] optimal obj=-0.0 x=(0,0,0); truth: optimal 3 at (1,1,1); maxViolation at (1,1,1) = (bounds 0.0, rows 0.0). [M4 1e-10 ...] optimal obj=0.0 x=(0,0) maxViolation(rows 1e-10). [M7] THROW internal inconsistency: CP-SAT returned a point that violates row c1",
+   "confidence": "reproduced",
+   "documented": "Not in README/HANDBOOK. A code comment (CPModel.swift:113-116) calls the 4-ulp snap a guard against 'noise in large data'; README promises rejection instead."
+  },
+  {
+   "id": "B5-03",
+   "title": "With decimal costs and |objective| < 1, CP-SAT stops up to 1e-4 (absolute) from the bound and reports .optimal: answers 2% to 50x off, where its API doc promises an exact proof",
+   "severity": "high",
+   "category": "doc-claim-false",
+   "claim": "CPSAT doc comment (CPSAT.swift:85-88): 'The search stops as soon as the incumbent is within the MIP gap of §6.5 (relative 1e-4, absolute 1e-6) ... this is an exact proof whenever 1e-4·|objective| is smaller than that step'. README risk 10: inexactness is 'Medium on large objective values', 'for CP-SAT, keep objective values below 10^4'. SolutionAnalysis.bound (Analysis.swift:22): 'equals objectiveValue when optimal'.",
+   "observed": "max 1e-6*x, x integer in [0,50] (one column, no row) -> .optimal objective 1e-06, bound 5e-05 (true 5e-05), with CPSAT() and CPSAT(deterministic: true). min sum_{j=1..50} j*1e-6 x_j s.t. sum x_j >= 1 -> .optimal 5e-05 (the worst feasible choice), bound 0, true 1e-06, in every configuration including CPSAT(). 1e-6-scaled knapsack -> .optimal 1.3e-05 (deterministic, no LP) and 2.3e-05 (4 workers) vs 2.4e-05. Exhaustive enumeration with costs scaled by 10^-ec (ec <= 6): 109 of 2800 solves .optimal with a non-optimal value (0 of 7000 with integral costs).",
+   "whyWrong": "Step 1e-6 and |objective| <= 5e-5, so 1e-4·|objective| <= 5e-9 < step: the doc promises an exact proof. The stop rule is diff <= max(1e-6, 1e-4·max(1,|incumbent|)), which is an absolute 1e-4 (100 steps, 100x the 'absolute 1e-6' named) whenever |incumbent| <= 1. Shrinking the objective, the README's mitigation, makes it worse. .optimal with bound != objectiveValue also contradicts the SolutionAnalysis.bound contract.",
+   "location": "Sources/ZTronLPCPSAT/Portfolio.swift:105-113 (checkGap; allowed = max(absoluteGap, relativeGap * max(1, |reportedObjective(best)|)) at :109); claim at Sources/ZTronLPCPSAT/CPSAT.swift:85-88.",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F5 -c release && .build/release/F5 min   (lines M5, M5b, M6, M6b, M6c); .build/release/F5 gap   (G2 lines); .build/release/F5 enum 4 400 6 6",
+   "evidence": "[M6 max 1e-6*x, x in [0,50], CPSAT(deterministic: true)] optimal obj=1e-06 bound=5e-05 x=(1); [M5 min sum j*1e-6 x_j s.t. sum x_j >= 1, CPSAT()] optimal obj=5e-05 bound=0.0 (x_50 = 1); enum seed 4 ... costExp 6: 2800 solves, 109 failures, all 'NON-OPTIMAL .optimal', e.g. box-only model got -4.5e-05, true -8.8e-05, bound -8.8e-05",
+   "confidence": "reproduced",
+   "documented": "Partly misstated. README risk 10 gives the formula max(1e-6, 1e-4·max(1,|incumbent|)), but it describes the trigger as large objective values (>= 10^4, integral costs), rates the impact 'low to medium' and advises keeping objectives below 10^4. The CPSAT API doc says these models get an exact proof. Wrong trigger, worse impact."
+  },
+  {
+   "id": "B5-04",
+   "title": "Root propagation of two parallel rows over a wide domain runs about 1.7*U bound changes inside one propagate() call: time limit, cancellation and memory budget are ignored and RSS grows past 10 GB",
+   "severity": "high",
+   "category": "hang",
+   "claim": "CPSAT doc (CPSAT.swift:72-74): timeLimit and task cancellation end the search with .feasible(stoppedBy:) or .noSolution(stoppedBy:); memoryBudgetBytes bounds the learned clauses (rule L7). CPSearch.swift:10-12: 'the loop calls gate.tick() once per propagation round, and forces a full check ... at every restart and every 10,000 propagations'. README §5: CPSAT cancellation latency worst 4.43 ms.",
+   "observed": "x - y >= 1 and x - y <= 0, x,y integer in [0, U], CPSAT(deterministic: true), timeLimit 1 s: U=1e7 -> .infeasible after 2e7 propagations, 0.60 s, 1.61 GB RSS; U=1e9 -> still running at 8 s (alarm, exit 142), 6.7 GB RSS. 652x - 552y = -1505 over [0,1e9]^2 (infeasible by parity), timeLimit 2 s: CPSAT(), CPSAT(deterministic: true) and CPSAT(lpPropagator: false, deterministic: true) are all still running at 40 s (exit 142), max RSS 12.7 / 10.7 / 7.2 GB. memoryBudgetBytes = 100 MB: still running at 15 s, 10.2 GB. Cancel after 0.5 s (deterministic): no return within 3.5 s (7.3 GB). With the default 8 workers the cooperative pool is saturated, so even the cancelling task does not run.",
+   "whyWrong": "The model is valid and accepted (bounds < 2^53, tiny activities). A time limit, a cancellation and the memory budget must end any solve; here none is checked until the fixed point, which takes ~1.7*U steps at ~150 bytes each (U=1e9: about 1.7e9 steps).",
+   "location": "Sources/ZTronLPCPSAT/CPWorker.swift:651-663: propagate() loops while true to a fixed point with no gate tick, propagation count or memory check. Each pass of propagateLinear (CPWorker.swift:785-807) tightens a bound by slack/a, about 1 unit, interning a new bound literal and trail entry. The only checks are in the search loop: gate.tick() once per propagate() call at CPSearch.swift:106, and the full check every 10,000 propagations between calls. A row whose rounded sides cross (CPModel.swift:326-352 adds each side separately) is not detected at load.",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F5 -c release && /usr/bin/time -l perl -e 'alarm shift; exec @ARGV' 8 .build/release/F5 strip 1e9 ; /usr/bin/time -l perl -e 'alarm shift; exec @ARGV' 40 .build/release/F5 pingpong 652 552 -1505 1e9 default 2   (cfg det | detnolp; optional 8th argument memoryBudgetBytes, e.g. 100000000); .build/release/F5 strip 1e7 for the terminating scale; perl -e 'alarm shift; exec @ARGV' 4 .build/release/F5 pingcancel",
+   "evidence": "[strip U=10000000.0] infeasible wall 0.60 s propagations 20000000, 1613627392 maximum resident set size; strip 1e9: 8.57 real, 6726828032 maximum resident set size, rc=142; pingpong ... 1e9 default 2: 41.54 real, 12699090944 maximum resident set size, rc=142; pingpong ... budget 100000000: 15.48 real, 10193813504 maximum resident set size, rc=142; pingcancel: 'cancelled at 0.5 s; waiting...' then rc=142 at 4.13 s, 7311441920 max RSS",
+   "confidence": "reproduced",
+   "documented": "No. README risk 3 says a hard model ends .feasible or .noSolution at the limit; §5 reports CP-SAT cancellation worst 4.43 ms."
+  },
+  {
+   "id": "B5-05",
+   "title": "Bounds of magnitude 2^53-4 to 2^53-1 are rejected although README rejects only magnitudes of 2^53 or more",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "README §2.5 CPSAT row: throws .unsupported for 'bounds or scaled coefficients of magnitude 2^53 or more'; §4 Limits: 'bounds and scaled coefficients below 2^53'.",
+   "observed": "x in [0, 2^53-1], max x -> SolverError.unsupported('the bounds of column x1 are too large for exact integer arithmetic'); x in [-(2^53-1), 2^53-1] the same. x in [0, 2^53-5] is accepted but widened to 2^53-1 (B5-01).",
+   "whyWrong": "2^53-1 is below 2^53 and exactly representable, so per the README it should be accepted.",
+   "location": "Sources/ZTronLPCPSAT/CPModel.swift:173-178: hi = (xu + 4 ulp).rounded(.down) passes 2^53 before the |hi| < 2^53 guard.",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F5 -c release && .build/release/F5 min   (line M8); .build/release/F5 domain   (lines D4a, D4b)",
+   "evidence": "[M8 x in [0, 2^53-1], max x, CPSAT()] THROW unsupported: the bounds of column x1 are too large for exact integer arithmetic",
+   "confidence": "reproduced",
+   "documented": "README states the threshold as 2^53."
+  },
+  {
+   "id": "B5-06",
+   "title": "SATLIB corpus tests are disabled, not reported as a known issue, when the corpus is missing",
+   "severity": "low",
+   "category": "test-integrity",
+   "claim": "HANDBOOK 'Testing': 'tests that need a missing instance report a known issue instead of failing'.",
+   "observed": "Tests/ZTronLPCPSATTests/SATTests.swift:16, :35, :52 are @Test(.enabled(if: !Corpora.satlib(...).isEmpty, satlibHint)), so they are skipped. Only the MIPLIB corpus tests (Tests/ZTronLPIntegrationTests/CorpusTests.swift:115) use withKnownIssue.",
+   "whyWrong": "On a checkout without the fetched corpus, the three SATLIB tests (all of the uf50/uuf50 coverage) do not run and are not recorded as a known issue, contrary to the handbook.",
+   "location": "Tests/ZTronLPCPSATTests/SATTests.swift:16,35,52",
+   "repro": "grep -n 'enabled(if' /Users/admin/Documents/ZTronLPOptimizer/Tests/ZTronLPCPSATTests/SATTests.swift; grep -n withKnownIssue /Users/admin/Documents/ZTronLPOptimizer/Tests/ZTronLPIntegrationTests/CorpusTests.swift",
+   "evidence": "SATTests.swift:16: @Test(.enabled(if: !Corpora.satlib(\"uf50-218\").isEmpty, satlibHint)); CorpusTests.swift:115: withKnownIssue(\"\\(instance.name) has not been fetched; run Scripts/fetch-miplib.sh\")",
+   "confidence": "code-reading-only",
+   "documented": ""
+  }
+ ],
+ "claimsHeld": [
+  {
+   "claim": "Every uf50-218 instance (all 1000) is SAT, and the returned model satisfies every raw clause",
+   "howChecked": "Own DIMACS parser, own CNF->LP and own clause checker; F5 sat .corpora/satlib/uf50-218 0 1000 <ci> under 5 configs (par4-lp, det-lp, det-nolp, par8-seed, det-never), release build: 1000/1000 each, 0 failures"
+  },
+  {
+   "claim": "Every uuf50-218 instance (all 1000) is UNSAT",
+   "howChecked": "F5 unsat over all 1000 instances, same 5 configs: all .infeasible. Own DPLL agrees on 100 uuf50 (UNSAT) and 100 uf50 (SAT, model verified): F5 dpll"
+  },
+  {
+   "claim": "No wrong SAT/UNSAT verdict on random 3-SAT near the threshold",
+   "howChecked": "F5 rand3sat 11 400 8 40 and rand3sat 12 300 40 90 (ratio 3.8-4.8, 7 configs round-robin): 700 formulas, 0 failures. DPLL oracle checked against brute force on 126 formulas (n <= 18)"
+  },
+  {
+   "claim": "Exact optimum or correct infeasibility on small pure-integer models with integral costs (binary and general integer, negative bounds, equality, range and half-integral-rhs rows, row data /10^0..10^6, empty rows), LP propagator on and off, deterministic and parallel, min and max, objective constant",
+   "howChecked": "Exhaustive enumeration in exact integer arithmetic: F5 enum 1 40, enum 2 600, enum 3 400 (binary, big coefficients) x 7 configs = 7280 solves, 0 failures; every returned point checked exactly, bounds checked against the true optimum"
+  },
+  {
+   "claim": "Input-domain rejection: 1e-7, 1.0000001, 1/3-like data, continuous columns, [0,inf), (-inf,0] and free integer columns throw SolverError.unsupported; mixed MIPLIB flugpl/egout/misc03 rejected",
+   "howChecked": "F5 domain (D2, D3) and F5 miplib on the three mixed instances"
+  },
+  {
+   "claim": "Decimal row data up to 1e-6 accepted and solved exactly (integral costs)",
+   "howChecked": "F5 domain D1 with the LP propagator, and the enumeration batches (row exponents 0..6)"
+  },
+  {
+   "claim": "Degenerate models: n=0/m=0 (objective = constant), empty infeasible row, integer fixed at 0.5, fractional box [0.2,2.7], parity-infeasible 2x+4y=3, xl>xu, duplicate and redundant equality rows",
+   "howChecked": "F5 domain D6a-g: all as expected"
+  },
+  {
+   "claim": "Row activities near 2^61 are handled; the common divisor is taken out before the activity check",
+   "howChecked": "F5 domain D7a/D7b/D7d: no trap, accepted where the divided row fits"
+  },
+  {
+   "claim": "Integral costs below 1e4 are proven exactly",
+   "howChecked": "F5 gap G5 (c0=9000): optimal 9001 = bound; enumeration with integral costs: 0 failures"
+  },
+  {
+   "claim": "MIPLIB 3 pure-integer optima with default CPSAT(): p0033 3089, enigma 0, stein27 18, lseu 1120, mod008 307, p0201 7615, stein45 30",
+   "howChecked": "F5 miplib <file> default 120 (release): all .optimal with these values; each point re-checked independently (bound and row violation 0, integral, objective recomputed); stein45 29.4 s under load ~20 (README 18.6 s)"
+  },
+  {
+   "claim": "README §4 defect 1: lpPropagator:false does not close mod008 and p0201 in 60 s",
+   "howChecked": "F5 miplib ... nolp 60: mod008 feasible(timeLimit) 321, p0201 feasible(timeLimit) 7735; behaves as documented"
+  },
+  {
+   "claim": "Time limits are honoured on a hard model (pigeonhole 12/11), including 0 and negative limits; exactly one .finished",
+   "howChecked": "F5 limits L1: 1.0 s -> 1.002 s, 2.0 s -> 2.002 s, 0/-5 s immediate noSolution(timeLimit)"
+  },
+  {
+   "claim": "Cancellation returns promptly on an ordinary hard model",
+   "howChecked": "F5 limits L2: returned noSolution(cancelled) 1 ms after cancel"
+  },
+  {
+   "claim": "deterministic: true is reproducible: same status, objective, point, conflicts, decisions and event sequence; it overrides workers",
+   "howChecked": "F5 limits L3: 3 runs x 3 configs x 2 knapsacks, identical; workers: 8 with deterministic -> 1 worker"
+  },
+  {
+   "claim": "The portfolio reports the best incumbent it announced, and its point is feasible",
+   "howChecked": "F5 limits L4: 6 knapsacks (60 binaries) x 2 limits, final objective = best .newIncumbent, point re-checked"
+  },
+  {
+   "claim": "A deterministic run is monotone under tighter time limits",
+   "howChecked": "F5 limits L5: 0.1/0.3/1/3 s give the same incumbent, never worse"
+  },
+  {
+   "claim": "Memory budget too small -> noSolution(memoryBudget), with a warning when the LP propagator is dropped",
+   "howChecked": "F5 limits L6 (budget 1 B, 50 kB)"
+  },
+  {
+   "claim": "Rejected model: .started then exactly one .finished before the throw",
+   "howChecked": "F5 limits L7"
+  },
+  {
+   "claim": "Wide domains on the bisection path are solved exactly",
+   "howChecked": "Extended-Euclid oracle: F5 dioph 150 3, min x s.t. ax-by=c over [0,U]^2, U up to 1e12, 3 configs: 103 exact optima, the rest correctly infeasible, 0 failures (15 infeasible models with U >= 1e8 skipped because of B5-04)"
+  },
+  {
+   "claim": "Invariance under row/column permutation, min<->max reformulation, row scaling by 1e-3..1e3, duplicated and doubled rows",
+   "howChecked": "F5 invariance 40 7: 40 medium models (n 20-40, general integers) x 4 variants x 2 configs, same optimum"
+  },
+  {
+   "claim": "SPECIFICATION-v0.2 on the current LP-worker size estimate (8·m·m or 96·nonzeros)",
+   "howChecked": "Code reading: LPRelaxation.swift engineBytes"
+  }
+ ],
+ "notChecked": [
+  "Thread Sanitizer / data races in CP-SAT (left to the baseline TSAN step; not re-run)",
+  "Soundness of clause sharing and of learned or LP-derived clauses, beyond black-box answers (internal API not reachable from probes)",
+  "Effect of warmStart .primalPoint hints (used only in gap probes; G3 hint did not produce the intended first incumbent, not investigated)",
+  "README §5 CP-SAT timing and conflict numbers: load-dependent (machine load about 20), not judged",
+  "Whether BranchAndBound shares the B5-03 gap behaviour (outside F5)",
+  "Memory-budget accounting in normal long runs (only tiny budgets and the B5-04 case)",
+  "How often B5-04-style propagation storms occur during search (not only at the root) on large-domain models",
+  "Tests of ZTronLPCPSATTests were not re-run individually; integrity only skimmed (agrees helpers are strict, SAT tests skip without corpus)"
+ ],
+ "overflow": [
+  "info: a NaN row bound in a hand-built CompiledLP is silently ignored (row dropped), CPSAT returns optimal -2 at (1,1): F5 domain D6h. Invalid input, the DSL rejects NaN",
+  "info: a rejected model's .finished event carries status .numericalFailure('unsupported: ...'), a misleading label: F5 limits L7",
+  "info: with objectives about 1e15 (documented >= 1e4 regime) default CPSAT stops far from the optimum, e.g. max x s.t. x <= 2^50+5 -> 1125886577027174: F5 min M2",
+  "info: CPSAT(lpPropagator:false, deterministic:true) climbs one step per incumbent on wide ranges (documented in the CPSAT doc): D4g/D7a feasible(timeLimit) after 10 s"
+ ],
+ "summary": "Cycle B, area F5 (CP-SAT), oracles first. The CDCL core held on every check: all 1000 uf50 instances SAT with verified models, all 1000 uuf50 UNSAT, 700 random 3-SAT formulas cross-checked with an independent DPLL, 7280 exhaustive-enumeration solves with integral costs, a Diophantine oracle on wide domains, invariance checks, determinism, portfolio, time limit and cancellation on ordinary hard models, and the seven MIPLIB 3 pure-integer optima with the default configuration. Six findings. Two are critical wrong answers, both from CPModel's snap tolerance max(1e-9, 4 ulp). B5-01: exact integer bounds and right-hand sides of magnitude >= 2^50, inside the documented range, are widened by 1-4, so .optimal comes back at an infeasible point (x = 2^52-3 for x >= 2^52+1). B5-02: data the README says is rejected is silently rounded instead, giving a false optimum (0 vs 3 on an exactly feasible point) or SolverError.internalInconsistency. Both need magnitudes >= 2^48..2^50, or coefficients <= 1e-9 off an integer. B5-03 (high): with decimal costs and |objective| < 1, the fixed gap becomes an absolute 1e-4, so .optimal answers are up to 50x off (a one-column model returns 1e-06 with bound 5e-05), exactly where the CPSAT API doc promises an exact proof. README risk 10 has the formula but misstates the trigger and the mitigation. B5-04 (high): two parallel rows over a wide domain (x-y>=1, x-y<=0 on [0,1e9]) make one propagate() call run ~1.7e9 steps without a gate tick, ignoring the time limit, cancellation and the memory budget while RSS passes 10 GB. B5-05 and B5-06 are low: the 2^53 threshold is off by 4, and the SAT tests skip instead of reporting a known issue. Probe sources: verification/probes/cycle-B/Slots/F5/{main,Oracles,Probes}.swift; log: verification/cycle-B/F5-cpsat.md."
+}

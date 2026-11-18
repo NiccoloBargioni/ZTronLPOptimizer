@@ -1,0 +1,184 @@
+{
+ "area": "F6 Runtime: cancellation, limits, events, concurrency, memory budget, Metal tier, Automatic and Portfolio facades",
+ "findings": [
+  {
+   "id": "B6-01",
+   "title": "Conditioned keeps running its uncancellable conditioning analysis after cancellation or the time limit",
+   "severity": "high",
+   "category": "limit-not-honoured",
+   "claim": "SolverStrategy doc (Sources/ZTronLPCore/Solve/Strategy.swift:193) 'Limits and cancellation end in the analysis's status'; README §5 cancellation-latency acceptance p99 <= 50 ms (rule L1); WorkGate doc (Sources/ZTronLPNumerics/WorkGate.swift:84-87) 'keeps cancellation latency bounded regardless of problem size'. The task contract: cancelling returns promptly for every strategy including Conditioned.",
+   "observed": "Conditioned(Simplex(.dual)) on InstanceGenerator.constructedOptimum(rows:3500, columns:7000, seed:31, density 0.0015): 6 cancels at random delays -> latency p50 317 ms, worst 778 ms; Simplex(.dual) alone in the same run: p50 1.7 ms, worst 4.0 ms. timeLimit 0.3 -> Conditioned returns after 0.588 s (Simplex alone 0.302 s); timeLimit 1 -> 1.60 s. ConditioningAnalyzer.analyze(after:) on the stopped basis takes 0.294 s by itself, and cancelling its task after 5 ms does not shorten it (0.366 s). Status is still the inner one (noSolution(timeLimit)/feasible(cancelled)).",
+   "whyWrong": "The inner engine stops within milliseconds, but the decorator then always runs ConditioningAnalyzer.analyze, whose basis analysis builds and LU-factors the dense m x m basis (m <= 4,000) with no Task.isCancelled or deadline check. Cancellation and time limits are therefore exceeded by the full analysis time, which grows as m^3 (about 0.3 s at 3,500 rows on a loaded M3, up to roughly a second at the 4,000-row cap) - 6x the p99 bound even at the median. Load cannot explain it: the inner engine measured 4 ms worst in the same run.",
+   "location": "Sources/ZTronLPOptimizer/Conditioned.swift:39 (analyze runs unconditionally after the inner solve, also when it stopped by cancellation/time limit); Sources/ZTronLPConditioning/ConditioningAnalyzer.swift:209-213 and 471-490 (dense factor, no gate)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build -c release --product F6 && perl -e 'alarm shift; exec @ARGV' 600 .build/release/F6 bigcancel conditioned 6 && .build/release/F6 analyzer && .build/release/F6 util2   (sources: Slots/F6/Threads.swift runBigCancel, runAnalyzerTiming, runUtil2)",
+   "evidence": "CANCEL Simplex(.dual)/m3500: reps=6 interrupted=6 p50=1.74ms worst=4.00ms | CANCEL Conditioned(Simplex(.dual))/m3500: reps=6 interrupted=6 p50=316.93ms p99=778.13ms worst=778.13ms | LIMIT Conditioned(Simplex(.dual))/m3500 limit=0.3 elapsed=0.588 status=noSolution(timeLimit) vs Simplex(.dual) elapsed=0.302 | ANALYZER analyze(after:) m=3500 took 0.294 s; cancelledAfter=0.005 took 0.366 s | THREADS Conditioned(Simplex(.dual))/m3500 limit 1 wall=1.60",
+   "confidence": "reproduced",
+   "documented": "Not documented. README §2.5 gives Conditioned's time as 'inner's plus one ConditioningAnalyzer.analyze', but neither §3/§4 nor HANDBOOK says that the analysis ignores cancellation and time limits; the §5 latency table does not cover Conditioned."
+  },
+  {
+   "id": "B6-02",
+   "title": "InteriorPoint checks cancellation and the deadline only once per iteration, so latency grows with problem size",
+   "severity": "medium",
+   "category": "limit-not-honoured",
+   "claim": "WorkGate doc (Sources/ZTronLPNumerics/WorkGate.swift:84-87): 'a check still happens every millisecond or so, which keeps cancellation latency bounded regardless of problem size'; README §5 acceptance p99 <= 50 ms (rule L1), InteriorPoint measured p99 3.46 ms; IPMWorker.swift:672-673 comment claims that one check per iteration satisfies rule L1.",
+   "observed": "InteriorPoint() on constructedOptimum(rows:3000, columns:6000, seed:32, density 0.08), nnz 1,440,811 (dense normal equations): 6 cancels -> p50 95 ms, worst 621 ms; timeLimit 0.3 -> returns after 0.741 s; timeLimit 4 -> 4.03 s (threads 1) and 4.53 s (threads 2). On the 660 x 36,000 transport LP the same engine stays at p99 17 ms.",
+   "whyWrong": "The gate is checked once at the top of each iteration; forming A*Theta*A^T and the dense Cholesky (O(sum z_j^2) + m^3/3) run without a check, so cancellation and time-limit latency equal one iteration, which is hundreds of ms at m = 3,000 and grows as m^3. This contradicts the 'regardless of problem size' claim and the 50 ms bound.",
+   "location": "Sources/ZTronLPInteriorPoint/IPMWorker.swift:672-674 (single gate.check per iteration), 383-430 (normalMatrixValues + DenseCholesky without checks)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build -c release --product F6 && perl -e 'alarm shift; exec @ARGV' 600 .build/release/F6 bigcancel ipm 6 && .build/release/F6 util2",
+   "evidence": "BIG ipm problem m=3000 n=6000 nnz=1440811 | CANCEL InteriorPoint/dense-m3000: reps=6 interrupted=6 p50=95.17ms p99=620.50ms worst=620.50ms idleCPU=0.000s | LIMIT InteriorPoint/dense-m3000 limit=0.3 elapsed=0.741 over=0.441 status=noSolution(timeLimit) | THREADS InteriorPoint/dense-m3000 threads=2 limit 4 wall=4.53",
+   "confidence": "reproduced",
+   "documented": "Partly: README §5 'What these numbers do not say' disclaims models larger than 2,000 x 20,000, but README §4 does not list it and the WorkGate doc claim is unqualified."
+  },
+  {
+   "id": "B6-03",
+   "title": "Portfolio returns the first inconclusive result to arrive, even when another member returned a strictly better feasible objective",
+   "severity": "medium",
+   "category": "contract-violation",
+   "claim": "README §2.5 Portfolio row: 'If none concludes, the best of what came back is returned (feasible before undecided before no solution before failure)'; Sources/ZTronLPOptimizer/Portfolio.swift:11-13 'if none concludes, the best of what came back is returned'. Derived contract: a portfolio is never worse than its members.",
+   "observed": "Scripted members (custom SolverStrategy returning fixed records): minimize, feasible 10 after 50 ms and feasible 5 after 300 ms -> portfolio obj=10 (winner=fastWorse) in both list orders; maximize, 5 then 10 -> 5. Real engines: Portfolio([BranchAndBound(nodeLimit:3, deterministic:true), BranchAndBound(nodeLimit:3000, deterministic:true)]) on InstanceGenerator.randomMILP(rows:25, columns:120, seed:99, upper:1) (maximize): members alone 1008 and 1090; the portfolio returns 1008 in both orders while its `others` holds the 1090 result.",
+   "whyWrong": "Among inconclusive results the code ranks by status class only (rank(): feasible=1, ...) with a strict '<', so ties keep arrival order and objectiveValue is never compared. The faster member - typically the one with the worse incumbent - wins, and a better incumbent the portfolio already holds is discarded. This happens whenever a time or node limit stops every member.",
+   "location": "Sources/ZTronLPOptimizer/Portfolio.swift:105-113 (best-rank selection ignores objectiveValue and sense)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build -c release --product F6 && perl -e 'alarm shift; exec @ARGV' 600 .build/release/F6 portfolio scripted && perl -e 'alarm shift; exec @ARGV' 600 .build/release/F6 portfolio real   (Slots/F6/PortfolioProbe.swift S1, S1b, S7, R1)",
+   "evidence": "PORT S1 two feasible (min; members 10 then 5): status=feasible(timeLimit) obj=10 winner=fastWorse others=[slowBetter:feasible(timeLimit)] | PORT S7 (max; 5 then 10): obj=5 | PORT R1 members alone: small=feasible(nodeLimit) obj=1008 large=feasible(nodeLimit) obj=1090 | PORT R1 portfolio([small,large]) obj=1008; portfolio([large,small]) obj=1008",
+   "confidence": "reproduced",
+   "documented": "Not documented in README §4 or HANDBOOK Known gaps; README §2.5 states the opposite ('the best of what came back')."
+  },
+  {
+   "id": "B6-04",
+   "title": "Portfolio invokes the progress callback concurrently from its members; chained listeners see different event orders",
+   "severity": "medium",
+   "category": "concurrency",
+   "claim": "EventSink doc (Sources/ZTronLPCore/Solve/Strategy.swift:222) and README §2.3: 'serializes the events of one solve (rule C2) and enforces their order'; Portfolio doc (Portfolio.swift:16-18) 'forwarded as it comes, interleaved'; makeEventStream doc: a previously installed progress callback keeps receiving every event; task contract: events keep order and several consumers work.",
+   "observed": "Callback with a 20 us critical section counting in-flight calls: Portfolio([BranchAndBound(), BranchAndBound(engine: Simplex(.dual))]) on randomMILP(25x120, seed 99), timeLimit 1 -> maxConcurrentCallbacks=2 in 3/3 runs; BranchAndBound() alone (8 workers) -> 1 in 3/3 runs; also 2 for Portfolio(bnb,cpsat,bnb-dual). With an EventRecorder plus two makeEventStream on one context, Portfolio([Conditioned(BranchAndBound()), Automatic()]) produced streams whose 256 events differ from the recorder's last 256 (suffixMatch=false for both); every non-portfolio case matched exactly.",
+   "whyWrong": "Each member runs with context.nested() and its own EventSink actor, so two members call the user's closure at the same time. A solve's events are then not serialized: a callback written against the documented serialization races, and listeners chained on one context (recorder, stream1, stream2) record different interleavings of the same solve.",
+   "location": "Sources/ZTronLPOptimizer/Portfolio.swift:42 (members share context.attachingMetal().nested()); Sources/ZTronLPCore/Solve/Strategy.swift:266-277 (nested() forwards directly), 172-183 (chained listeners)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build -c release --product F6 && perl -e 'alarm shift; exec @ARGV' 600 .build/release/F6 events concurrency && perl -e 'alarm shift; exec @ARGV' 600 .build/release/F6 events nested   (Slots/F6/Events.swift CallbackProbe, streamSuffixCheck)",
+   "evidence": "CALLBACK run0/1/2 Portfolio([BnB(primal), BnB(dual)])/mipHard: maxConcurrentCallbacks=2 finished=1 afterFinished=0 | CALLBACK run0/1/2 BnB(primal) alone: maxConcurrentCallbacks=1 | EVENTS FAIL Portfolio(Conditioned(bnb), Automatic)/mipHard: total=1024 stream1=256(ended=true, suffixMatch=false) stream2=256(ended=true, suffixMatch=false) finished=1 lastIsFinished=true",
+   "confidence": "reproduced",
+   "documented": "Not documented."
+  },
+  {
+   "id": "B6-05",
+   "title": "The Metal kernel tests pass, by skipping, when the shader library does not compile",
+   "severity": "medium",
+   "category": "test-integrity",
+   "claim": "Tests named for kernel correctness (ReducedCostScanTests.scoresMatchTheDoubleReference, BatchedActivityTests.aPointOnItsBoundsIsNeverRejectedBySinglePrecision, ...) and README §5 'Building and testing'; MetalContext design rule 'if neither works the tier is disabled' is meant for machines without a toolchain, not to hide a broken shader on a Mac with a GPU.",
+   "observed": "In a copy of the package (verification/cycle-B/F6-shadercheck) with one invalid line appended to Sources/ZTronLPMetal/Shaders/Kernels.metal, `swift test --filter ZTronLPMetalTests` exits 0: 'Test run with 28 tests in 3 suites passed'; BatchedActivityTests and ReducedCostScanTests are skipped with 'the GPU tier is unavailable on this machine' on an Apple M3; MetalTierTests passes.",
+   "whyWrong": "The .requiresMetal trait skips whenever MetalAccelerator.shared.isAvailable is false, and that includes .libraryUnavailable (a compile error), not only .noDevice. statusIsAlwaysOneOfTheThreeOutcomes accepts .libraryUnavailable, and theShaderIsBundledAsALibraryOrAsSource only greps the source for the two kernel names. A shader regression therefore turns every kernel test into a skip, and the gate stays green.",
+   "location": "Tests/ZTronLPMetalTests/MetalTestSupport.swift:15-19; Tests/ZTronLPMetalTests/MetalTierTests.swift:31-45 and 105-116",
+   "repro": "D=/Users/admin/Documents/ZTronLPOptimizer/verification/cycle-B/F6-shadercheck; mkdir -p $D && cd /Users/admin/Documents/ZTronLPOptimizer && cp -R Package.swift Package.resolved Sources Tests $D/ && printf 'this is not valid metal source;\\n' >> $D/Sources/ZTronLPMetal/Shaders/Kernels.metal && cd $D && swift test --filter ZTronLPMetalTests",
+   "evidence": "metal-tests-broken-shader.log: '-> Suite BatchedActivityTests skipped: \"the GPU tier is unavailable on this machine\"', '-> Suite ReducedCostScanTests skipped: ...', 18 tests skipped, 'Suite MetalTierTests passed', 'Test run with 28 tests in 3 suites passed after 1.144 seconds', rc=0",
+   "confidence": "reproduced",
+   "documented": "Not documented (README §4 Not verified mentions only that the precompiled-library path was not exercised)."
+  },
+  {
+   "id": "B6-06",
+   "title": "Portfolio uses more threads than SolveContext.threads when threads < number of members",
+   "severity": "low",
+   "category": "limit-not-honoured",
+   "claim": "SolveContext.threads: 'the number of worker threads this run may use' (Strategy.swift:147,162); README §2.5 Portfolio 'with threads ÷ k each'; risk 7: share the machine with SolveContext.threads.",
+   "observed": "threads=1: Portfolio([BranchAndBound(), CPSAT()]) CPU utilisation 1.55, Portfolio of 3 members 1.79; BranchAndBound/CPSAT alone at threads=1: 0.84/0.74; Portfolio(bnb,cpsat) at threads=2: 1.66.",
+   "whyWrong": "child.threads = max(1, resolvedThreads / count) rounds 1/k up to 1 for every member, so k members run at once and the run uses k threads when the caller allowed fewer.",
+   "location": "Sources/ZTronLPOptimizer/Portfolio.swift:44",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build -c release --product F6 && perl -e 'alarm shift; exec @ARGV' 600 .build/release/F6 threads util",
+   "evidence": "THREADS OVER Portfolio(bnb,cpsat)/mipHard threads=1 wall=2.51 cpu=3.87 utilisation=1.55 | THREADS OVER Portfolio(bnb,cpsat,bnbdual)/mipHard threads=1 cpu=4.52 utilisation=1.79",
+   "confidence": "reproduced",
+   "documented": "README §2.5 says 'threads ÷ k each' and does not mention the case k > threads."
+  }
+ ],
+ "claimsHeld": [
+  {
+   "claim": "Lint claims: exactly one @unchecked Sendable (Sparse.swift:329, with INVARIANT), no nonisolated(unsafe), no global or stored static vars, no DispatchSemaphore/Thread.sleep/waitUntilCompleted/DispatchGroup/usleep; all targets Swift 6 mode",
+   "howChecked": "grep over Sources + Package.swift + baseline/02-lint.log ('1 in total', 'lint: all rules hold')"
+  },
+  {
+   "claim": "TSAN baseline clean",
+   "howChecked": "baseline/05-tsan.log: rc=0, no ThreadSanitizer lines; Liveness, Integration, CPSAT, BranchAndBound targets ran"
+  },
+  {
+   "claim": "Cancellation returns promptly with status .optimal or stopReason .cancelled and leaves no work running, for Simplex(.primal/.dual), InteriorPoint, Automatic (LP and MIP), Portfolio, Conditioned, BranchAndBound (primal/dual/IPM node engines), CPSAT (with/without LP propagator) on moderate models",
+   "howChecked": "F6 cancel 20 all: 20 random-delay cancels per configuration; worst p99 35.8 ms at load avg 11-20; idle CPU over 0.6 s after return 0.000 s everywhere; no unexpected status"
+  },
+  {
+   "claim": "timeLimit honoured and reported as a status (never thrown) for every strategy, including 0 and negative limits",
+   "howChecked": "F6 limits time x3: 48 cases, max overrun 24 ms"
+  },
+  {
+   "claim": "memoryBudgetBytes ends BranchAndBound and CPSAT with .memoryBudget; CPSAT drops the LP propagator when the share is too small; negative budget acts as 0; Portfolio splits the budget",
+   "howChecked": "F6 memory"
+  },
+  {
+   "claim": "Monotonicity under tighter node limits (deterministic BnB): incumbent never worse, bound never looser",
+   "howChecked": "F6 limits monotone, nodeLimit 1..2000: violations=0"
+  },
+  {
+   "claim": "makeEventStream keeps exactly the newest 256 events in order, ends after .finished, two streams on one context are identical, .started first and .finished once and last, also on throwing paths (CPSAT on continuous, Conditioned(CPSAT), Portfolio([]), all-throw Portfolio) and nested compositions",
+   "howChecked": "F6 events stream / nested: stream content == suffix(256) of an EventRecorder record (12+4 cases); .finished status == returned status"
+  },
+  {
+   "claim": "No events after .finished or after solve returns, including cancelled Portfolio/Conditioned/Automatic; unconsumed stream does not block the solver",
+   "howChecked": "F6 events callback / flood"
+  },
+  {
+   "claim": "BranchAndBound with 8 workers and CPSAT deliver callbacks one at a time",
+   "howChecked": "F6 events callback/concurrency: maxConcurrentCallbacks=1"
+  },
+  {
+   "claim": "SolveContext.threads honoured by BranchAndBound, CPSAT, Simplex (parallel-pricing size) and dense IPM",
+   "howChecked": "F6 threads util / util2: CPU utilisation <= threads"
+  },
+  {
+   "claim": "Parallel search agrees with exhaustive enumeration across thread counts",
+   "howChecked": "F6 threads diff: BnB, CPSAT, BnB(dual, depth-first) x threads {1,2,8} on 25 random IPs, 0 mismatches"
+  },
+  {
+   "claim": "Automatic routing as documented: <=4,000 rows dual simplex; >4,000 IPM; >10,000 rows with a >30% dense column sparse-QR simplex; integer columns BranchAndBound<Simplex(.primal)>; answers optimal and feasible",
+   "howChecked": "F6 automatic on cycle-cover LPs m=4000/4001/4002/10000/10002; dense-column optima confirmed with a hand-built dual certificate; empty and 0-row models optimal"
+  },
+  {
+   "claim": "Portfolio: conclusive member wins, cooperative losers cancelled promptly (others: noSolution(cancelled)), deaf loser only delays (documented), throwers recorded, all-throw rethrows first error by index, inconclusive early result does not pre-empt a working member, reported winner = base engine",
+   "howChecked": "F6 portfolio scripted S2-S6"
+  },
+  {
+   "claim": "Portfolio answers are correct",
+   "howChecked": "F6 portfolio oracle: Portfolio(primal,dual,ipm) on 13 netlib within 1.33e-11 of reference; Portfolio(bnb,cpsat) == enumeration on 30 IPs"
+  },
+  {
+   "claim": "KernelThresholds values and gating: 3,000,000 columns and 6,000,000 nonzeros for the scan; 64 points and 100,000 nonzeros for the activity screen; .off never, .forced always; provider declines below thresholds; PolicyBoundActivityEvaluator declines 63-point batches under .automatic",
+   "howChecked": "F6 metal thresholds: 11/11 boundary cases, provider checks"
+  },
+  {
+   "claim": "MetalAccelerator(device: nil) reports .noDevice and yields no kernels even under .forced; shared provider ready (compiledFromSource) on the M3",
+   "howChecked": "F6 metal thresholds"
+  },
+  {
+   "claim": "reducedCostScan kernel equals the double-precision oracle within fp32 noise and returns the same top-64 candidates",
+   "howChecked": "F6 metal scan: max abs err 1.1e-6, 64/64 overlap at 5,000 and 60,000 columns"
+  },
+  {
+   "claim": "batchedActivity never rejects an exactly feasible point; chunked (>1,024) and single evaluations agree; activities match double",
+   "howChecked": "F6 metal activity: integer data, tight equality rows, coefficients up to 16,777,215, 0 rejections; 0/30 mismatches; rel err 1.2e-5"
+  },
+  {
+   "claim": "Metal forced vs off gives the same answers end to end",
+   "howChecked": "F6 metal e2e: Automatic/BnB on 12 IPs == enumeration; Simplex(.primal)+IPM on 13 netlib within 1.3e-11; transport primal forced/off same objective and pivot count"
+  }
+ ],
+ "notChecked": [
+  "TSAN on the simplex, interior-point and facade targets: README §5 claims no reports there, but the baseline TSAN step ran only Integration, Liveness, BranchAndBound and CPSAT, and I did not start my own TSAN run",
+  "Precompiled default.metallib path (no Metal toolchain here); a solve end to end with a shader that fails to compile (only the test suite was run against a broken shader)",
+  "Kernels at the real .automatic pricing threshold (3,000,000 columns): only .forced at up to 60,000 columns; the activity screen inside BranchAndBound at >=100,000 nonzeros under .automatic was not run end to end",
+  "Memory (RSS) growth with an unconsumed event stream over a long solve: bounded by construction, not measured",
+  "Ordering bugs in the shared search tree beyond differential checks against enumeration (no targeted interleaving fuzzing)",
+  "Behaviour under an iOS memory allowance (os_proc_available_memory path)",
+  "Cancellation latency of the sparse-QR simplex and of Simplex at the 1,500-row dense-LU limit (only m=3,500 sparse-QR stays below 4 ms)"
+ ],
+ "overflow": [
+  "info: InteriorPoint with threads=1 on the 100x1200 transport LP used 1.54 cores once (Accelerate internal threading?); re-runs gave 1.04 and 0.77 - not confirmed",
+  "info: engineName does not identify the configuration (BranchAndBound(nodeLimit:3) and (nodeLimit:3000) are both 'BranchAndBound<Simplex(.primal)>', Automatic's sparse-QR choice reports 'Simplex(.dual)'), so PortfolioAnalysis.winner can be ambiguous",
+  "info: timeLimit = NaN or +inf means no deadline (documented only at Deadline.after(seconds:), not at SolveContext.timeLimit)",
+  "info: Simplex(.primal) on the 660x36,000 transport LP did not finish phase 1 within 20 s under load (noSolution(timeLimit)); Simplex(.dual) solves it in 0.43 s (F2 area)",
+  "info: Automatic at exactly 4,000 rows (dual simplex) took 8.4 s on a cycle-cover LP that the IPM solves in 0.04 s at 4,001 rows"
+ ],
+ "summary": "Oracle-first audit of the runtime layer, using F6 probes (cancellation with idle-CPU checks, limits, budgets, event-stream suffix oracle, callback-concurrency probe, scripted and real Portfolio members, enumeration and netlib oracles, fp64 oracles for the Metal kernels) plus a broken-shader copy of the package. On moderate models, cancellation, time limits, memory budgets, events, thread limits for single engines, Automatic routing, Portfolio correctness and the Metal kernels all held. Six findings: Conditioned runs an uncancellable O(m^3) basis analysis after its inner solve stops, giving 317-778 ms cancellation latency and a 2x time-limit overrun at m=3,500 (high); InteriorPoint checks cancellation once per iteration, up to 621 ms on dense normal equations (medium); Portfolio returns the first inconclusive result to arrive rather than the best one (1008 vs 1090) (medium); Portfolio calls progress callbacks concurrently, so chained listeners disagree on event order (medium); the Metal kernel tests skip silently, and so pass, when the shader does not compile (medium); Portfolio exceeds threads=1 with several members (low)."
+}

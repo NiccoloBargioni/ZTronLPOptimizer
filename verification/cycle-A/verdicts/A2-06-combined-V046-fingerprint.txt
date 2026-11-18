@@ -1,0 +1,20 @@
+m=200 n=3600 nnz=7200: A density 1.0000%; slack basis 0.5000%; final basis probed 0.9750% package basisDensity 0.9750%
+   denseLU   status optimal pivots 206 refactorizations 4 obj 32087.0 primalBits 32598c5ef93b7c65 0.01s
+   sparseQR  status optimal pivots 210 refactorizations 6 obj 32086.999999999996 primalBits cdec5e09be7104e 0.01s
+   automatic status optimal pivots 206 refactorizations 4 obj 32087.0 primalBits 32598c5ef93b7c65 0.00s
+   => .automatic behaved as denseLU; doc comment predicts sparseQR; code rule (m <= 1500 -> denseLU) predicts denseLU; makeFactorization(rows: 200) is DenseLUBasis
+m=1000 n=19600 nnz=39200: A density 0.2000%; slack basis 0.1000%; final basis probed 0.1983% package basisDensity 0.1983%
+   denseLU   status optimal pivots 1011 refactorizations 12 obj 153334.0 primalBits 60a3dc65b9d09e65 0.38s
+   sparseQR  status optimal pivots 1017 refactorizations 22 obj 153334.0 primalBits b73605e9fde82953 0.27s
+   automatic status optimal pivots 1011 refactorizations 12 obj 153334.0 primalBits 60a3dc65b9d09e65 0.41s
+   => .automatic behaved as denseLU; doc comment predicts sparseQR; code rule (m <= 1500 -> denseLU) predicts denseLU; makeFactorization(rows: 1000) is DenseLUBasis
+m=1500 n=29600 nnz=59200: A density 0.1333%; slack basis 0.0667%; final basis probed 0.1327% package basisDensity 0.1327%
+   denseLU   status optimal pivots 1527 refactorizations 17 obj 229070.0 primalBits d4d86e3840fe3ba5 1.96s
+   sparseQR  status optimal pivots 1530 refactorizations 32 obj 229070.0 primalBits 508c1e53cac10226 0.63s
+   automatic status optimal pivots 1527 refactorizations 17 obj 229070.0 primalBits d4d86e3840fe3ba5 1.89s
+   => .automatic behaved as denseLU; doc comment predicts sparseQR; code rule (m <= 1500 -> denseLU) predicts denseLU; makeFactorization(rows: 1500) is DenseLUBasis
+m=1501 n=29620 nnz=59240: A density 0.1332%; slack basis 0.0666%; final basis probed 0.1326% package basisDensity 0.1326%
+   denseLU   status optimal pivots 1554 refactorizations 17 obj 241231.0 primalBits 812cb8fed3f709b5 1.95s
+   sparseQR  status optimal pivots 1552 refactorizations 33 obj 241231.0 primalBits e4448582ae1996ad 0.65s
+   automatic status optimal pivots 1552 refactorizations 33 obj 241231.0 primalBits e4448582ae1996ad 0.64s
+   => .automatic behaved as sparseQR; doc comment predicts sparseQR; code rule (m <= 1500 -> denseLU) predicts sparseQR; makeFactorization(rows: 1501) is SparseQRBasis

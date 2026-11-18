@@ -1,0 +1,71 @@
+== 1. The test's own two solves (test config: nodeSelection .bestBound, heuristics .none; default threads)
+T1 run 1 budget 2000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 21 open 22 lpIter 3057 wall 0.00s predicate(line246)=true
+T1 run 2 budget 2000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 20 open 21 lpIter 2948 wall 0.00s predicate(line246)=true
+T1 run 3 budget 2000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 19 open 20 lpIter 2924 wall 0.00s predicate(line246)=true
+T2 default config budget 16777216: optimal obj 593 nodes 1503 open 0 lpIter 14705 wall 0.03s predicate(line246)=true second expect(status == .optimal)=true
+== 2. What a solver that ignores the budget returns: the same solve with no binding budget
+T1-unbudgeted budget nil(=25% RAM): optimal obj 593 nodes 3221 open 0 lpIter 34847 wall 0.07s predicate(line246)=true
+T1-unbudgeted budget 9223372036854775807: optimal obj 593 nodes 3369 open 0 lpIter 36472 wall 0.06s predicate(line246)=true
+== 3. Independent optimum (CP-SAT, a different algorithm), pure binary model
+CPSAT(): optimal obj 593
+CPSAT(lpPropagator: false, deterministic): feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 510
+exit(oracle)=0
+== 4. Test config over budgets: is the line-246 predicate ever false?
+scan budget 1: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 1 open 2 lpIter 242 wall 0.00s predicate(line246)=true
+scan budget 500: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 12 open 13 lpIter 2006 wall 0.00s predicate(line246)=true
+scan budget 1000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 17 open 18 lpIter 2926 wall 0.00s predicate(line246)=true
+scan budget 1500: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 16 open 17 lpIter 2720 wall 0.00s predicate(line246)=true
+scan budget 2000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 22 open 23 lpIter 3242 wall 0.00s predicate(line246)=true
+scan budget 2500: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 23 open 24 lpIter 3292 wall 0.00s predicate(line246)=true
+scan budget 3000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 27 open 28 lpIter 3421 wall 0.01s predicate(line246)=true
+scan budget 4000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 31 open 32 lpIter 3995 wall 0.00s predicate(line246)=true
+scan budget 6000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 38 open 39 lpIter 4178 wall 0.01s predicate(line246)=true
+scan budget 8000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 42 open 43 lpIter 4476 wall 0.01s predicate(line246)=true
+scan budget 12000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 57 open 58 lpIter 4762 wall 0.01s predicate(line246)=true
+scan budget 16000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 68 open 69 lpIter 4940 wall 0.01s predicate(line246)=true
+scan budget 24000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 92 open 93 lpIter 5529 wall 0.01s predicate(line246)=true
+scan budget 32000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 111 open 112 lpIter 5887 wall 0.01s predicate(line246)=true
+scan budget 48000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 155 open 156 lpIter 6879 wall 0.03s predicate(line246)=true
+scan budget 64000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 191 open 192 lpIter 7692 wall 0.03s predicate(line246)=true
+scan budget 128000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 347 open 348 lpIter 9519 wall 0.07s predicate(line246)=true
+scan budget 256000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 648 open 649 lpIter 12403 wall 0.22s predicate(line246)=true
+scan budget 1048576: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 2274 open 2273 lpIter 29104 wall 2.36s predicate(line246)=true
+scan budget nil(=25% RAM): optimal obj 593 nodes 3425 open 0 lpIter 37298 wall 0.17s predicate(line246)=true
+predicate false for 0 of 20 budgets; smallest budget in the grid that completes .optimal: nil(=25% RAM)
+exit(scan)=0
+== 5. Is the 'degrade' step observable through the public API? deterministic: true, threads 1
+det-ref budget nil(=25% RAM): optimal obj 593 nodes 2353 open 0 lpIter 18155 wall 0.22s predicate(line246)=true
+det budget 1: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 1 open 2 lpIter 242 wall 0.00s predicate(line246)=true differsFromUnbudgeted=true
+det budget 500: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 4 open 5 lpIter 845 wall 0.00s predicate(line246)=true differsFromUnbudgeted=true
+det budget 1000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 6 open 7 lpIter 1140 wall 0.00s predicate(line246)=true differsFromUnbudgeted=true
+det budget 1500: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 8 open 9 lpIter 1328 wall 0.00s predicate(line246)=true differsFromUnbudgeted=true
+det budget 2000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 10 open 11 lpIter 1563 wall 0.01s predicate(line246)=true differsFromUnbudgeted=true
+det budget 2500: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 11 open 12 lpIter 1670 wall 0.01s predicate(line246)=true differsFromUnbudgeted=true
+det budget 3000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 12 open 13 lpIter 1774 wall 0.01s predicate(line246)=true differsFromUnbudgeted=true
+det budget 4000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 15 open 16 lpIter 2039 wall 0.01s predicate(line246)=true differsFromUnbudgeted=true
+det budget 6000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 19 open 20 lpIter 2146 wall 0.01s predicate(line246)=true differsFromUnbudgeted=true
+det budget 8000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj nil nodes 22 open 23 lpIter 2290 wall 0.01s predicate(line246)=true differsFromUnbudgeted=true
+det budget 12000: feasible(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj 556 nodes 106 open 25 lpIter 4027 wall 0.10s predicate(line246)=true differsFromUnbudgeted=true
+det budget 16000: feasible(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj 556 nodes 111 open 27 lpIter 4131 wall 0.04s predicate(line246)=true differsFromUnbudgeted=true
+det budget 24000: feasible(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj 593 nodes 1028 open 31 lpIter 12444 wall 0.17s predicate(line246)=true differsFromUnbudgeted=true
+det DEGRADED-BUT-OPTIMAL budget 32000: optimal obj 593 nodes 2394 open 0 lpIter 19060 wall 0.49s predicate(line246)=true differsFromUnbudgeted=true
+det DEGRADED-BUT-OPTIMAL budget 48000: optimal obj 593 nodes 2326 open 0 lpIter 18262 wall 0.42s predicate(line246)=true differsFromUnbudgeted=true
+det DEGRADED-BUT-OPTIMAL budget 64000: optimal obj 593 nodes 2353 open 0 lpIter 18177 wall 0.21s predicate(line246)=true differsFromUnbudgeted=true
+det budget 128000: optimal obj 593 nodes 2353 open 0 lpIter 18155 wall 0.33s predicate(line246)=true differsFromUnbudgeted=false
+det budget 256000: optimal obj 593 nodes 2353 open 0 lpIter 18155 wall 0.51s predicate(line246)=true differsFromUnbudgeted=false
+det budget 1048576: optimal obj 593 nodes 2353 open 0 lpIter 18155 wall 0.52s predicate(line246)=true differsFromUnbudgeted=false
+budgets where the run degraded (path changed) yet completed .optimal: [32000, 48000, 64000]
+exit(degrade)=0
+== 6. Reproducibility of the degrade signature (deterministic: true, threads 1), 3 runs each
+det run 1 budget nil(=25% RAM): optimal obj 593 nodes 2353 open 0 lpIter 18155 wall 0.08s predicate(line246)=true
+det run 2 budget nil(=25% RAM): optimal obj 593 nodes 2353 open 0 lpIter 18155 wall 0.08s predicate(line246)=true
+det run 3 budget nil(=25% RAM): optimal obj 593 nodes 2353 open 0 lpIter 18155 wall 0.08s predicate(line246)=true
+det run 1 budget 64000: optimal obj 593 nodes 2353 open 0 lpIter 18177 wall 0.08s predicate(line246)=true
+det run 2 budget 64000: optimal obj 593 nodes 2353 open 0 lpIter 18177 wall 0.08s predicate(line246)=true
+det run 3 budget 64000: optimal obj 593 nodes 2353 open 0 lpIter 18177 wall 0.07s predicate(line246)=true
+det run 1 budget 32000: optimal obj 593 nodes 2394 open 0 lpIter 19060 wall 0.08s predicate(line246)=true
+det run 2 budget 32000: optimal obj 593 nodes 2394 open 0 lpIter 19060 wall 0.08s predicate(line246)=true
+det run 3 budget 32000: optimal obj 593 nodes 2394 open 0 lpIter 19060 wall 0.08s predicate(line246)=true
+det run 1 budget 24000: feasible(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj 593 nodes 1028 open 31 lpIter 12444 wall 0.04s predicate(line246)=true
+det run 2 budget 24000: feasible(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj 593 nodes 1028 open 31 lpIter 12444 wall 0.04s predicate(line246)=true
+det run 3 budget 24000: feasible(stoppedBy: ZTronLPCore.StopReason.memoryBudget) obj 593 nodes 1028 open 31 lpIter 12444 wall 0.04s predicate(line246)=true

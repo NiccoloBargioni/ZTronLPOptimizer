@@ -1,0 +1,32 @@
+# ZTronLPOptimizer benchmarks (specification §14.3)
+machine: arm64, 8 cores, 24 GB; build: release
+
+## Netlib set
+acceptance for v1: primal ≤ 2 s, dual ≤ 2 s, IPM + crossover-lite ≤ 3 s in total on M1
+instance  primal it  s        dual it  s        IPM it  xover it  s        max rel. error
+afiro     16         0.000    14       0.000    10      1         0.000    6.1e-12
+sc50a     49         0.000    49       0.000    9       0         0.000    6.7e-12
+sc50b     49         0.000    49       0.000    8       0         0.000    2.0e-16
+sc105     99         0.001    99       0.001    10      6         0.001    5.6e-12
+kb2       58         0.000    57       0.000    12      0         0.000    3.5e-12
+adlittle  109        0.001    68       0.001    12      6         0.001    1.1e-11
+blend     89         0.001    89       0.001    13      4         0.001    5.6e-12
+share2b   107        0.001    110      0.002    16      14        0.001    3.4e-12
+stocfor1  88         0.001    107      0.002    12      10        0.001    1.1e-11
+scagr7    164        0.002    154      0.002    14      0         0.001    1.3e-11
+beaconfd  98         0.002    95       0.001    12      4         0.003    6.0e-12
+israel    123        0.003    108      0.003    17      3         0.005    3.4e-12
+degen2    1011       0.133    539      0.098    13      127       0.039    7.9e-16
+total seconds: primal 0.145, dual 0.111, IPM + crossover-lite 0.054
+(netlib: 0.337 s wall, peak memory so far 38 MB)
+
+## Random transport LP, 2,000 × 20,000
+acceptance for v1: DenseLUBasis and SparseQRBasis both ≤ 10 s on M1; the faster becomes the automatic choice at that size
+rows 2000, columns 20000, nonzeros 40000
+basis         method   status      iterations  refactors  seconds   objective
+DenseLUBasis  dual     optimal     1000        11         3.293     162355.0000
+DenseLUBasis  primal   optimal     1942        21         4.646     162355.0000
+SparseQRBasis dual     optimal     1000        21         0.776     162355.0000
+SparseQRBasis primal   optimal     1942        40         1.144     162355.0000
+(interior point)       optimal     12          -          0.156     162355.0000
+(transport: 10.021 s wall, peak memory so far 142 MB)

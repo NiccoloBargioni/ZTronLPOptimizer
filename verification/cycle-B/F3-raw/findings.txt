@@ -1,0 +1,9 @@
+matrix ratio 1000000.0: []
+matrix ratio 1000000.1: ["warning"]
+matrix ratio 1000000000.0: ["warning"]
+matrix ratio 1000000100.0: ["severe"]
+near-parallel eps=1e-3 1-cos=5.434e-09 found=0 (expected 0)
+near-parallel eps=1e-5 1-cos=5.433e-13 found=1 (expected 1)
+near-parallel eps=3e-5 1-cos=4.891e-12 found=1 (expected 1)
+near-parallel eps=1e-6 1-cos=5.329e-15 found=1 (expected 1)
+rc=0

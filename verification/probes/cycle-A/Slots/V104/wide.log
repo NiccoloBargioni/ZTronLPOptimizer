@@ -1,0 +1,133 @@
+p0033 (sense minimize, opt 3089.000000):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 2699.925000 gap nil nodes 13 open 7
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 2920.275000 gap nil nodes 87 open 51
+   T 0.005: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3089.000000 bound 3008.145000 gap 0.026175 nodes 338 open 106
+   T 0.01: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3089.000000 bound 3085.850000 gap 0.001020 nodes 787 open 41
+   T 0.02: optimal obj 3089.000000 bound 3089.000000 gap 0.000000 nodes 931 open 0
+   T 0.05: optimal obj 3089.000000 bound 3089.000000 gap 0.000000 nodes 824 open 0
+   T 0.1: optimal obj 3089.000000 bound 3089.000000 gap 0.000000 nodes 925 open 0
+   T 0.2: optimal obj 3089.000000 bound 3089.000000 gap 0.000000 nodes 819 open 0
+   T 0.5: optimal obj 3089.000000 bound 3089.000000 gap 0.000000 nodes 910 open 0
+   T 1.0: optimal obj 3089.000000 bound 3089.000000 gap 0.000000 nodes 936 open 0
+stein27 (sense minimize, opt 18.000000):
+   T 0.001: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 27.000000 bound 27.000000 gap 0.000000 rootLP 13.000000 boundInvalidVsOpt true
+   T 0.002: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 19.000000 bound 19.000000 gap 0.000000 rootLP 13.000000 boundInvalidVsOpt true
+   T 0.005: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 19.000000 bound 19.000000 gap 0.000000 rootLP 13.000000 boundInvalidVsOpt true
+   T 0.01: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 19.000000 bound 13.000000 gap 0.315789 nodes 3 open 4
+   T 0.02: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 19.000000 bound 13.000000 gap 0.315789 nodes 13 open 14
+   T 0.05: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 18.000000 bound 14.833333 gap 0.175926 nodes 395 open 396
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 18.000000 bound 16.000000 gap 0.111111 nodes 1388 open 941
+   T 0.2: optimal obj 18.000000 bound 18.000000 gap 0.000000 nodes 4191 open 0
+   T 0.5: optimal obj 18.000000 bound 18.000000 gap 0.000000 nodes 4127 open 0
+   T 1.0: optimal obj 18.000000 bound 18.000000 gap 0.000000 nodes 4277 open 0
+stein45 (sense minimize, opt 30.000000):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.005: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 45.000000 bound 45.000000 gap 0.000000 rootLP 22.000000 boundInvalidVsOpt true
+   T 0.01: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 45.000000 bound 45.000000 gap 0.000000 rootLP 22.000000 boundInvalidVsOpt true
+   T 0.02: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 45.000000 bound 45.000000 gap 0.000000 rootLP 22.000000 boundInvalidVsOpt true
+   T 0.05: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 32.000000 bound 32.000000 gap 0.000000 rootLP 22.000000 boundInvalidVsOpt true
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 32.000000 bound 22.000000 gap 0.312500 nodes 1 open 2
+   T 0.2: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 32.000000 bound 22.000000 gap 0.312500 nodes 7 open 8
+   T 0.5: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 32.000000 bound 23.666667 gap 0.260417 nodes 354 open 355
+   T 1.0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 32.000000 bound 25.000000 gap 0.218750 nodes 1731 open 1732
+enigma (sense minimize, opt 0.000000):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 1 open 0
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 0.000000 gap nil nodes 1 open 2
+   T 0.005: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 0.000000 gap nil nodes 9 open 7
+   T 0.01: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound -0.000000 gap nil nodes 69 open 51
+   T 0.02: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 0.000000 gap nil nodes 287 open 145
+   T 0.05: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound -0.000000 gap nil nodes 1087 open 354
+   T 0.1: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 0.000000 gap nil nodes 2693 open 812
+   T 0.2: optimal obj 0.000000 bound 0.000000 gap 0.000000 nodes 2566 open 761
+   T 0.5: optimal obj 0.000000 bound -0.000000 gap 0.000000 nodes 1936 open 613
+   T 1.0: optimal obj 0.000000 bound 0.000000 gap 0.000000 nodes 1762 open 450
+lseu (sense minimize, opt 1120.000000):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 837.716526 gap nil nodes 1 open 2
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 842.556515 gap nil nodes 5 open 6
+   T 0.005: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 891.862487 gap nil nodes 94 open 95
+   T 0.01: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 971.518883 gap nil nodes 363 open 360
+   T 0.02: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1120.000000 bound 992.806364 gap 0.113566 nodes 969 open 842
+   T 0.05: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1165.000000 bound 1005.962771 gap 0.136513 nodes 2845 open 2333
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1120.000000 bound 1039.342067 gap 0.072016 nodes 6141 open 3391
+   T 0.2: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 1120.000000 bound 1070.478089 gap 0.044216 nodes 12048 open 4386
+   T 0.5: optimal obj 1120.000000 bound 1120.000000 gap 0.000000 nodes 30341 open 0
+   T 1.0: optimal obj 1120.000000 bound 1120.000000 gap 0.000000 nodes 34826 open 0
+mod008 (sense minimize, opt 307.000000):
+   T 0.001: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 510.000000 bound 510.000000 gap 0.000000 rootLP 290.931073 boundInvalidVsOpt true
+   T 0.002: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 444.000000 bound 291.390842 gap 0.343714 nodes 2 open 3
+   T 0.005: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 307.000000 bound 292.927360 gap 0.045839 nodes 26 open 12
+   T 0.01: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 307.000000 bound 294.035115 gap 0.042231 nodes 120 open 60
+   T 0.02: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 307.000000 bound 296.999585 gap 0.032575 nodes 360 open 181
+   T 0.05: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 307.000000 bound 301.067183 gap 0.019325 nodes 1603 open 535
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 307.000000 bound 301.983777 gap 0.016339 nodes 2812 open 806
+   T 0.2: optimal obj 307.000000 bound 307.000000 gap 0.000000 nodes 5549 open 0
+   T 0.5: optimal obj 307.000000 bound 307.000000 gap 0.000000 nodes 5727 open 0
+   T 1.0: optimal obj 307.000000 bound 307.000000 gap 0.000000 nodes 6738 open 0
+flugpl (sense minimize, opt 1201500.000000):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 1171431.995885 gap nil nodes 29 open 23
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 1174997.500000 gap nil nodes 118 open 66
+   T 0.005: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 1179885.000000 gap nil nodes 406 open 157
+   T 0.01: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 1184860.000000 gap nil nodes 992 open 284
+   T 0.02: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 1195680.000000 gap nil nodes 2178 open 409
+   T 0.05: optimal obj 1201500.000000 bound 1201500.000000 gap 0.000000 nodes 4840 open 0
+   T 0.1: optimal obj 1201500.000000 bound 1201500.000000 gap 0.000000 nodes 3152 open 0
+   T 0.2: optimal obj 1201500.000000 bound 1201500.000000 gap 0.000000 nodes 5246 open 0
+   T 0.5: optimal obj 1201500.000000 bound 1201500.000000 gap 0.000000 nodes 2829 open 0
+   T 1.0: optimal obj 1201500.000000 bound 1201500.000000 gap 0.000000 nodes 3223 open 0
+egout (sense minimize, opt 568.100700):
+   T 0.001: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 689.453210 bound 689.453210 gap 0.000000 rootLP 149.588766 boundInvalidVsOpt true
+   T 0.002: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 689.453210 bound 154.643792 gap 0.775701 nodes 1 open 1
+   T 0.005: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 689.453210 bound 160.317685 gap 0.767471 nodes 2 open 1
+   T 0.01: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 689.453210 bound 181.448513 gap 0.736823 nodes 6 open 1
+   T 0.02: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 680.350850 bound 263.449200 gap 0.612774 nodes 14 open 1
+   T 0.05: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 568.100700 bound 484.504296 gap 0.147151 nodes 398 open 259
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 568.100700 bound 524.876452 gap 0.076086 nodes 1414 open 825
+   T 0.2: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 568.100700 bound 536.952035 gap 0.054829 nodes 2188 open 1175
+   T 0.5: optimal obj 568.100700 bound 568.100700 gap 0.000000 nodes 5992 open 0
+   T 1.0: optimal obj 568.100700 bound 568.100700 gap 0.000000 nodes 6017 open 0
+misc03 (sense minimize, opt 3360.000000):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 1 open 0
+   T 0.005: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 1 open 0
+   T 0.01: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 1 open 0
+   T 0.02: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 1 open 0
+   T 0.05: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3360.000000 bound 2001.666667 gap 0.404266 nodes 27 open 4
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3360.000000 bound 2045.000000 gap 0.391369 nodes 68 open 15
+   T 0.2: optimal obj 3360.000000 bound 3360.000000 gap 0.000000 nodes 497 open 0
+   T 0.5: optimal obj 3360.000000 bound 3360.000000 gap 0.000000 nodes 488 open 0
+   T 1.0: optimal obj 3360.000000 bound 3360.000000 gap 0.000000 nodes 539 open 0
+p0201 (sense minimize, opt 7615.000000):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.005: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 1 open 0
+   T 0.01: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 1 open 0
+   T 0.02: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 6875.000000 gap nil nodes 1 open 2
+   T 0.05: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound 6975.000000 gap nil nodes 26 open 27
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 7735.000000 bound 7035.000000 gap 0.090498 nodes 105 open 72
+   T 0.2: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 7785.000000 bound 7158.333333 gap 0.080497 nodes 269 open 182
+   T 0.5: optimal obj 7615.000000 bound 7615.000000 gap 0.000000 nodes 245 open 0
+   T 1.0: optimal obj 7615.000000 bound 7615.000000 gap 0.000000 nodes 341 open 0
+randomMILP(80x400,s5) (sense maximize, opt nil):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.005: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.01: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3386.000000 bound 3386.000000 gap 0.000000 rootLP 3803.593799 boundInvalidVsOpt unknown
+   T 0.02: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3386.000000 bound 3386.000000 gap 0.000000 rootLP 3803.593799 boundInvalidVsOpt unknown
+   T 0.05: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3507.000000 bound 3802.718547 gap 0.084322 nodes 1 open 2
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3512.000000 bound 3801.577231 gap 0.082454 nodes 8 open 9
+   T 0.2: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3518.000000 bound 3801.577231 gap 0.080608 nodes 37 open 38
+   T 0.5: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3739.000000 bound 3800.387346 gap 0.016418 nodes 504 open 505
+   T 1.0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 3754.000000 bound 3799.211318 gap 0.012044 nodes 2388 open 2389
+randomMILP(120x800,s9,upper3) (sense maximize, opt nil):
+   T 0.001: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.002: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.005: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.01: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.02: noSolution(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj nil bound nil gap nil nodes 0 open 0
+   T 0.05: LOST-ROOT feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 22420.000000 bound 22420.000000 gap 0.000000 rootLP 23033.218325 boundInvalidVsOpt unknown
+   T 0.1: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 22420.000000 bound 23033.218325 gap 0.027351 nodes 1 open 2
+   T 0.2: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 22504.000000 bound 23032.629287 gap 0.023490 nodes 25 open 26
+   T 0.5: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 22521.000000 bound 23032.629287 gap 0.022718 nodes 120 open 121
+   T 1.0: feasible(stoppedBy: ZTronLPCore.StopReason.timeLimit) obj 22955.000000 bound 23031.981078 gap 0.003354 nodes 895 open 896
+SUMMARY wide: 12 lost-root results

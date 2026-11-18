@@ -1,0 +1,227 @@
+{
+ "area": "F7 Package integrity: gates, documentation claims, measured numbers, test-suite integrity, layering (cycle A, claims first)",
+ "claimsHeld": [
+  {
+   "claim": "Gates: build -warnings-as-errors, lint, full debug suite (546/546, 13 targets), release integration+liveness (24+17, one recorded known issue), TSAN on integration/liveness/B&B/CP-SAT all exit 0",
+   "howChecked": "verification/baseline/progress.txt and logs 01-05; summed 'Test run with' lines; grep for ThreadSanitizer (0)"
+  },
+  {
+   "claim": "README 'Tests: 546 in 13 targets, debug build'",
+   "howChecked": "sum of the 13 'Test run with N tests' lines in baseline/03-test-debug.log = 546"
+  },
+  {
+   "claim": "README §1 example prints the commented numbers (2600.0 / 56.0 / 1.0 / 2725.0 / 3.1666666666666665 ...), and ReadmeExampleTests asserts them",
+   "howChecked": "README lines 89-139 extracted verbatim into Slots/F7/main.swift and run; test read; LP duals derived by hand (basis {c,o}: y_h = 8/3, y_w = 19/6)"
+  },
+  {
+   "claim": "README §2 defaults (tolerances, limits, kernel thresholds, Automatic 4000/10000/0.3, heuristics, gap, B&B/CPSAT/IPM defaults, memory budget = 1/4 of RAM) and the Automatic.choice boundaries (strict)",
+   "howChecked": ".build/release/F7 defaults on synthetic LPs at 4000/4001 rows and 10000/10001 rows with a 30%/30%+ dense column"
+  },
+  {
+   "claim": "README §2 API tables: every listed member exists with the README's labels and shapes",
+   "howChecked": "Python scan over Sources plus Slots/F7/APIShapes.swift (~300 references, never executed) built with swift build -c release --product F7"
+  },
+  {
+   "claim": "Layering: no engine imports Metal; all BLAS/LAPACK through the CLAPACKShim ztlp_* wrappers; the import graph is acyclic and follows the layers",
+   "howChecked": "grep of import lines per target and of cblas_/LAPACK symbols in Swift sources"
+  },
+  {
+   "claim": "README §5 netlib table: dimensions, nonzeros, primal/dual pivots, IPM iterations, crossover pivots, relative errors (all 13 rows)",
+   "howChecked": ".build/release/F7 netlib: every count identical, all optimal, max rel. error <= 1.3e-11"
+  },
+  {
+   "claim": "Oracle 1 (InstanceGenerator constructed optimum) is truly optimal on every suite the tests use (debug 3x100, release 3x1000, fixture 40, certificate 2x40, Hilbert forms)",
+   "howChecked": ".build/release/F7 gen: independent KKT certificate (primal feasibility, column and row dual signs, complementarity, duality gap <= 2.4e-13): 0 failures"
+  },
+  {
+   "claim": "Benchmark netlib and transport rows: pivots, refactorizations, IPM iterations, objective 162355; totals within load",
+   "howChecked": "swift build -c release --product ZTronLPBenchmarks && .build/release/ZTronLPBenchmarks netlib transport (cycle-A/F7-bench-netlib-transport.txt): identical counts; 0.145/0.111/0.054 s vs 0.112/0.087/0.038 s at load ~10"
+  },
+  {
+   "claim": "MIPLIB benchmark: 10 instances x 2 node engines optimal at the published objectives; stein45 times within 2x of README",
+   "howChecked": ".build/release/ZTronLPBenchmarks mip (cycle-A/F7-bench-mip.txt): 20/20 optimal; stein45 35.9 s / 32.6 s under load vs 19.6 / 15.9"
+  },
+  {
+   "claim": "Deterministic B&B: the nine MIPLIB 3 instances other than stein45 reach the published optima, and two runs are identical (README §1 item 6, §5)",
+   "howChecked": ".build/release/F7 bnbdet (cycle-A/F7-bnbdet.txt): 9 x {primal, dual} x 2 runs optimal, rel. err <= 2e-16, identical nodes and LP iterations, slowest 2.33 s"
+  },
+  {
+   "claim": "README §5 TSAN: no reports on the simplex, interior-point and facade targets as well (not in the baseline gate)",
+   "howChecked": "ZTRONLP_LATENCY_SCALE=20 swift test --sanitize=thread --filter 'ZTronLPSimplexTests|ZTronLPInteriorPointTests|ZTronLPOptimizerTests' (cycle-A/F7-tsan-simplex-ipm-facade.log): 47+13+13 passed, 0 ThreadSanitizer lines"
+  },
+  {
+   "claim": "README §5 Hilbert table, every cell except the warning count of orders 4 and 5",
+   "howChecked": ".build/release/F7 hilbert 3 12 (condition estimate, dense solve, per-engine distance, objective error, statuses)"
+  },
+  {
+   "claim": "Cancellation latency stays within the 50 ms acceptance on the benchmark instances",
+   "howChecked": ".build/release/F7 latency: worst 8.05 ms (IPM), B&B 1.04 ms, primal 1.39 ms"
+  },
+  {
+   "claim": "Every liveness rule L1-L10 has a test; determinism tests compare counters and event sequences; the LP-propagator learned-clause test is guarded against vacuity (checked models > 100, clauses > 300)",
+   "howChecked": "read Tests/ZTronLPLivenessTests, BranchAndBound/CPSAT determinism tests, LPPropagatorTests"
+  },
+  {
+   "claim": "Lint does catch nonisolated(unsafe) in Sources and Tests, column-0 global vars, every static var, @unchecked without INVARIANT in Sources, and the listed C6 primitives",
+   "howChecked": "mutation test on a copy of Scripts/lint.sh (verification/cycle-A/F7-lint-mutation/)"
+  },
+  {
+   "claim": "TestSupport reference values (netlib, MIPLIB 3 optima) and the generators are correct",
+   "howChecked": "compared to published values; generator outputs certified by the gen probe"
+  },
+  {
+   "claim": "CPSAT(deterministic: true) gives the same result every run and closes the six pure-integer MIPLIB 3 instances other than stein45; CPSAT(lpPropagator: false, deterministic: true) is reproducible where it finishes",
+   "howChecked": "F7_LIMIT=40 .build/release/F7 cpdet (cycle-A/F7-cpdet.txt): with the LP propagator, 6/6 optimal at the published objective with identical conflicts and lpSolves over two runs; without it, p0033/stein27/enigma/lseu optimal and identical, while mod008 and p0201 stop at the 40 s limit"
+  }
+ ],
+ "findings": [
+  {
+   "id": "A7-01",
+   "title": "The memory-budget tests accept the result of a solve that ignores the budget",
+   "severity": "medium",
+   "category": "test-integrity",
+   "claim": "L7 suite doc (Tests/ZTronLPLivenessTests/L3ToL10Tests.swift:186-188): 'the node pool respects the budget; exceeding it degrades (drops bases) and, if still exceeded, stops with .feasible(stoppedBy: .memoryBudget)'; test names sixteenMegabytesIsEnoughAndIsRespected (L3ToL10Tests.swift:190) and memoryBudgetDegradesThenStops (Tests/ZTronLPBranchAndBoundTests/BranchAndBoundTests.swift:241); HANDBOOK Testing 'The liveness rules of §12.2 each have a test'.",
+   "observed": "Both tests assert `status == .optimal || stopReason == .memoryBudget` (L3ToL10Tests.swift:198, BranchAndBoundTests.swift:246) and read no byte count, dropped-basis count or warning. On memoryBudgetDegradesThenStops' own instance and solver (randomMILP 12x60 seed 4242, BranchAndBound(nodeSelection: .bestBound, heuristics: .none)): 2,000 B -> noSolution(stoppedBy: memoryBudget) after 19 nodes; 4,096 B -> same after 29; 16 MiB -> optimal 593 (3191 nodes); no budget -> optimal 593 (3269 nodes). The unbudgeted result satisfies both assertions.",
+   "whyWrong": "A regression that stops enforcing the budget (or the degrade step in SearchTree.checkGapAndMemory) or undercounts openBytes turns the 2,000-byte case into .optimal, which the test accepts; the 16 MiB test cannot fail on a node pool that grows past 16 MiB; neither test checks degradation. Mitigation: aBudgetTooSmallForTheTreeStopsWithTheIncumbent (4,096 B, L3ToL10Tests.swift:202-215) and the L10 exit-path test require .memoryBudget, so a budget ignored entirely is still caught; a loosely honoured budget or a dead degrade step is not.",
+   "location": "Tests/ZTronLPBranchAndBoundTests/BranchAndBoundTests.swift:246; Tests/ZTronLPLivenessTests/L3ToL10Tests.swift:198 (code under test Sources/ZTronLPBranchAndBound/SearchTree.swift:428-462)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build -c release --product F7 && perl -e 'alarm shift; exec @ARGV' 300 .build/release/F7 membudget   (Slots/F7/Extra.swift memBudget)",
+   "evidence": "budget 2000: noSolution(stoppedBy: ZTronLPCore.StopReason.memoryBudget) nodes 19 | budget 4096: noSolution(stoppedBy: memoryBudget) nodes 29 | budget 16777216: optimal nodes 3191 objective 593.0 | budget nil (default): optimal nodes 3269 objective 593.0",
+   "confidence": "reproduced",
+   "documented": "No. README risk 4 and the 'Memory is budgeted, partly' bullet say what the budget counts, not that these tests leave it unchecked."
+  },
+  {
+   "id": "A7-02",
+   "title": "README §5 Hilbert table: 'Answers with a warning' is wrong for orders 4 and 5",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "README.md:615-616: order 4 '0 of 12', order 5 '3 of 12' answers with a warning.",
+   "observed": "Order 4: 4 of 12 (each of the four InteriorPoint() answers carries '4 column(s) have more than 30% nonzeros; the normal equations will be dense (§8.3)'); order 5: 4 of 12 (3 stall warnings plus 1 dense-column warning). Every other cell reproduces: condition estimates 7e2..4e16, dense-solve and per-engine distances (order 8: 4.0e-7/8.7e-7/7.6e-7; orders 9-12: 1..3), objective errors <= 7.9e-12, warning counts of orders 3 and 6-12, every answer .optimal.",
+   "whyWrong": "The column evidently counted only stall/ill-conditioning warnings, but SolutionAnalysis.warnings also carries the IPM dense-column warning (Sources/ZTronLPInteriorPoint/IPMWorker.swift:638-639), which a dense Hilbert matrix of order >= 4 always triggers.",
+   "location": "README.md:615-616 (warning emitted at Sources/ZTronLPInteriorPoint/IPMWorker.swift:638-639)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && .build/release/F7 hilbert 3 12 && .build/release/F7 hilbertwarn 3 6",
+   "evidence": "hilbert: 'order 4 ... warned 4 of 12', 'order 5 ... warned 4 of 12'; hilbertwarn order 4: InteriorPoint on all 4 forms -> '4 column(s) have more than 30% nonzeros; the normal equations will be dense'",
+   "confidence": "reproduced",
+   "documented": ""
+  },
+  {
+   "id": "A7-03",
+   "title": "Scripts/lint.sh misses violations inside its own stated C2/C3/C6 scope",
+   "severity": "low",
+   "category": "test-integrity",
+   "claim": "Scripts/lint.sh:2-8 'CI runs this; it exits non-zero on the first rule that is broken ... C2 no global mutable variables in library code ... C3 every @unchecked Sendable is listed and must carry an // INVARIANT: comment ... C6 no DispatchSemaphore, Thread.sleep, blocking command-buffer wait or DispatchGroup wait'; HANDBOOK 'no global mutable state ... no blocking primitives'; SPEC v0.2 §2.2 'no new @unchecked Sendable (the count stays at one)'.",
+   "observed": "Mutation test on a copy of the script, one injected line per run. Not caught (rc=0): `@MainActor var counter = 0` in Sources; `commandBuffer.waitUntilScheduled()` (only waitUntilCompleted is listed); `sleep(1)` starting in column 0 (pattern '[^A-Za-z_.]sleep\\(' needs a preceding character); `nanosleep(&ts, nil)`; any `@unchecked Sendable` without INVARIANT under Tests/ (code() greps Sources only). Caught: nonisolated(unsafe) in Sources and Tests, `var`/`public var` globals at column 0, every `static var x =`, @unchecked without INVARIANT in Sources, DispatchSemaphore/Thread.sleep/waitUntilCompleted/DispatchGroup/usleep(/indented sleep(.",
+   "whyWrong": "CI relies on this gate for C2/C3/C6, and these forms pass it. Mitigation: Swift 6 language mode (Package.swift:23) rejects nonisolated global vars, covering `public private(set) var` and indented globals inside #if that lint also misses, but not @MainActor globals or blocking calls. No current violation exists in Sources/ or Tests/, so the gap is latent.",
+   "location": "Scripts/lint.sh:21-23 (code() scope), :35 (global-var regex), :66 (C6 pattern list)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && T=verification/cycle-A/F7-lint-mutation/t && mkdir -p $T/Scripts $T/Sources/X && cp Scripts/lint.sh $T/Scripts/ && printf 'func f() {\\nsleep(1)\\n}\\n' > $T/Sources/X/V.swift && bash $T/Scripts/lint.sh; echo rc=$?   (repeat with each one-liner above)",
+   "evidence": "'lint: all rules hold' with rc=0 for each uncaught mutation; rc=1 with the rule's message for each caught one",
+   "confidence": "reproduced",
+   "documented": ""
+  },
+  {
+   "id": "A7-04",
+   "title": "Debug and Thread-Sanitizer runs report skipped MIPLIB cases as passed",
+   "severity": "low",
+   "category": "test-integrity",
+   "claim": "README 'Building and testing': 546 tests pass in a debug build; README §5 'Thread Sanitizer: no reports on ... branch-and-bound, CP-SAT, ... integration ...' with the CI thread-sanitizer job (.github/workflows/ci.yml:65) as the gate.",
+   "observed": "CorpusTests.swift:125, :151, :171 `guard !Self.slow.contains(instance.name) || Slow.enabled else { return }`; Slow.enabled is false in any DEBUG build without ZTRONLP_SLOW_TESTS=1 (CorpusTests.swift:9-17). In debug, branchAndBoundWithBothStrategies runs 6 of 10 instances, cpSatClosesEveryPureIntegerInstance 3 of 7, cpSatWithoutTheLPPropagator 2 of 6; the other 12 cases return at their first line and count as passes (baseline 03: 'cpSatWithoutTheLPPropagator(_:) with 6 test cases passed after 7.784 seconds', no known issue; release 04 records the mod008 known issue after 60 s). The CI TSAN job and HANDBOOK's TSAN command are debug builds, so under Thread Sanitizer B&B never runs stein45, lseu, enigma or mod008, CPSAT() never runs stein45, lseu, mod008 or p0201, and CPSAT(lpPropagator: false) never runs stein45, lseu, enigma or mod008.",
+   "whyWrong": "Skipped cases are reported as passes in the 546-test count and in CI, and the TSAN claim on the integration target covers only the reduced corpus, without the longest parallel searches. Swift Testing's .enabled(if:), which the SATLIB tests use, would show them as skipped.",
+   "location": "Tests/ZTronLPIntegrationTests/CorpusTests.swift:125,151,171; .github/workflows/ci.yml:65",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && grep -n 'Slow.enabled else { return }' Tests/ZTronLPIntegrationTests/CorpusTests.swift; grep -h 'cpSatWithoutTheLPPropagator\\|cpSatClosesEvery\\|branchAndBoundWithBoth' verification/baseline/03-test-debug.log verification/baseline/04*.log",
+   "evidence": "03-test-debug.log: 'cpSatClosesEveryPureIntegerInstance(_:) with 7 test cases passed after 8.283 seconds', 'cpSatWithoutTheLPPropagator(_:) with 6 test cases passed after 7.784 seconds'; 04 release: 'recorded a known issue ... mod008 ... CorpusTests.swift:184:17'",
+   "confidence": "reproduced",
+   "documented": "Partly: HANDBOOK Testing says 'A debug build runs a reduced corpus ... ZTRONLP_SLOW_TESTS=1 runs the slow MIPLIB instances in a debug build as well'. It does not say the skipped cases count as passes, or that the TSAN gate therefore never covers them."
+  },
+  {
+   "id": "A7-05",
+   "title": "fetch-miplib.sh ignores ZTRONLP_CORPORA although the tests and its doc comment say the fetch scripts use it",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "Sources/ZTronLPTestSupport/Fixtures.swift:39 'The directory the fetch scripts write to: $ZTRONLP_CORPORA when set, otherwise ...'.",
+   "observed": "Scripts/fetch-miplib.sh:15 `DEST=\"${1:-${ROOT}/.corpora/miplib3}\"` never reads ZTRONLP_CORPORA; fetch-satlib.sh:31 does honour it.",
+   "whyWrong": "With ZTRONLP_CORPORA set, fetch-miplib.sh writes to .corpora/miplib3 while Corpora.root looks under $ZTRONLP_CORPORA. Every MIPLIB test then records 'has not been fetched' as a known issue (CorpusTests.swift:113-121), and the run is green with the corpus untested.",
+   "location": "Scripts/fetch-miplib.sh:15",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && grep -n ZTRONLP_CORPORA Scripts/fetch-miplib.sh Scripts/fetch-satlib.sh Sources/ZTronLPTestSupport/Fixtures.swift",
+   "evidence": "fetch-miplib.sh: no match; fetch-satlib.sh:31 CORPORA=\"${ZTRONLP_CORPORA:-$ROOT/.corpora}\"; Fixtures.swift:42 reads the variable",
+   "confidence": "code-reading-only",
+   "documented": ""
+  },
+  {
+   "id": "A7-06",
+   "title": "FixtureTests.constructedInstancesAreFeasibleAndComplementary checks only the column half of the certificate",
+   "severity": "low",
+   "category": "test-integrity",
+   "claim": "Test name (Tests/ZTronLPTestSupportTests/FixtureTests.swift:39) and comment 'Dual feasibility of the constructed pair'. Oracle 1 is the reference for every engine's duals.",
+   "observed": "The dual check loops over 0..<lp.n only (FixtureTests.swift:46-50). The m row entries of reducedCosts(forDuals:) (row-dual sign against row activity, row complementarity) and the duality gap are never checked.",
+   "whyWrong": "A generator change that gave an inactive inequality row a nonzero dual, or a dual of the wrong sign, would pass. The oracle is correct today: an independent KKT certificate (row and column signs, complementarity, duality gap <= 2.4e-13) holds on every suite (.build/release/F7 gen).",
+   "location": "Tests/ZTronLPTestSupportTests/FixtureTests.swift:46-50",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && sed -n 39,53p Tests/ZTronLPTestSupportTests/FixtureTests.swift",
+   "evidence": "`for j in 0..<lp.n { ... }` is the only dual assertion",
+   "confidence": "code-reading-only",
+   "documented": ""
+  },
+  {
+   "id": "A7-07",
+   "title": "Manifest and HANDBOOK misstate the dependency and import graph",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "Package.swift:69-70 'The only two dependencies (§2): ... Heap / OrderedDictionary / BitSet'; Package.swift:159 gives ZTronLPCPSAT heap, orderedCollections, bitCollections; Package.swift:182 gives ZTronLPTestSupport ZTronLPNumerics; HANDBOOK.md:134-135 'branch and bound and CP-SAT are the two that import an LP engine'.",
+   "observed": "No file imports OrderedCollections or BitCollections. HeapModule is imported only by Sources/ZTronLPBranchAndBound/SearchTree.swift. ZTronLPCPSAT imports only Atomics, Foundation, Core, Numerics and Simplex. ZTronLPTestSupport imports Core, Dispatch and Foundation, not Numerics. ZTronLPInteriorPoint imports ZTronLPSimplex for crossover-lite, which makes it a third LP-engine consumer.",
+   "whyWrong": "Three declared products are dead dependencies for every client of ZTronLPCPSAT. The manifest comment and the HANDBOOK sentence describe a graph that is not the real one.",
+   "location": "Package.swift:69-70, 159, 182; HANDBOOK.md:134-135",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && grep -rln 'import HeapModule\\|import OrderedCollections\\|import BitCollections' Sources Tests; grep -h '^import' Sources/ZTronLPCPSAT/*.swift Sources/ZTronLPTestSupport/*.swift Sources/ZTronLPInteriorPoint/*.swift | sort | uniq -c",
+   "evidence": "Only Sources/ZTronLPBranchAndBound/SearchTree.swift matches the first grep; the CP-SAT, TestSupport and IPM imports are as listed",
+   "confidence": "reproduced",
+   "documented": "IPM -> Simplex is recorded elsewhere in HANDBOOK as a design decision, which contradicts the Targets sentence."
+  },
+  {
+   "id": "A7-08",
+   "title": "README 'no single full debug run of it was green' is stale",
+   "severity": "info",
+   "category": "doc-claim-false",
+   "claim": "README.md:715 'Every other test passed in those runs, so every test of the final tree has passed, but no single full debug run of it was green'.",
+   "observed": "The baseline full debug run (verification/baseline/03-test-debug.log, rc=0) passed all 546 tests in 13 runs.",
+   "whyWrong": "The statement understates the current state: a green full debug run of this tree exists.",
+   "location": "README.md:715",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer && grep 'Test run with' verification/baseline/03-test-debug.log",
+   "evidence": "13 'Test run with N tests ... passed' lines summing to 546; baseline/progress.txt debug suite rc=0",
+   "confidence": "reproduced",
+   "documented": ""
+  },
+  {
+   "id": "A7-09",
+   "title": "Cancellation-latency figures count solves that finished before the cancel as 0 ms",
+   "severity": "info",
+   "category": "performance-claim",
+   "claim": "README §5 / HANDBOOK 'Cancellation latency, 240 solves: p99 3.64 ms, worst 4.43 ms'; L1 test p99 bounds.",
+   "observed": "LivenessHarness.cancellationLatency records latency 0 when the solve returned before Task.cancel() (LivenessHarness.swift:45-48), and both the benchmark and the L1 test put those zeros into their quantiles. A probe on the benchmark's own instances, windows and seed gave Simplex(.primal) 30 interrupted / 8 finished first / 2 finished after the cancel; InteriorPoint 9 / 8 / 23; BranchAndBound 35 / 5 / 0. With 40 samples per row p99 = max, so the published per-row p99 and max are unaffected. p50 shifts (primal 0.16 -> 0.21 ms), and the all-engines p99 over 240 samples is taken at a slightly lower rank of the real latencies. Worst observed was 8.05 ms (IPM), within the 50 ms acceptance.",
+   "whyWrong": "A latency quantile that includes non-cancellations is optimistic. The measured effect on the published numbers is negligible.",
+   "location": "Sources/ZTronLPTestSupport/LivenessHarness.swift:45-48; Sources/ZTronLPBenchmarks/main.swift:262-270",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && perl -e 'alarm shift; exec @ARGV' 400 .build/release/F7 latency",
+   "evidence": "verification/cycle-A/F7-latency.txt",
+   "confidence": "reproduced",
+   "documented": "The CancellationSample.finishedFirst doc describes the flag, but the benchmark and README do not say that zeros are included."
+  }
+ ],
+ "notChecked": [
+  "Metal benchmark rows and Metal threshold claims; the iOS Simulator CI job (xcodebuild); the demo app",
+  "CP-SAT benchmark rows with the 60 s limit and parallel workers (7 of 7 optimal with CPSAT(), 5 of 7 without the LP propagator); only the deterministic single-worker runs at 40 s were checked, and stein45 was not run under CP-SAT",
+  "README 'the release run of eight targets passes with one recorded known issue' (only the baseline release integration+liveness run was available; the other six targets were not run in release)",
+  "Peak-memory numbers (1.16 GB / 1360 MB), event-frequency claims (simplex every 100 iterations, nodes every 100 ms)",
+  "Exact count of public declarations (117 / 22 / ~700); rough recount 122 top-level / ~600 members",
+  "Swift 6.0-6.3 toolchain path; the README comparison 'LP pivots within 1% of the changes switched off' (needs the old code)",
+  "Transport LP timings per basis and method beyond the totals"
+ ],
+ "overflow": [
+  "Tests/ZTronLPOptimizerTests/FacadeTests.swift:173 `#expect(simplex.method == .dual || simplex.method == .primal)` is a tautology (Simplex.Method has only these two cases) after line 171 has established Simplex(.dual)",
+  "README.md:650 and HANDBOOK.md:203 'the primal node engine takes 0.60-1.65x the dual's LP pivots' is a single-run range: enigma 5.11x in this parallel run and 0.165x in deterministic mode (97,889 vs 594,890)",
+  ".github/workflows/ci.yml thread-sanitizer comment 'Rule C10: Thread Sanitizer is clean on the integration suite with threads = 8': the job sets no thread count, so the runner's core count applies",
+  "README risk 13 'CP-SAT on mod008 took about 50 s in the debug test suite': the default debug suite never runs mod008 under CP-SAT (it needs ZTRONLP_SLOW_TESTS=1)",
+  "README risk 1 says solutions are recovered 'up to a condition number of about 1e10', and defect 9 says 'beyond about 1e11'; the measured edge lies between 3e10 (order 8) and 1e12 (order 9)",
+  "README.md:181 'Three things to know before reading the bounds' is followed by four bullets",
+  "README §2 LPFormat row does not say that LPFormat.write throws",
+  "HANDBOOK says a missing corpus instance shows as a known issue; the SATLIB tests use an .enabled(if:) skip instead",
+  "InteriorPoint on degen2 returned .optimal after Task.cancel() in 23 of 40 latency samples (all within 8.05 ms): the tail of the IPM solve may not poll the gate; not investigated (liveness area)",
+  "README §1 item 6 'deterministic: true ... the same result and the same event sequence every run' has no time-limit caveat: CPSAT(lpPropagator: false, deterministic: true) on mod008 stopped at 40 s with 669,025 conflicts in one run and 676,188 in the next (same incumbent, 372)"
+ ],
+ "summary": "Cycle A / F7: the gates, the 546-test count, the README §1 example, the §2 defaults and API shapes, the layering (no engine imports Metal; BLAS/LAPACK only through the shim), the netlib, transport and MIPLIB benchmark counts, deterministic B&B on nine MIPLIB instances, Oracle 1 (an independent KKT certificate on every suite) and TSAN on simplex/IPM/facade all hold. No critical or high defect was found. Nine findings: one medium (two memory-budget tests accept the result an unbudgeted solve gives, so they cannot catch a loosely honoured budget or a dead degrade step; only the 4,096-byte L7 test and L10 catch a budget ignored entirely), six low (README Hilbert warning counts wrong for orders 4-5; lint misses waitUntilScheduled, column-0 sleep(, nanosleep, @MainActor globals and anything under Tests/; debug and TSAN runs report skipped MIPLIB cases as passes; fetch-miplib.sh ignores ZTRONLP_CORPORA; the fixture complementarity test checks columns only; the manifest declares three never-imported collections products and the HANDBOOK misstates the LP-engine consumers), and two info (a stale 'never green' README statement; latency samples that count a solve that finished first as 0 ms, with negligible effect on the published p99). Checkpoint: verification/cycle-A/F7-integrity.md; probes in verification/probes/cycle-A/Slots/F7/."
+}

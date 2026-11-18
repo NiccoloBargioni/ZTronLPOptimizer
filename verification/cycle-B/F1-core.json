@@ -1,0 +1,219 @@
+{
+  "area": "F1 Core (cycle B): modelling DSL, compile, presolve/postsolve, scaling, MPS/LP I/O, result types",
+  "findings": [
+    {
+      "id": "B1-01",
+      "title": "Presolve integer-bound rounding moves integral bounds outward by about 1e-9*|b| per pass once |b| >= ~1e9; BranchAndBound and Automatic return .optimal points outside the bounds",
+      "severity": "critical",
+      "category": "wrong-result",
+      "claim": "README §2.2 Presolve row and §4 Presolve: presolve 'rounds integer bounds'; the Presolve.swift rule comment says it rounds fractional bounds inward; Status.swift:5 says .optimal means an optimal solution was found and proven.",
+      "observed": "Integer x in [1.7e9, 1.7e9+100], minimize x: BranchAndBound() and Automatic() return .optimal with x = 1699999989, and CompiledLP.maxViolation at that point gives bounds = 11.0. A DSL model (start integer >= 1_700_000_000, finish >= start + 3600, minimize finish) returns optimal start = 1699999989, finish = 1700003589. The drift is 22 at 2e9, 110 at 1e10 and 10999.5 at 1e12+0.5, and the maximize side drifts upward the same way. Presolve.run(mode: .boundsOnly) on its own maps xl = 1e9+0.5 to 999999990. CP-SAT returns the correct point.",
+      "whyWrong": "normalizeBounds computes ceil(xl - 1e-9*max(1,|xl|)). When |xl| >= 1e9 the slack is at least one unit, so an integral bound drops by one or more units and sets `changed`. The pass loop then applies the rule again for up to 10 passes plus a final normalize, giving 11 outward steps. Rounding integer bounds may only tighten them. B&B solves pre.reduced and never checks the incumbent against the original bounds, so the status is .optimal at an infeasible point. Unix timestamps hit this.",
+      "location": "Sources/ZTronLPCore/Model/Presolve.swift:139-150 (normalizeBounds, :142 rounded(.up) and :146 rounded(.down)), :166 (pass loop re-applies it); Sources/ZTronLPBranchAndBound/BranchAndBound.swift:199-202 (pre.reduced adopted as the problem)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 300 .build/debug/F1 bigint2 && perl -e 'alarm shift; exec @ARGV' 300 .build/debug/F1 bigint",
+      "evidence": "'integral bounds min x, x>=X X=1700000000.0: bnb=optimal x=1699999989.0 (violation 11.0) auto=optimal x=1699999989.0'; 'status=optimal start=1699999989.0 finish=1700003589.0 (expected start=1700000000, finish=1700003600)', 'maxViolation ... bounds=11.0'; 'Presolve.run boundsOnly M=1000000000.0: xl 1000000000.5 -> 999999990.0'",
+      "confidence": "reproduced",
+      "documented": "Not documented. README §3 risk 10 covers only the MIP gap on the objective, README §4 Presolve lists integer bound rounding with no magnitude limit, and HANDBOOK Known gaps lists only CP-SAT items."
+    },
+    {
+      "id": "B1-02",
+      "title": "Geometric scaling, the default, makes Simplex(), Simplex(.primal) and Automatic() return .optimal at a non-optimal vertex with no warning when one row mixes coefficients >= 1e16 apart",
+      "severity": "critical",
+      "category": "wrong-result",
+      "claim": "README §4 Results: 'Optimal' means 'feasible and dual feasible to 1e-7 (and, after the simplex's refinement pass, to about 1e-10 ...)'. The README SolutionAnalysis row (line 264) says values are unscaled. The Simplex row (line 308) says it 'warns when the optimal basis is ill-conditioned or was optimal only within the tolerances'. Status.swift:5 says .optimal is found and proven. The contract requires scaling on and off to agree.",
+      "observed": "LP: min -x0 - x1 subject to 1e-16*x0 + x1 <= 1, 0 <= x <= 10. Simplex() (dual, geometric scaling, presolve on), Simplex(.primal) and Automatic() return .optimal with obj = -10.0, x = [10.0, 0.0], y = [0.0], reducedCosts = [-1.0, -1.0, 0.0] and warnings = []. The point (10, 0.5) has maxViolation (0, 0) and objective -10.5. The optimum is -11, which Simplex(scaling: .none) and .equilibration return. The same happens for every spread from 1e-16 to 1e-60, while 1e-4 to 1e-14 are correct. At 1e-20 the column factors are [8.6e9, 1.16e-10], so x1's scaled cost is -1.16e-10, below the 1e-7 dual tolerance. On a random 4x4 LP (scalext seed 6, coefficients 1e-93..1e138) the default returns -95.4 and primal returns -65.4, both .optimal with no warnings, while x = [10, 10, 3, 10] is feasible (maxViolation (0, 0)) at -96.0 and equilibration finds -96.6. A single row of it is enough to reproduce.",
+      "whyWrong": "In the model's own units the returned vertex has reduced cost -1 for x1 at its lower bound in a minimization. That is dual infeasible by 1.0, not 1e-7. The package's own unscaled reduced costs show this, yet the status is .optimal and nothing is warned. The scale factors come from |a_ij| alone, with costs ignored, and the optimality test runs on scaled reduced costs with an absolute tolerance. Nothing re-checks dual feasibility after unscaling.",
+      "location": "Sources/ZTronLPCore/Model/Scaling.swift:42-113 (geometric and equilibration factors from |a_ij| only, no limit on the column-factor spread); Sources/ZTronLPSimplex/SimplexEngine+Driver.swift:511 (dual infeasibility against tol.dualFeasibility on scaled data) and :579-602 (refinement pass, not traced); Sources/ZTronLPSimplex/SimplexEngine.swift:760-772 (values unscaled with no unscaled optimality check); Sources/ZTronLPSimplex/Simplex.swift:197",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 200 .build/debug/F1 scalmin && perl -e 'alarm shift; exec @ARGV' 60 .build/debug/F1 scalmin1 20 && perl -e 'alarm shift; exec @ARGV' 280 .build/debug/F1 scalcase 6 10,10,3,10",
+      "evidence": "'k=16 truth=-10.999999999999998: dual=optimal -10.0 WRONG x=[10.0, 0.0] w=0 dual-noscale=optimal -10.999999999999998 dual-equil=optimal -10.999999999999998 primal=optimal -10.0 WRONG x=[10.0, 0.0] w=0 ipm=optimal -10.999999999999998 auto=optimal -10.0 WRONG x=[10.0, 0.0] w=0'; 'k=20 factors rows=[8589934592.0] columns=[8589934592.0, 1.1641532182693481e-10]; scaled c=[-8589934592.0, -1.1641532182693481e-10]'; '  dual: optimal obj=-10.0 x=[10.0, 0.0] y=[0.0] d=[-1.0, -1.0, 0.0] warnings=[]'; '  point [10.0, 0.5]: objective -10.5 maxViolation (bounds: 0.0, rows: 0.0)'; seed 6: '  dual: optimal obj=-95.4 x=[10.0, 10.0, 2.7, 10.0] ... warnings=0', '  primal: optimal obj=-65.4 x=[10.0, 0.0, 2.7, 10.0] ... warnings=0', '  probe x=[10.0, 10.0, 3.0, 10.0]: objective=-96.0 maxViolation=(bounds: 0.0, rows: 0.0)', '  rows [1]: default(geom)=-65.4 equil=-96.6 none=-96.6'",
+      "confidence": "reproduced",
+      "documented": "Not documented. README §3 risk 1 says wrong answers are possible on untested models but that an ill-conditioned optimal basis is reported; here warnings = []. README §4 Results claims dual feasibility to 1e-7 and does not say it is measured in the scaled problem."
+    },
+    {
+      "id": "B1-03",
+      "title": "Crossed bounds (rl > ru from the LP reader, xl > xu in a CompiledLP) are solved to .optimal at infeasible points, even after presolve has proven infeasibility",
+      "severity": "critical",
+      "category": "wrong-result",
+      "claim": "Status.swift:5 says .optimal means an optimal solution was found and proven. Presolve outcome .infeasible means the model has no feasible point (Presolve.swift:25). README §2.2 says a malformed LP file throws SolverError.invalidModel. compile() rejects the same data as inconsistentRowBounds or inconsistentVariableBounds.",
+      "observed": "LPFormat.read of 'Minimize / obj: x / Subject To / c1: 5 <= x + y <= 3 / End' is accepted with rl = [5], ru = [3]. Automatic returns optimal x = [0, 5] with maxViolation rows = 2.0. Simplex(.dual) with and without presolve or scaling returns optimal x = [0, 5]. Simplex(.primal) returns optimal x = [0, 3]. BranchAndBound with integer x, y in [0, 10] returns optimal x = [5, 0]. 3.001 <= x+y <= 3 returns optimal with violation 1e-3. A hand-built CompiledLP with xl = 5 > xu = 3 on a column of the row x+y >= 1: Presolve.run finds it infeasible, Simplex warns and re-solves without presolve, and returns optimal x = [5, 0], obj = 5, bound violation 2.0. InteriorPoint answers infeasibleOrUnbounded or infeasible, and CPSAT answers infeasible.",
+      "whyWrong": "No real point satisfies rl > ru or xl > xu, so the right result is .infeasible, or a reader error as compile() gives. Simplex.solve leaves the unpresolved engine to settle the status, and that engine treats crossed bounds as satisfiable.",
+      "location": "Sources/ZTronLPCore/IO/LPFormat.swift:462-463 (rowLower/rowUpper appended with no lo <= hi check, unlike columns at :658); Sources/ZTronLPCore/Model/CompiledLP.swift:130-131 (init validates only array sizes); Sources/ZTronLPSimplex/Simplex.swift:155-161 (presolve-infeasible fallback trusts the engine)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 300 .build/debug/F1 crossed",
+      "evidence": "'LP [crossed double-sided row]: ACCEPTED m=1 n=2 rl=[5.0] ru=[3.0]'; 'dual: optimal obj=0.0 x=[0.0, 5.0] maxViolation=(bounds: 0.0, rows: 2.0)'; hand-built xl>xu: 'dual: optimal obj=5.0 x=[5.0, 0.0] maxViolation=(bounds: 2.0, rows: 0.0)'",
+      "confidence": "reproduced",
+      "documented": "Not documented. README §4 Misuse says only inconsistent dimensions trap and says nothing about crossed bounds in a CompiledLP or an LP file; HANDBOOK Known gaps lists only CP-SAT items."
+    },
+    {
+      "id": "B1-04",
+      "title": "MPS and LP readers accept NaN and infinities where no LP can have them; every engine then reports .optimal with a NaN or infinite objective, x = +-inf, or a row silently ignored",
+      "severity": "medium",
+      "category": "contract-violation",
+      "claim": "README §2.2 MPSFormat and LPFormat rows: 'A malformed file throws SolverError.invalidModel'. README §3 risk 12 says malformed inputs yield SolverError.invalidModel. compile() rejects the same values as nonFiniteCoefficient or nonFiniteValue.",
+      "observed": "MPS cases accepted and then solved: 'RHS c1 nan' gives ru = [nan], and all engines return optimal with the row ignored; 'RANGES c1 nan' gives rl = [nan]; 'RHS obj nan' gives c0 = nan and optimal obj = nan; 'RHS obj inf' gives c0 = -inf and optimal obj = -inf; 'LO/FX x inf' gives xl = +inf and optimal x = [inf]; 'UP/FX x -inf' gives optimal x = [-inf]; duplicate COLUMNS entries 1e308+1e308 give an inf coefficient or cost and optimal obj = nan; 'RHS inf' on an E or G row gives rl = +inf and .unbounded. LP cases: 'inf x' and '1e999 x' give an inf coefficient; 'obj: inf x' gives optimal obj = nan; 'x + inf <= inf' gives ru = nan and optimal with the row ignored; 'x >= inf' gives optimal x = inf; 'x + y = inf' gives numericalFailure from dual and 'unbounded obj=inf' from primal. Fuzzing accepted 191 LP and 8 MPS models with invalid data. None trapped.",
+      "whyWrong": "These files are malformed, since no finite LP has these values. The MPS reader checks NaN only in BOUNDS and finiteness only per COLUMNS entry, not on the summed value. Nothing checks RHS, RANGES or the objective RHS, and the LP reader checks no value at all. Downstream, .optimal comes back with NaN or inf values, and maxViolation reports 0 (see B1-10).",
+      "location": "Sources/ZTronLPCore/IO/MPSFormat.swift:275-290 (RHS/RANGES: no NaN/inf checks), :263-268 (summed duplicates not re-checked), :327-328 (bounds: NaN checked, +inf lower / -inf upper not); Sources/ZTronLPCore/IO/LPFormat.swift:335 and :348 (numbers and the 'inf' token used as coefficients), :404 (addConstraint), :469 (addBound), :574 (finishObjective): no finiteness checks",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 300 .build/debug/F1 malformed ; fuzz: perl -e 'alarm shift; exec @ARGV' 600 .build/debug/F1 fuzz lp 8000 12000 1",
+      "evidence": "'MPS [RHS nan]: ACCEPTED m=1 n=1 rl=[-inf] ru=[nan] ... INVALID: NaN bound on row 0'; 'MPS [RHS nan on objective row]: ACCEPTED ... c0=nan' then 'dual: optimal obj=nan x=[0.0] maxViolation=(bounds: 0.0, rows: 0.0)'; 'MPS [UP -inf]: ACCEPTED ... xl=[-inf] xu=[-inf]' then 'dual: optimal obj=-inf x=[-inf]'; 'MPS [LO inf]: ACCEPTED ... xl=[inf] xu=[inf]' then 'dual: optimal obj=inf x=[inf] maxViolation=(bounds: 0.0, rows: inf)'; 'MPS [RHS inf on E row]: ACCEPTED ... rl=[inf] ru=[inf]' then 'dual: unbounded obj=nan'",
+      "confidence": "reproduced",
+      "documented": "Not documented. README §2.2 and §3 risk 12 state the opposite. Risk 12 admits the readers were not fuzzed but still says malformed inputs yield invalidModel."
+    },
+    {
+      "id": "B1-05",
+      "title": "LP writer name-collision handling produces duplicate row and range-column names, so the file read back is a different LP (optimum 4 becomes 6)",
+      "severity": "medium",
+      "category": "wrong-result",
+      "claim": "LPFormat.swift:22-24 says the writer keeps row names apart from the generated range columns. README §4 File formats: 'A range row is written to LP format as an equality against an extra Rg… column', which implies writing a range row preserves the model.",
+      "observed": "A CompiledLP with columns x, y, Rga, range row 'a' (1 <= x <= 2), range row 'a_' (3 <= y <= 4), and objective x + y + Rga. The writer emits both rows as 'a_' and both range columns as 'Rga_', with two bound lines '1.0 <= Rga_ <= 2.0' and '3.0 <= Rga_ <= 4.0'. Reading back gives columns ['x', 'y', 'Rga', 'Rga_'] and rows ['a_', 'a_']: one shared range column, so x = y. The original optimum is 4.0 and the read-back optimum is 6.0.",
+      "whyWrong": "The collision fix appends '_' to a row name whose 'Rg' + name is a column, without checking that the new name is free among rows or that 'Rg' + new name is free among columns. The file silently describes another model.",
+      "location": "Sources/ZTronLPCore/IO/LPFormat.swift:24 (rowNames[i] += \"_\" without re-uniquing), :55 (range column named from the renamed row)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 60 .build/debug/F1 lpnames",
+      "evidence": "' a_: x - Rga_ = 0', ' a_: y - Rga_ = 0', ' 1.0 <= Rga_ <= 2.0', ' 3.0 <= Rga_ <= 4.0'; 'read back: n=4 columns=[x, y, Rga, Rga_] rows=[a_, a_]'; 'optimum original optimal 4.0 vs read back optimal 6.0'",
+      "confidence": "reproduced",
+      "documented": "Not documented. README §4 File formats describes the Rg column but not this collision."
+    },
+    {
+      "id": "B1-06",
+      "title": "Readers silently accept structurally malformed files: RANGES before RHS drops the ranges, MPS without ENDATA or truncated mid-COLUMNS loads as a smaller model, and a second LP objective is summed into the first",
+      "severity": "medium",
+      "category": "contract-violation",
+      "claim": "README §2.2 MPSFormat row: 'A malformed file throws SolverError.invalidModel (.syntax, ...)'. The LPFormat row and README §3 risk 12 make the same claim.",
+      "observed": "MPS: with RANGES before RHS the file is accepted with row [-inf, 5] instead of [3, 5], so the range is silently lost. A file with no ENDATA and no BOUNDS, and a file truncated in the middle of COLUMNS, are both accepted as smaller models. A BOUNDS line with 6 fields is accepted. A duplicate RHS entry is accepted with the last value winning. LP: a file with no End is accepted. Two objective sections are accepted, with both cost vectors summed under the last sense (c = [-1, -1]). Duplicate row names, a bound before Subject To, and extra tokens in a bound line are all accepted.",
+      "whyWrong": "These are malformed, or at best ambiguous, files. Accepting them changes the model without notice. In the RANGES-before-RHS case a well-formed range is discarded, so the solved LP differs from the file author's.",
+      "location": "Sources/ZTronLPCore/IO/MPSFormat.swift:160-163 (the RHS header re-creates the rhs and range arrays, discarding earlier RANGES), :170 (ENDATA optional, end of input accepted in any section); Sources/ZTronLPCore/IO/LPFormat.swift:276 (the 'end' keyword optional; no check for duplicate row names or a second objective section)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 300 .build/debug/F1 malformed",
+      "evidence": "'MPS [RANGES before RHS]: ACCEPTED m=1 n=1 rl=[-inf] ru=[5.0] ... c=[-1.0]'; 'MPS [truncated mid COLUMNS]: ACCEPTED m=2 n=1'; 'MPS [truncated: no ENDATA, no BOUNDS]: ACCEPTED'; 'MPS [duplicate RHS entry]: ACCEPTED ... ru=[7.0]'; 'LP [two objectives]: ACCEPTED m=1 n=2 ... c=[-1.0, -1.0]'; 'LP [no End]: ACCEPTED'; 'LP [duplicate row names]: ACCEPTED m=2'",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    },
+    {
+      "id": "B1-07",
+      "title": "Solution.dual(ofConstraintNamed:) gives each lowered singleton constraint the whole reduced cost when several imply the same active bound, so the reported duals are not a dual solution",
+      "severity": "medium",
+      "category": "certificate",
+      "claim": "Analysis.swift:158-160 says a lowered constraint 'receives the reduced cost when the bound it implies is the active one'. The contract requires duals and reduced costs to be those of the original model, satisfying stationarity c - A^T y = d.",
+      "observed": "Model: x >= 2 (named a), 2x >= 4 (named b), minimize x. The reported duals are dual(a) = 1.0 and dual(b) = 0.5. x = 2 lies strictly inside its own domain [0, inf), so stationarity requires 1*y_a + 2*y_b = 1, but the reported values give 2.0. Moving both implied bounds by t changes the optimum by t, while the duals predict 2t.",
+      "whyWrong": "When k lowered constraints imply the same active bound, each gets the full d/a, so the bound's multiplier is counted k times. At CompiledLP level, Presolve.expandDual handles duplicate singleton rows correctly (held in the lpdiff and dualfd checks), but the DSL path does not.",
+      "location": "Sources/ZTronLPCore/Solve/Analysis.swift:178-183",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 120 .build/debug/F1 dsl2",
+      "evidence": "'x>=2 (a) and 2x>=4 (b), min x: dual a=1.0 b=0.5; d/dt of optimum when both move the bound by t is 1, duals predict 2.0'",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    },
+    {
+      "id": "B1-08",
+      "title": "Contradictory one-variable constraints make compile() throw invalidModel instead of the model solving to .infeasible; the outcome depends on lowerSingletonConstraints",
+      "severity": "medium",
+      "category": "api",
+      "claim": "README line 216 describes CompileOptions.lowerSingletonConstraints as a lowering ('a one-variable constraint becomes a bound; on by default'), which should not change the answer. An infeasible model should report .infeasible (Status.swift).",
+      "observed": "x >= 3 and x <= 2 as two one-variable constraints: compile throws 'invalid model: variable v[1] has lower bound 3.0 above upper bound 2.0'. The same model with lowerSingletonConstraints = false gives .infeasible, and x+y >= 3, x+y <= 2 gives .infeasible. An integer constraint 2i == 3 throws 'integer variable i[0] is fixed at the non-integral value 1.5' instead of .infeasible.",
+      "whyWrong": "Lowering merges constraint-implied bounds into the column bounds and then applies the declared-bounds validity check to them. A modelling infeasibility becomes a thrown model error, so a caller handling .infeasible never sees it.",
+      "location": "Sources/ZTronLPCore/Model/Compile.swift:140-147 (singletons lowered) and :210-229 (implied bounds intersected, then inconsistentVariableBounds or nonIntegralFixedBound thrown)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 120 .build/debug/F1 dsl2",
+      "evidence": "'x>=3, x<=2 (two one-variable constraints) -> throws invalid model: variable v[1] has lower bound 3.0 above upper bound 2.0'; 'x+y>=3, x+y<=2 -> infeasible'; 'x>=3, x<=2 with lowerSingletonConstraints=false -> infeasible'; 'integer 2i == 3 (a constraint) -> throws invalid model: integer variable i[0] is fixed at the non-integral value 1.5'",
+      "confidence": "reproduced",
+      "documented": "Partly. The compile() doc comment (Compile.swift:31-34) lists 'lower > upper on a variable' and 'a non-integral fixed bound' as throws, without saying that lowered constraints count. Nothing in README §4 or HANDBOOK."
+    },
+    {
+      "id": "B1-09",
+      "title": "Free MPS write-then-read is not exact for range rows (49 of 3000 random models), contrary to the 'read(write(lp)) == lp' and 'bit-for-bit' claims; the round-trip tests use only representable pairs",
+      "severity": "low",
+      "category": "doc-claim-false",
+      "claim": "MPSFormat.swift:5: 'so read(write(lp)) == lp'. MPSFormat.swift:616: 'so a range row reads back bit-for-bit'.",
+      "observed": "In 49 of 3000 random models a range row such as [-8.0, 10.050132380851457] reads back as [-8.000000000000002, 10.050132380851457]. Searching 1e5 ulps around R with either anchor finds no value that reproduces the pair, so exactness is impossible for such pairs in the RHS+RANGES encoding. The tests rangeRowsReadBackBitForBit and randomProblemsOfEveryShapeRoundTrip use only bound pairs that are exactly representable (read in the test code), so they cannot catch this.",
+      "whyWrong": "The claim is unconditional. exactRange returns nil when no R works, as its own comment says, and the writer then writes an inexact R.",
+      "location": "Sources/ZTronLPCore/IO/MPSFormat.swift:5 and :614-630 (exactRange and its fallback)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 600 .build/debug/F1 roundtrip 0 3000 && perl -e 'alarm shift; exec @ARGV' 60 .build/debug/F1 showmps 167",
+      "evidence": "49/3000 MPS round-trip failures, all on range rows; e.g. '[-8.0, 10.050132380851457] -> [-8.000000000000002, 10.050132380851457]'; no R within 1e5 ulps reproduces the pair",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    },
+    {
+      "id": "B1-10",
+      "title": "CompiledLP.maxViolation(at:) ignores NaN: an all-NaN point, or NaN row bounds, report (0, 0)",
+      "severity": "low",
+      "category": "api",
+      "claim": "README §3 risk 1 says 'CompiledLP.maxViolation(at:) checks a point'. The CompiledLP.swift:183 doc says it returns the largest violation of a column bound and of a row bound at x.",
+      "observed": "maxViolation(at: [NaN, ...]) returns (bounds: 0.0, rows: 0.0). For the NaN-bound models of B1-04 it also reports rows 0.0 for the row that is ignored.",
+      "whyWrong": "A NaN coordinate or activity satisfies no bound. Swift.max with NaN keeps the accumulated value, so the checker the README recommends for validating answers reports no violation.",
+      "location": "Sources/ZTronLPCore/Model/CompiledLP.swift:184-194",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F1 && perl -e 'alarm shift; exec @ARGV' 120 .build/debug/F1 dsl",
+      "evidence": "'maxViolation at an all-NaN point = (bounds: 0.0, rows: 0.0)'",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    }
+  ],
+  "claimsHeld": [
+    {
+      "claim": "LP optima are KKT-valid on the ORIGINAL model (primal feasibility, d = c - A^T y, sign conditions, complementary slackness, logical reduced cost = dual, bound = objective) for 11 configurations: dual/primal simplex, presolve on/off, scaling none/equilibration/geometric, IPM on/off and noscale, and Automatic. The random LPs include fixed columns, singleton/empty/duplicate rows, empty columns, ranges, equalities, max/min and an objective constant. This covers presolve on vs off and scaling on vs off per engine on these families.",
+      "howChecked": "probe Slots/F1 (Oracles.swift randomLP + kkt): F1 lpdiff 0 3000 1 1 0 and lpdiff 0 3000 1 0 0, 33000 optimal results each, failures=0"
+    },
+    {
+      "claim": "No false infeasible or unbounded results when columns may be free or half-bounded, and every unbounded result carries a valid primal ray",
+      "howChecked": "F1 lpdiff 0 3000 0 1 0 and 0 0 0 (x0 feasible by construction; primalRayValid): failures=0 (22847 optimal, 8602 unbounded, 1551 infeasibleOrUnbounded from IPM)"
+    },
+    {
+      "claim": "Infeasible LPs are reported .infeasible with a valid Farkas ray (simplex) or infeasibleOrUnbounded (IPM) for all 11 configurations, including presolve-detected cases: an empty row excluding 0, crossed singleton rows, and a fixed column making a row infeasible",
+      "howChecked": "F1 infeas 0 1000 (farkasValid interval-disjointness oracle): failures=0, 9742 infeasible, 1258 infeasibleOrUnbounded"
+    },
+    {
+      "claim": "Small pure-integer programs (fractional bounds, singleton rows, max/min, constant) give the brute-force optimum from BranchAndBound (primal/dual/IPM node engines, deterministic), CPSAT (1 and 2 workers) and Automatic",
+      "howChecked": "F1 ip 0 400 against bruteForceIP enumeration: failures=0"
+    },
+    {
+      "claim": "DSL semantics: constants and sums on both sides fold into bounds, within() with a constant, assignment folding, duplicate terms merge and cancel, 0*(x+5), negation",
+      "howChecked": "F1 dsl: structural comparison of the compiled rows and bounds against hand-derived values, failures=0"
+    },
+    {
+      "claim": "compile() equals the model: maximize stored as min of -c with c0 negated, bound overrides, domain bounds, singleton lowering with negative coefficients, row coefficients and bounds per named row; maxViolation equals an independent computation on 50 random points",
+      "howChecked": "F1 dsl, failures=0"
+    },
+    {
+      "claim": "Solution API: objectiveValue in the max sense equals the model expression at the returned values; value(of:) and reducedCost(of:) are 0 for an absent variable; dual(ofConstraintNamed:) is nil for an unknown name",
+      "howChecked": "F1 dsl, failures=0"
+    },
+    {
+      "claim": "Row duals and single lowered-singleton duals lie within the one-sided finite-difference derivatives of the optimal value with respect to that right-hand side",
+      "howChecked": "F1 dualfd 0 400 (delta 1e-3): 717 duals checked, failures=0"
+    },
+    {
+      "claim": "MPS semantics: RANGES on E rows by the sign of R, on L/G rows by |R|; UP < 0 without a lower bound sets lower to -inf; LO 0 then UP -1 gives invalidModel; MI, PL, BV, LI, UI, FR, FX; MARKER integers without bounds are binary; RHS on the objective row sets c0 = -rhs; OBJSENSE header-line and section forms",
+      "howChecked": "F1 mpssem, failures=0"
+    },
+    {
+      "claim": "LP reader semantics: objective constant, <=, >=, =, double-sided rows, variables on both sides, unlabelled rows named cN, all bound forms, Generals and Binaries; a range row is written as an equality plus an Rg column with the same optimum",
+      "howChecked": "F1 lpsem, failures=0"
+    },
+    {
+      "claim": "LP write/read round trip is exact by name (column order follows first appearance, as documented) on random named models without range rows",
+      "howChecked": "F1 roundtrip 0 3000 with lpDiffByName: exact. The only LP mismatches were 9 ill-scaled range-row models where engines disagree on borderline feasibility."
+    },
+    {
+      "claim": "Readers never trap, hang or throw anything other than SolverError on mutated input",
+      "howChecked": "Seeded fuzzing, mutations recorded per seed: F1 fuzz mps 0 5000 0, fuzz mps 5000 25000 1, fuzz lp 0 8000 0, fuzz lp 8000 12000 1, fuzz mpsfixed 0 10000 1; other=0 everywhere, no exit 133/142"
+    },
+    {
+      "claim": "The Simplex basis is consistent with the returned point (nonbasic at bounds, m basic, nonsingular), and warm-restarting from it re-solves in a few iterations",
+      "howChecked": "F1 basis 0 2000: checked=6000 failures=0, restart iterations total=189 max=2"
+    }
+  ],
+  "notChecked": [
+    "No existing swift test --filter runs; the test-integrity remark in B1-09 rests on reading the test code",
+    "Fixed-format MPS data identity in a round trip (only fuzzed for traps); names with spaces in fixed format",
+    "MPSFormat.ReadOptions.keepFreeRows round trip",
+    "LPName sanitisation and qualifier stripping beyond the Rg collision in B1-05",
+    "Presolve .full on MIPs and presolve on vs off for MIPs (B&B always uses .boundsOnly)",
+    "The simplex refinement pass (SimplexEngine+Driver.swift:579-602) was not traced; B1-02 shows only that it does not repair the scaled-tolerance answer",
+    "Models larger than about 10x10 in the random oracles; netlib/MIPLIB corpus not re-run",
+    "Metal paths, timing and performance claims, and thread-sanitizer runs (outside this area)"
+  ],
+  "summary": "Built independent oracles: KKT on the original model, Farkas and ray validity, brute-force IP enumeration, finite-difference duals, structural compile checks, name-based round trips and seeded fuzzing of both readers. Ran them over thousands of seeds and 11 LP plus 7 IP engine configurations. The core contract held on ordinary data: KKT-valid optima, valid infeasibility and unboundedness certificates, presolve and scaling on vs off agreeing on the random families, correct DSL folding, MPS and LP semantics, basis consistency, and no reader traps across 60000 fuzz cases. Three critical wrong answers with a success status were reproduced. (1) Presolve's integer-bound rounding moves integral bounds outward once |b| >= ~1e9, so B&B and Automatic return .optimal points up to 11 units outside the bounds at 1.7e9 (timestamp-sized data). (2) The default geometric scaling hides a cost below the 1e-7 dual tolerance, so Simplex(), Simplex(.primal) and Automatic return .optimal -10 with no warning on min -x0 - x1, 1e-16 x0 + x1 <= 1, whose optimum is -11; the reported reduced cost is -1 at a lower bound. (3) Crossed bounds (rl > ru from the LP reader, xl > xu in a CompiledLP) are solved to .optimal at infeasible points, even after presolve proves infeasibility. Medium issues: the readers accept NaN/inf values and structurally malformed files, contradicting the README's invalidModel claim; the LP writer's rename creates duplicate names that change the optimum on read-back; lowered-singleton duals double count; contradictory singletons throw instead of returning .infeasible. Low issues: the free-MPS 'bit-for-bit' range claim is false, and maxViolation ignores NaN. None of these is documented in README §4 or HANDBOOK Known gaps.",
+  "overflow": [
+    "LPFormat.read doc comment (LPFormat.swift:209-210) says SOS sets and semi-continuous variables throw SolverError.unsupported; an LP file with an SOS or Semi-continuous section throws invalidModel('line 5: a constraint has no relational operator') (F1 malformed)",
+    "InteriorPoint (default scaling) returns .infeasibleOrUnbounded for the feasible, bounded one-row LP of B1-02 once the spread is >= 1e24, and InteriorPoint with every scaling mode does the same on scalext seed 6 (IPM area; not minimized)",
+    "Simplex(scaling: .none) returned .optimal with x[2] = -1.57e19 below xl = 0 on scalext seed 8 (coefficient spread ~1e240; pathological data, engine numerics)",
+    "scalext seed 3: default Simplex .optimal -5.6 (with an ill-conditioning warning, estimate 1e241) while scaling .none and .equilibration reach a feasible -6.4 before a limit",
+    "DSL: setting .continuous after .binary gives bounds [0, inf], not the LP relaxation [0, 1] (max x gives 12 instead of 1); may be intended, not checked against the docs (F1 dsl2)",
+    "Presolve's crossed-bound noise tolerance is applied in column space: with coefficients about 2e11 (lpdiff seed 513) a row violation of 1.71 was accepted and engines disagreed (unbounded vs infeasible)",
+    "MPS reader accepts non-contiguous duplicate column names by merging them (lenient, F1 malformed)"
+  ]
+}

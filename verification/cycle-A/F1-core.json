@@ -1,0 +1,228 @@
+{
+  "area": "F1 Core: modelling DSL, compile, presolve, scaling, MPS/LP I/O, result types",
+  "findings": [
+    {
+      "id": "A1-01",
+      "title": "MPS and LP readers accept non-finite and out-of-range numbers; the engines then return success statuses with wrong answers",
+      "severity": "high",
+      "category": "contract-violation",
+      "claim": "README §2.2 (MPSFormat, LPFormat): a malformed file throws SolverError.invalidModel. README risk 12: malformed inputs yield SolverError.invalidModel. MPSFormat.swift:9-13: values of magnitude 1e20 or more are mapped to ±inf only on the side where an infinite bound makes sense, because read as finite numbers they would poison ratio tests. ModelDiagnostic.nonFiniteValue: NaN, or infinite on the wrong side (compile() enforces this; the readers do not).",
+      "observed": "MPS: 'UP BND x -1e400' (or '-inf') with row e: x = 0 is read with xl = xu = -inf. Simplex and InteriorPoint both return .optimal with objective -inf at x = [-inf]. 'LO BND x 1e400' gives .optimal with objective +inf at x = [inf]. 'RHS r 1e400' on a G row (min x s.t. x >= 1e400) gives .unbounded. 'RHS COST nan' gives .optimal with objective NaN. 'RHS r nan' gives .optimal. LP: 'x >= 1e400' in Bounds gives .optimal with objective inf. 'r: x >= 1e400' gives .unbounded. 'obj: x + 1e400 y' is read as cost +inf and Simplex returns .optimal with objective NaN. 'r: 1e400 x + y >= 1' makes Simplex return .infeasible, although y = 1 is feasible. Across 28,000 mutated inputs per format, the fuzzer had both readers accept models with row or column bounds of [inf,inf] or [-inf,-inf], c0 = NaN or inf, or non-finite coefficients.",
+      "whyWrong": "These files should be rejected with invalidModel, as compile() rejects the same values. Instead the solvers return .optimal at a point that violates a row (x = -inf against x = 0), .unbounded for a model bounded below by 1e400, and .infeasible for a feasible model. By consequence this is the critical class (wrong answer with a success status). It is rated high because it takes non-finite or overflowing literals, which only corrupt or untrusted files contain.",
+      "location": "Sources/ZTronLPCore/IO/MPSFormat.swift:286 (RHS/RANGES values stored unchecked), :327-328 (bound values: only NaN rejected, ±inf accepted on either side), :403-415 (only xl > xu checked, no row sanity); Sources/ZTronLPCore/IO/LPFormat.swift:335 (Double(...) overflow to inf accepted), :462-465, :655-660",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && for f in up-minus-1e400 lo-1e400 rhs-1e400-G objrhs-nan rhs-nan; do perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 file mps Slots/F1/inputs/$f.mps; done; for f in lp-lo-1e400 lp-rhs-1e400 lp-coef-1e400 lp-rowcoef-1e400; do perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 file lp Slots/F1/inputs/$f.lp; done; perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 mps",
+      "evidence": "up-minus-1e400.mps: read xl=[-inf] xu=[-inf] rl=[0] ru=[0]; Simplex: optimal obj=-inf x=[-inf]; IPM: optimal obj=-inf. rhs-1e400-G.mps: rl=[inf]; Simplex: unbounded; IPM: unbounded. objrhs-nan.mps: c0=nan; Simplex: optimal obj=-nan. lp-rowcoef-1e400.lp: Simplex: infeasible. lp-coef-1e400.lp: c=[1, inf]; Simplex optimal obj=nan.",
+      "confidence": "reproduced",
+      "documented": "Not documented. Risk 12 admits there was no fuzzing and predicts traps, not silent acceptance. The MPSFormat doc comment claims that wrong-side huge values stay finite. No test in MPSFormatTests or LPFormatTests feeds NaN, inf or overflowing literals."
+    },
+    {
+      "id": "A1-02",
+      "title": "Presolve.expandBasis returns an optimal-status basis that is dual infeasible and disagrees with the returned duals",
+      "severity": "medium",
+      "category": "certificate",
+      "claim": "README §2.2: postsolve maps 'a solution, a ray or a basis between the reduced and the original problem' (expandBasis). SimplexAnalysis.basis is 'Reusable as WarmStart.basis'. The basis that comes with an .optimal result should be an optimal basis of the original LP and should match the returned duals.",
+      "observed": "Minimal case: min x s.t. -4x >= 4, x in [-1,1]. With Simplex(.dual) and presolve on, the basis is {x basic, row logical atLower}. The basis's own duals are y = -0.25, so the logical at its lower bound has d = -0.25 and the basis is dual infeasible. The reported duals are y = [0] with d_x = 1 while x is basic. A warm start from this basis takes 1 pivot; the presolve-off basis takes 0. On random LPs: 24 of 540 seeds gave a dual-infeasible basis and 45 of 540 a basis that disagrees with the reported duals. All of them had presolve on, under every engine and scaling. x, y and d themselves always passed KKT.",
+      "whyWrong": "Take a column fixed by presolve whose reduced cost points at its own original bound. expandDual (sign test, :401) correctly gives the singleton row a zero dual. expandBasis instead treats any .fixed column as resting on the bound the row created, makes it basic and puts the row's logical at a bound. The resulting basis is not optimal and does not match the reported (x, y). Warm starts and the conditioning analysis of the 'optimal basis' (InteriorPoint.finalBasis and Conditioned use the same postsolve) work from the wrong basis.",
+      "location": "Sources/ZTronLPCore/Model/Presolve.swift:438-445 (current == .fixed claims the row whichever side the reduced cost points to), compare :401",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 basisrepro ; perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 presolve 60 600 | grep -B1 'dual-infeasible: \\[\"'",
+      "evidence": "presolve=true: optimal obj=-1.0 x=[-1.0] y=[0.0] d=[1.0, 0.0]; basis status=[basic, atLower]; basis's own duals [-0.25] dual-infeasible [k=1 atLower d=-0.25]; warm start from it: optimal iterations 1. presolve=false: basis [atLower, basic], dual feasible, warm start 0 iterations.",
+      "confidence": "reproduced",
+      "documented": "Not documented. PresolveTests.aBasisIsMappedBothWays and postsolveInvariantsHoldOnRandomProblems check only structure (m basics, the round trip through reduceBasis), never optimality or agreement with the duals, so they cannot catch this."
+    },
+    {
+      "id": "A1-03",
+      "title": "CompiledLP.maxViolation(at:) reports zero violation for a point that contains NaN",
+      "severity": "medium",
+      "category": "api",
+      "claim": "README risk 1 offers CompiledLP.maxViolation(at:) as the independent check of a point. Its doc comment: 'The largest violation of a column bound and of a row bound at x, both >= 0.'",
+      "observed": "Bounds [0,1]^2, row 1 <= x0 + x1 <= 2, x = [NaN, 0.5]: maxViolation returns (bounds: 0.0, rows: 0.0).",
+      "whyWrong": "Every comparison with NaN is false, so Swift.max keeps its earlier argument and the NaN coordinate and NaN row activity vanish. The check that the README recommends for validating a point accepts a meaningless one.",
+      "location": "Sources/ZTronLPCore/Model/CompiledLP.swift:187 and :192",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 dsl   (line 'maxViolation flags a NaN point')",
+      "evidence": "FAIL | maxViolation flags a NaN point | (bounds: 0.0, rows: 0.0)",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    },
+    {
+      "id": "A1-04",
+      "title": "An infeasible or tolerance-level conflicting one-variable constraint makes compile and solve throw invalidModel instead of returning .infeasible",
+      "severity": "medium",
+      "category": "api",
+      "claim": "README §2.1 presents CompileOptions.lowerSingletonConstraints ('a one-variable constraint becomes a bound; on by default') as a choice of representation. SolveStatus.infeasible: 'The model has no feasible point.'",
+      "observed": "minimize x + y s.t. x <= -1 (x >= 0 from its domain), x + y >= 0: Simplex().solve(model) throws 'invalid model: variable x has lower bound 0.0 above upper bound -1.0'. With lowerSingletonConstraints = false the same model returns .infeasible. 'x >= 1 + 1e-12' together with 'x <= 1' also throws, although presolve would treat a 1e-12 crossing as a fixed column.",
+      "whyWrong": "An infeasible LP is not an invalid model, and the outcome flips with an option documented as representational. The diagnostic blames bounds the user never wrote. Bounds that cross by rounding noise are a hard error, with no tolerance applied.",
+      "location": "Sources/ZTronLPCore/Model/Compile.swift:209-227 (singletons tighten bounds, then guard xl[j] <= xu[j] throws with no tolerance)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 dsl   (INFO lines 'infeasible singleton')",
+      "evidence": "INFO | infeasible singleton x <= -1 (x>=0): solve threw invalid model: variable x has lower bound 0.0 above upper bound -1.0 / same model with lowerSingletonConstraints=false: status infeasible / singleton x>=1+1e-12 and x<=1: solve threw invalid model",
+      "confidence": "reproduced",
+      "documented": "Partly. The compile() doc lists 'lower > upper on a variable' among the errors it throws. Neither README nor HANDBOOK says that an infeasible one-variable constraint becomes an error rather than an .infeasible status."
+    },
+    {
+      "id": "A1-05",
+      "title": "Solution.dual(ofConstraintNamed:) double counts when two named one-variable constraints imply the same bound",
+      "severity": "low",
+      "category": "wrong-result",
+      "claim": "Analysis.swift:155-160: a lowered constraint 'receives the reduced cost when the bound it implies is the active one'. The presolve's own postsolve handles the same situation ('the last and tightest claims the reduced cost and the others see none left').",
+      "observed": "min x + y s.t. a: x >= 2, b: 2x >= 4, c: x + y >= 1 gives ya = 1, yb = 0.5, yc = 0, so ya + 2*yb = 2 != c_x = 1. Kept as rows, the same model gives duals [1, 0, 0].",
+      "whyWrong": "Each lowered constraint independently claims the whole reduced cost, so the reported duals are not a valid dual solution (the stationarity residual is -1).",
+      "location": "Sources/ZTronLPCore/Solve/Analysis.swift:173-185",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 misc",
+      "evidence": "FAIL | ... | ya=1.0 yb=0.5 yc=0.0: c_x - (ya + 2yb + yc) = -1.0; INFO | same model as rows: duals [1.0, 0.0, 0.0]",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    },
+    {
+      "id": "A1-06",
+      "title": "The free-format MPS round trip is not bit-exact for range rows",
+      "severity": "low",
+      "category": "doc-claim-false",
+      "claim": "MPSFormat.swift:3-5: the writer emits shortest round-trip numbers 'so read(write(lp)) == lp'. Test name: rangeRowsReadBackBitForBit.",
+      "observed": "15 of 400 random models read back different, only in range-row bounds, by at most 2.2e-16 relative to the larger end. Examples: rl -388213.4614957075 -> -388213.4614957074; -5.323138532990446e-11 -> -5.3231197227887606e-11; -2.0 -> -1.9999999999999996. Every other field, including adversarial names, survives exactly.",
+      "whyWrong": "When the 8-ulp search for an exact R fails, the writer falls back to R = hi - lo, and lo is then not reproduced. The equality claim is false, although the numerical effect is about one ulp of the larger bound.",
+      "location": "Sources/ZTronLPCore/IO/MPSFormat.swift:526 (fallback '?? (hi - lo)')",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 roundtrip 0 400 | grep MPSDIFF",
+      "evidence": "round trip seeds 0..<400: MPS exact failures 15 ... MPSDIFF seed 4 onlyRangeRows=true maxErrRelToLargerEnd=1.52e-16",
+      "confidence": "reproduced",
+      "documented": "Not documented. The writer doc claims an exact round trip."
+    },
+    {
+      "id": "A1-07",
+      "title": "The MPS writer produces a file its own reader rejects when a constraint is named \"\"",
+      "severity": "low",
+      "category": "wrong-result",
+      "claim": "MPSFormat.write doc: free format 'keeps every name ... so the output round-trips'. The DSL accepts .named(\"\").",
+      "observed": "LPModel.minimizing(x + y).subjectTo { (x + y >= 1).named(\"\") }.mpsString() writes ' G ' in ROWS and '    x  1.0' in COLUMNS. MPSFormat.read then fails with 'line 4: a ROWS line needs a type and a name'. The LP export of the same model reads back.",
+      "whyWrong": "The writer's 'usable' check rejects the empty name, but the replacement it substitutes is still empty.",
+      "location": "Sources/ZTronLPCore/IO/MPSFormat.swift:447-452",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 emptyname",
+      "evidence": "FAIL | MPS export of a constraint named \"\" reads back | invalid model: line 4: a ROWS line needs a type and a name",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    },
+    {
+      "id": "A1-08",
+      "title": "LP export drops columns that have no cost, no row and default bounds, and renumbers columns; README describes only the Rg column",
+      "severity": "low",
+      "category": "doc-claim-false",
+      "claim": "README §4 'Not verified': LP and MPS exports round-trip through this package's own readers. README §4 'File formats' names only the Rg column as a change made by LP export.",
+      "observed": "Columns [a, b, c], where a has no cost or row, read back as [b, c]. Columns [a, b, c], where c has no cost or row, read back as [b, a]. Column indices, and so positional solution vectors, do not survive.",
+      "whyWrong": "The README presents the LP round trip as structure-preserving apart from the Rg column. Only the test helper's comments acknowledge the dropped column and the renumbering.",
+      "location": "Sources/ZTronLPCore/IO/LPFormat.swift:32 (only nonzero costs written), :66-76 (default bounds not written)",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 lp   (INFO lines 'LP round trip')",
+      "evidence": "INFO | LP round trip (a has no cost/row): columns [a, b, c] -> [b, c]; (c has no cost/row): [a, b, c] -> [b, a]",
+      "confidence": "reproduced",
+      "documented": "Only in the comments of Tests/ZTronLPCoreTests/LPFormatTests.swift:12-13 and :38, not in README or HANDBOOK."
+    },
+    {
+      "id": "A1-09",
+      "title": ".unbounded Simplex results carry an objectiveValue although hasSolution is false",
+      "severity": "low",
+      "category": "api",
+      "claim": "SolutionAnalysis.objectiveValue: 'nil without a primal solution'. SolveStatus.hasSolution: 'True when a primal solution accompanies the status', which is false for .unbounded.",
+      "observed": "min -x - y s.t. x - y <= 1, x, y >= 0 gives .unbounded with hasSolution = false and objectiveValue = -1.0, with presolve on and off.",
+      "whyWrong": "The two doc comments together promise nil here. A caller that reads objectiveValue without checking the status gets the objective of an arbitrary last iterate.",
+      "location": "Sources/ZTronLPSimplex/Simplex.swift:259 vs Sources/ZTronLPCore/Solve/Analysis.swift:20",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 unbobj",
+      "evidence": "presolve=true: unbounded hasSolution=false objectiveValue=Optional(-1.0) primal=Optional([1.0, 0.0])",
+      "confidence": "reproduced",
+      "documented": "README risk 9 documents the last iterate in primal for unbounded results, but says nothing about objectiveValue."
+    },
+    {
+      "id": "A1-10",
+      "title": "The LP writer can emit duplicate row labels, and the LP reader accepts duplicate row names",
+      "severity": "low",
+      "category": "other",
+      "claim": "LPFormat.write keeps row names apart from the generated Rg columns, and names are uniqued. compile() and the MPS reader both reject duplicate row names.",
+      "observed": "Rows [a (range), a_] with a column named Rga: row a is renamed a_ and collides with the existing row a_, so both are written as 'a_:'. LPFormat.read returns rows [a_, a_] without error; the optimum is preserved.",
+      "whyWrong": "The writer appends '_' without re-checking uniqueness, and the reader does not reject duplicate labels, so a name lookup on the result is ambiguous.",
+      "location": "Sources/ZTronLPCore/IO/LPFormat.swift:24",
+      "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-A && swift build --product F1 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F1 misc2",
+      "evidence": "LP text: ' a_: x + Rga - Rga_ = 0' and ' a_: x + z <= 3.0'; read back: rows [a_, a_]",
+      "confidence": "reproduced",
+      "documented": "Not documented."
+    }
+  ],
+  "claimsHeld": [
+    {
+      "claim": "DSL folds constants and variables from both sides (x+3 <= 2y+5 -> x-2y <= 2; 3+x >= y-1+z -> x-y-z >= -4; x+y+z == 7-z -> x+y+2z = 7); within(1...4) gives a range row; 2 <= x+z works; duplicate terms merge; x+x-2x cancels (no zero coefficient stored)",
+      "howChecked": "F1 dsl: compiled rows compared exactly"
+    },
+    {
+      "claim": "compile stores negated c and c0 for maximize; CompiledLP.objective(at:) reports the model sense with the constant; integer, binary and free domains; a one-variable constraint is lowered to a bound; compiling twice gives identical results (override-only variables sorted by name)",
+      "howChecked": "F1 dsl, F1 misc2"
+    },
+    {
+      "claim": "Solution API: objective in the max sense with its constant, value(of:), dual(ofConstraintNamed:) for a row and for a lowered constraint, reducedCost(of:) in the model sense, nil for an unknown name, 0 for an absent variable, nil duals for MIP results; hasSolution true only for optimal and feasible",
+      "howChecked": "F1 dsl, against hand-derived optima, duals and reduced costs, plus an independent KKT check"
+    },
+    {
+      "claim": "continuous(...) drops integrality and a relaxed binary keeps [0,1]; bounding a binary is intersected with [0,1]; B&B on 2i <= 3 gives i = 1 and on 0.1i <= 0.7 gives i = 7",
+      "howChecked": "F1 dsl"
+    },
+    {
+      "claim": "compile throws invalidModel for a duplicate name, a NaN coefficient, a non-integral fixed integer and an infeasible constant constraint; dropTolerance 1e-14 drops a 1e-15 coefficient with exactly one warning; LP engines relax integer columns with a warning",
+      "howChecked": "F1 dsl, F1 misc2"
+    },
+    {
+      "claim": "Presolve on vs off, scaling none/equilibration/geometric, Simplex primal/dual and InteriorPoint give the same status and objective; the postsolved primal, duals and reduced costs satisfy KKT on the original LP (feasibility, d = c - A'y, logical d = y, sign and complementary-slackness conditions, zero duality gap); objectiveValue = c'x + c0",
+      "howChecked": "F1 presolve 0 600: 600 random LPs rich in fixed columns, singleton rows, empty rows/columns, free and ranged rows, max/min and c0, each solved 18 ways; 0 KKT, objective or status failures (576 optimal, 24 unbounded)"
+    },
+    {
+      "claim": "Presolve infeasibility and unboundedness are reported correctly; the Simplex Farkas rays and primal rays are valid on the original problem; empty improving column with an infeasible rest gives infeasible and with a feasible rest gives unbounded (HANDBOOK decision 9); the presolve-solved path (optimal with duals, unbounded with a ray) works",
+      "howChecked": "F1 presolve 0 200 infeasible (200 seeds, independent Farkas check), F1 emptycol"
+    },
+    {
+      "claim": "Netlib: every engine with presolve on and off reaches the reference optimum to 1e-6 with zero duality gap on the original LP",
+      "howChecked": "F1 netlib: 13 instances x 3 engines x 2, 78/78 ok"
+    },
+    {
+      "claim": "Integer bound rounding and the other rules keep the integer optimum and feasibility in .full and .boundsOnly modes",
+      "howChecked": "F1 intpresolve 0 6000: 12,000 enumeration checks, 0 mismatches with an oracle that applies the package's 1e-9 relative snapping"
+    },
+    {
+      "claim": "Scaling: factors are powers of two; scalePrimal/unscalePrimal, unscaleRowActivity and the objective are consistent; unscaled values belong to the unscaled LP",
+      "howChecked": "F1 misc (100 scaled problems, error < 1e-12) and the KKT checks of F1 presolve under every scaling mode"
+    },
+    {
+      "claim": "MPS RANGES: E with R>0 -> [b, b+R], E with R<0 -> [b-|R|, b], L -> [b-|R|, b], G -> [b, b+|R|]; bound types MI (upper stays +inf), PL, BV, LI, UI, FR, FX; a negative UP with no lower bound makes the lower -inf; LO then a negative UP keeps LO; UP 1e30 is +inf; wrong-side 1e30 stays finite",
+      "howChecked": "F1 mps and F1 file on hand-written files"
+    },
+    {
+      "claim": "MPS objective RHS v means constant -v under MIN, OBJSENSE MAX/MAXIMIZE (same line or next line) and MIN; MARKER INTORG/INTEND; an integer column without bounds is binary (documented convention)",
+      "howChecked": "F1 mps: values and solved optima"
+    },
+    {
+      "claim": "LP reader: Maximize objective constant, bound forms (x <= 8 keeps lower 0, -inf <= y <= 3, free, =, >=), double-sided rows, variables and constants on both sides, merged duplicate terms, Generals, Binaries; a ranged row is written as an equality with an Rg column and keeps its optimum",
+      "howChecked": "F1 lp"
+    },
+    {
+      "claim": "Free MPS round trip keeps every number except range-row ulps, including adversarial names (RHS, BOUNDS, ENDATA, 'MARKER', *star, N, 1e3, x[1,2]; spaces become _); LP write/read keeps status and optimum",
+      "howChecked": "F1 roundtrip 0 400: 400 models plus 400 with adversarial names; LP checked on 800 models"
+    },
+    {
+      "claim": "Malformed input never traps or hangs either reader; rejections are invalidModel (or unsupported for SC, quadratic)",
+      "howChecked": "F1 fuzz mps|lp with seeds 1 (20,000), 2 and 3 (4,000 each) per format; the solve option ran Simplex, IPM and B&B on 8,000 accepted models; no crash, the alarm never fired"
+    },
+    {
+      "claim": "LinearExpr == and hash ignore term order; SparseCSC.fromTriplets sums duplicates and drops zeros; LPName.uniqued returns distinct names; Basis.allLogical follows its doc",
+      "howChecked": "F1 misc2, F1 names"
+    }
+  ],
+  "notChecked": [
+    "Time/Space bounds of the README API tables (complexity claims)",
+    "Fixed-format MPS beyond the fuzz corpus (names with spaces, column positions); MPSFormat.read(contentsOf:) Latin-1 fallback and file-error passthrough",
+    "SolverEvent ordering and frequency, EventSink, makeEventStream's 256-event buffer (Strategy.swift)",
+    "Tolerances.consistent (simplex scope) and the effect of non-default tolerances on presolve",
+    "Presolve on models larger than netlib degen2 (444 x 534); presolve's 10-pass limit only through existing tests",
+    "README example numbers (ReadmeExampleTests passed in the baseline; not re-run) and golden files facility-location.{lp,mps} (not re-derived)",
+    "No targeted existing tests re-run: the baseline debug suite passed and all checks here were independent probes"
+  ],
+  "overflow": [
+    "info: MPS reader accepts a file with no ENDATA that is cut after its first COLUMNS line, silently returning a smaller model (F1 mps)",
+    "info: an MPS RANGES section placed before RHS is wiped when the RHS header resets the range array (row read as [-inf,5] instead of [3,5]) (F1 mps)",
+    "info: 'UI BND x -3' with no lower bound throws inconsistent bounds; the negative-upper-means-lower-minus-infinity convention is applied to UP only (F1 mps)",
+    "info: LP reader stores '2 <= x - y' as -x + y <= -2, so the row dual sign is relative to the flipped orientation (F1 lp)",
+    "info: the presolve '.solved' path returns a basis that is optimal but not the basis of the returned degenerate duals in ~5% of random seeds (part of A1-02)"
+  ],
+  "summary": "Cycle A, finder F1 (core). The most important claims held under independent oracles: DSL semantics, compile, the Solution API, presolve/postsolve with scaling across 18 engine configurations on 600 random LPs and 13 netlib instances (KKT checked on the original problem), integer presolve by enumeration, MPS/LP section and bound semantics, round trips, and 56,000 fuzzed files with no trap or hang. Ten findings. The most severe (A1-01, high, critical-class consequence): both readers accept non-finite or overflowing numbers (1e400, inf, nan) on the wrong side, and the engines then answer .optimal with x=-inf, .optimal with objective NaN, a false .unbounded or a false .infeasible, against README's promise of invalidModel. Medium: Presolve.expandBasis can return a dual-infeasible basis that disagrees with the returned duals (about 4% of random LPs; tests check only structure); maxViolation(at:) passes NaN points; an infeasible one-variable constraint throws invalidModel instead of returning .infeasible. Low: double-counted duals of duplicate lowered constraints, range rows not bit-exact in the MPS round trip, an empty name breaking the MPS export, undocumented LP column dropping and renumbering, objectiveValue on .unbounded, duplicate LP row labels."
+}

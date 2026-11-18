@@ -1,0 +1,28 @@
+T0 test data 1e9*x0 + x1 >= 2e9, x0<=1e6, min x0 [det] expect opt=2 x=[2, 0] | optimal obj=2 x=[2, 0] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test data 1e9*x0 + x1 >= 2e9, x0<=1e6, min x0 [par] expect opt=2 x=[2, 0] | optimal obj=2 x=[2, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test data 1e9*x0 + x1 >= 2e9, x0<=1e6, min x0 [detnolp] expect opt=2 x=[2, 0] | optimal obj=2 x=[2, 0] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test value a=123456789012.5: a*x + y >= a+0.5, min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test value a=123456789012.5: a*x + y >= a+0.5, min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T0 test value a=123456789012.5: a*x + y >= a+0.5, min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^36+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^36+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^36+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^44+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^44+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^44+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^48+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^48+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^48+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=1 x=[1, 1] exactViolation(bounds=0.0, rows=0.0) => OK
+T2 a=2^49+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=2^49+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=2^49+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=7e14+0.5 (10a < 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=7e14+0.5 (10a < 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=7e14+0.5 (10a < 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=2^50+0.5 (10a >= 2^53), min y [det] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=2^50+0.5 (10a >= 2^53), min y [par] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+T2 a=2^50+0.5 (10a >= 2^53), min y [detnolp] expect opt=1 x=[1, 1] | optimal obj=0 x=[1, 0] exactViolation(bounds=0.0, rows=0.5) => WRONG-OPTIMAL
+
+SUMMARY (per group: ok / wrong with success status / rejected unsupported / other)
+  T0: ok=6 wrong=0 rejected=0 other=0  first wrong: -
+  T2: ok=9 wrong=9 rejected=0 other=0  first wrong: a=2^49+0.5 (10a < 2^53), min y [det]

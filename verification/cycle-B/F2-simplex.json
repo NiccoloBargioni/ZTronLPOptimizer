@@ -1,0 +1,142 @@
+{
+ "area": "F2: Simplex engine (primal/dual, refinement, warm starts, certificates) and the numerics under it (DenseLU, triangular solves, SparseCSC, BasisFactorization with product-form updates)",
+ "findings": [
+  {
+   "id": "B2-01",
+   "title": "Refinement pass swaps the optimal basis for the all-slack basis (sparse QR) and reports that starting point as .optimal, infeasible by 3.4e7",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "README 2.5: Simplex 'Returns a vertex with its basis' and warns when the optimal basis is ill-conditioned; SolveStatus.optimal 'An optimal solution was found and proven'; README 4 Limits/Results: optimal means 'feasible and dual feasible to 1e-7'; HANDBOOK decision 16: 'The pass can only replace an optimal answer by a better one: anything but an optimal ending returns the engine to the basis it started from.'",
+   "observed": "Simplex(.primal, factorization: .sparseQR, presolve: false or true, scaling: .none) on a feasible, bounded planted LP (HARD family seed 5067: m=56, n=67, known optimum -90497620.27) returns .optimal with objective 28004750.59 and no warning. CompiledLP.maxViolation(at:) of the returned x is 3.36e7 on the rows. The returned basis has 0 structural columns, and x is exactly the slack-basis starting point: the it=0 progress event has objective 28004750.594775513. The same progress log shows the engine had already reached the right optimum at it=700 (-90497620.2749953, phase 2, infeasibility 0). With denseLU the same LP ends optimal after 88 pivots and carries an ill-conditioned-basis warning (condition estimate 1.5e14). Seed 5069 (m=52, n=17, maximize) behaves the same way: .optimal at -2729088 against a true 106374769, rows violated by 1.35e7. On the public SimplexEngine (same LP, no presolve or scaling), solve(cutoff: nil) runs the refinement pass and gives 19 refactorizations, the all-slack basis and the wrong answer. With cutoff: 1e300, which cannot bind and skips refine (Driver.swift:462), it gives 18 refactorizations, 32 structural basics, the correct optimum and a row violation of 2.2e-8.",
+   "whyWrong": "A point that violates rows by 3e7, with an objective 130% off, is reported .optimal and carries no warning. The pass that is documented never to make an answer worse threw away the optimal basis.",
+   "location": "Sources/ZTronLPSimplex/SimplexEngine.swift:471-475. In refactorize(), a .singular error that carries no positions makes the engine call installSlackBasis() silently. SparseQRBasis always throws such an error (BasisFactorization.swift:207-209, Sparse.swift:361-364); its probe tolerance of 1e-4 corresponds to a condition number near 1e12. Sources/ZTronLPSimplex/SimplexEngine+Driver.swift:584-587: refine() refactorizes the optimal basis, and that call performs the swap. From then on the pass measures the slack basis. Code reading says it most likely leaves through the early return at :594-597, which runs warnIfIllConditioned() on the identity basis and so gives no warning. If instead it takes the re-solve path, the state it would restore (:613) was captured after the swap. Either way the pass adds no pivots: 702 with and without it. Driver.swift:785: conclude(.optimal) sets primalFeasible = true without checking.",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F2 -c release && HARD=1 perl -e 'alarm shift; exec @ARGV' 100 .build/release/F2 one 5067 60 80 'P/QR/pre=0/sc=none/devex/pert=off' ; HARD=1 .build/release/F2 engine 5067 60 80 primal qr ; HARD=1 .build/release/F2 trace 5067 60 80 'P/QR/pre=0/sc=none/devex/pert=off' 100 ; HARD=1 .build/release/F2 one 5069 60 80 'P/QR/pre=0/sc=none/devex/pert=off' ; sweep: HARD=1 .build/release/F2 grid 5000 300 60 80 mid hard",
+   "evidence": "P/QR/pre=0/sc=none/devex/pert=off status=optimal obj=28004750.594775513 it=702 pv=2.6e+00 dv=1.0e+00 objErr=1.3e+00 | package maxViolation(at:) bounds=0.0 rows=33642684.54654266 | warnings=[] | basis: 0 structural of 56 basic; max |x - slack-basis point| = 0.0. Engine: cutoff=nil -> status=optimal obj=28004750.594775513 refac=19 structural basics=0 rows=3.36e7; cutoff=1e+300 -> status=optimal obj=-90497620.27499528 refac=18 structural basics=32 rows=2.2e-08. Trace: it=0 obj=28004750.594775513 ... it=700 obj=-90497620.2749953 inf=0.0 phase=2; finished optimal",
+   "confidence": "reproduced",
+   "documented": "Not documented. README 4 and the HANDBOOK known gaps do not mention it, and HANDBOOK decision 16 states the opposite. No test covers a refactorization failure inside the pass: RefinementTests inject only an iteration limit."
+  },
+  {
+   "id": "B2-02",
+   "title": "False .infeasible on feasible LPs, with a dualRay that certifies nothing (on Klee-Minty order 14, x = 0 is feasible)",
+   "severity": "critical",
+   "category": "wrong-result",
+   "claim": "SolveStatus.infeasible: 'The model has no feasible point'. README risk 1: 'An .infeasible or .unbounded result of Simplex carries a ray that can be checked independently'. HANDBOOK Results: 'An .infeasible LP result carries a dual ray (a Farkas certificate)'. README defect 8 (marked fixed) and HANDBOOK decision 18: before phase 1 reads 'no direction of descent' as infeasibility, the small entries now get a second look.",
+   "observed": "(1) Klee-Minty (Chvatal form) of order 14, where x = 0 is feasible (package maxViolation(at: 0) = (0, 0)). Simplex(.primal, scaling: .none) returns .infeasible after 7 pivots and Simplex(.dual, scaling: .none) after 6, both without a warning. The dualRay puts +0.05 on a row whose lower bound is -inf, so its Farkas margin is -inf. With scaling .none, 18 of the 36 configurations per method and presolve setting answer .infeasible at orders 13 and 14. (2) HARD planted seed 5028 (m=25, n=16), whose planted x* is exactly feasible. Simplex(.primal, presolve: true, scaling: .none) returns .infeasible after 29 pivots with a dualRay margin of -2.0e-16. The returned x is the optimum itself (objective 16187313.706328832) and violates one bound by 1.35e-7 absolute. (3) Planted seed 30 with a warm start .basis that has all 7 structurals basic, which is a legitimate basis since n < m. Simplex(.primal, factorization: .sparseQR, scaling: .none) returns .infeasible with margin 1.4e-12, while x is feasible to 1.2e-10 and sits at the optimum. (4) A planted LP with rows scaled by 10^+-3 (invariance seed 114): the primal method with sparse QR and scaling none returns .infeasible in 4 configurations.",
+   "whyWrong": "Each of these models is feasible: a point that satisfies every row and bound exactly is known. The status is false, and the certificate fails an independent Farkas check (margin <= 0, or it relies on a bound that does not exist).",
+   "location": "Sources/ZTronLPSimplex/SimplexEngine+Primal.swift:697-706. When phase 1 finds nothing to price, including after weakPhase1Entering(), it sets lastDualRay = farkasRay(from: y) and returns .infeasible without requiring farkasValue(lastDualRay) > 0. farkasRay (:584-590) only picks the better of the two signs, and farkasValue (:562-581) would return -inf for the Klee-Minty ray. Simplex.postsolved (Simplex.swift:237-291) does not check again.",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 100 .build/release/F2 kmone 14 'P/auto/pre=1/sc=none/devex/pert=onStall' ; .build/release/F2 kmone 14 'D/auto/pre=1/sc=none/devex/pert=onStall' ; HARD=1 .build/release/F2 cert 5028 60 80 'P/auto/pre=1/sc=none/devex/pert=off' ; .build/release/F2 allbasic 30 20 25 'P/QR/pre=1/sc=none/devex/pert=onStall' ; .build/release/F2 km 8 14 ; .build/release/F2 invariance 1 150 15 20",
+   "evidence": "klee-minty 14: optimum 1e+26; x = 0 feasible: package maxViolation(at: 0) = (bounds: 0.0, rows: 0.0) | P/auto/pre=1/sc=none/devex/pert=onStall status=infeasible it=7 obj=nil farkas=margin -inf dualRay=[0.0, 0.0, 0.0, 0.0, -0.0, -0.0, -0.0, 0.0, -0.0, -0.0, -1.0, 0.05000000000000001, 0.0, 0.0] warnings=[] | D/auto/pre=1/sc=none/devex/pert=onStall status=infeasible it=6 (same ray). Seed 5028: planted x* absViol=0.0; P/auto/pre=1/sc=none status=infeasible it=29 x absViol=1.347e-07 obj(x)=16187313.706328832 (= planted optimum) farkas=margin -2.0e-16 warnings=[]; with presolve false or with the dual method the status is optimal.",
+   "confidence": "reproduced",
+   "documented": "Not in this form. README defect 8 and HANDBOOK decision 18 call the false-infeasible class fixed, on the Hilbert family. This is a different trigger: a wide range of magnitudes with scaling .none, or a warm start. The claim in README risk 1 that the ray can be checked independently fails here. In the samples, every case had scaling .none."
+  },
+  {
+   "id": "B2-03",
+   "title": "Dual simplex stalls until the 50,000-pivot cap on a feasible 36x78 LP; .onStall never fires because its trigger measures primal degeneracy",
+   "severity": "medium",
+   "category": "hang",
+   "claim": "Simplex.Perturbation.onStall (Simplex.swift:37-38, README 2.5): 'After 1,000 iterations without progress with more than 30% of basics at a bound'. The anti-cycling comment at SimplexEngine.swift:724-725 says a basis seen among the last 64 triggers Bland's rule for 50 iterations. The task contract requires that degenerate problems do not stall.",
+   "observed": "Planted LP seed 1356: m=36, n=78, real data, a 2.9-decade row and column spread, known optimum 7255833.9693. Simplex(.dual) returns noSolution(iterationLimit) after 50,000 pivots, 1,317 refactorizations and degeneracy 0.0. This happens with denseLU or automatic factorization (presolve false, scaling .equilibration) and with sparseQR (presolve true or false, scaling .none), under perturbation .off and .onStall alike. In the progress log the objective sits at the optimum (7255833.97) from pivot 2,000 on, while the primal infeasibility swings between 4e6 and 1.2e8 for 48,000 dual-degenerate pivots. Perturbation .always solves every one of these configurations, and so does the primal method. HARD seeds 5093, 5142, 5147, 5169 and 5173 stall the same way with dual/QR/scaling none. Unscaled Klee-Minty of orders 8-12 stops at 50,000 pivots in 27 of 36 configurations per method, although Dantzig's worst case there is 2^n-1 <= 4,095 pivots.",
+   "whyWrong": "A feasible, bounded LP with 36 rows goes unsolved. The documented anti-stall mechanism cannot engage for the kind of stall the dual method has, which is dual degeneracy. degeneracyFraction() counts basic variables at a bound, which is primal degeneracy and is 0.0 here. The trigger is also blocked whenever a cost shift has set costsPerturbed.",
+   "location": "Sources/ZTronLPSimplex/SimplexEngine+Dual.swift:412-421 (the trigger requires degeneracyFraction() > 0.3 and !costsPerturbed); Sources/ZTronLPSimplex/SimplexEngine.swift:703-715 (degeneracyFraction measures primal degeneracy); SimplexEngine+Dual.swift:165, 423, 448 (cost shifts set costsPerturbed)",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F2 -c release && perl -e 'alarm shift; exec @ARGV' 120 .build/release/F2 trace 1356 60 80 'D/LU/pre=0/sc=eq/devex/pert=onStall' 2000 ; sweep: .build/release/F2 grid 1000 400 60 80 full (32 failures, all on seed 1356) ; HARD=1 .build/release/F2 grid 5000 300 60 80 mid hard ; .build/release/F2 kmone 10 'P/auto/pre=1/sc=none/devex/pert=onStall'",
+   "evidence": "it=2000 obj=7255833.970796935 inf=4398358.43 ... it=24000 obj=7255833.965338953 inf=121441636.69 ... it=48000 obj=7255833.969265446 inf=12306679.97 | finished noSolution(iterationLimit) 0.459s | D/LU/pre=0/sc=eq/devex/pert=onStall status=noSolution(iterationLimit) it=50000 ph1=0 refac=1317 degen=0.0",
+   "confidence": "reproduced",
+   "documented": "Not documented. README 2.5 describes the .onStall trigger accurately but says nothing of this consequence for the dual method. No stall appeared with the default geometric scaling in 2,700 sampled seeds."
+  },
+  {
+   "id": "B2-04",
+   "title": "SparseQRBasis doc comment describes a density rule for choosing it that no code applies",
+   "severity": "low",
+   "category": "doc-claim-false",
+   "claim": "Sources/ZTronLPNumerics/BasisFactorization.swift:204-205: 'Chosen when m > 1,500 or the basis density is below 2%.'",
+   "observed": "Simplex.makeFactorization(rows:) (Simplex.swift:78-90) takes only the row count, and .automatic returns DenseLUBasis for every m <= 1,500 whatever the density. No engine calls basisDensity(basic:lp:): grep finds only its definition, and README 2.7 itself says it serves 'the tests and the analyzer and no engine'.",
+   "whyWrong": "The doc comment states a selection rule that does not exist.",
+   "location": "Sources/ZTronLPNumerics/BasisFactorization.swift:204-205",
+   "repro": "cd /Users/admin/Documents/ZTronLPOptimizer/verification/probes/cycle-B && swift build --product F2 -c release && .build/release/F2 crash 1 1 (the last line prints makeFactorization(rows: 1500) -> DenseLUBasis, rows: 1501 -> SparseQRBasis) ; grep -rn 'basisDensity' /Users/admin/Documents/ZTronLPOptimizer/Sources",
+   "evidence": "Simplex().makeFactorization(rows: 1500) -> DenseLUBasis, rows: 1501 -> SparseQRBasis; grep basisDensity: only BasisFactorization.swift:283 (the definition)",
+   "confidence": "reproduced",
+   "documented": "README 2.7 and Simplex.Factorization.automatic state the actual rule (dense LU up to 1,500 rows); only this doc comment is wrong."
+  }
+ ],
+ "claimsHeld": [
+  {
+   "claim": "KKT holds on planted LPs in every Simplex configuration: primal feasibility, dual feasibility, complementary slackness, d = c - A^T y, duality gap, objective equal to the planted optimum, and the sign conventions in the model's sense including maximize. The planted LPs mix free, negative, fixed, boxed and shifted columns with equality, >=, <=, ranged and free rows, degenerate multipliers and non-unique optima; 30% use real data with 0.5-3 decades of scale spread.",
+   "howChecked": "Own oracle (Slots/F2/Oracle.swift, Gen.swift). Ran F2 grid 1 300 12 16 full (432 configurations, 129,600 solves, 0 failures, worst relative primal violation 1.1e-9, worst objective error 1.7e-13); F2 grid 2000 2000 60 80 mid (96,000 solves, 0 failures); F2 grid 1000 400 60 80 full (172,800 solves; the 32 failures are all B2-03)."
+  },
+  {
+   "claim": "Infeasible LPs end .infeasible with a dualRay of m entries that passes an independent Farkas check with one consistent sign; none ends .optimal.",
+   "howChecked": "Planted Farkas vectors, with boxed and free columns: F2 infeas 1 300 12 12 and F2 infeas 1000 150 40 40 full, 79,200 solves, wrongStatus=0, badCert=0."
+  },
+  {
+   "claim": "Unbounded LPs end .unbounded with a primalRay that is an improving recession direction and a feasible primal point.",
+   "howChecked": "Planted feasible point plus planted ray: F2 unbnd 1 300 12 12 and F2 unbnd 1000 150 40 40 full, 79,200 solves, 0 bad."
+  },
+  {
+   "claim": "The ReferenceValues.netlib optima equal the published netlib optima. SCAGR7 uses the CPLEX value -2.331389824e6; the MINOS value differs from it by 2.4e-7.",
+   "howChecked": "Compared all 13 values with independent knowledge of the netlib lp/data/readme summary table."
+  },
+  {
+   "claim": "README 5 netlib table: default primal and dual pivot counts (afiro 16/14 up to degen2 1011/539), and every optimum within 1.3e-11 of the published value.",
+   "howChecked": "F2 netlib default: pivot counts identical on all 13 instances; worst relative error 1.33e-11; KKT holds after duals are mapped back through presolve (gap <= 2.4e-15)."
+  },
+  {
+   "claim": "Every one of the 432 Simplex configurations reaches every netlib optimum with valid KKT.",
+   "howChecked": "F2 netlib full: 5,616 solves, 0 failures, worst relative error 1.33e-11, worst relative primal violation 6.4e-10."
+  },
+  {
+   "claim": "README 5 ill-conditioned table and defects 8-9. Up to order 8, every configuration recovers x to about 1e-6 (default dual 4e-7, primal 9e-7). From order 9 only the objective is right (relative error <= 8e-12). Every solve ends optimal. An ill-conditioned basis gets a warning from order 7 on. No configuration reports optimal at a wrong objective.",
+   "howChecked": "Own Hilbert construction (b = H*1, c = H^T*1, 4 forms). F2 hilbert 3 12 default reproduces the README table digit for digit. F2 hilbert 3 12 all covers 56 configurations: all optimal, objective error <= 8e-12, 224/224 warned from order 7, |x-1| <= 2e-6 at order 8."
+  },
+  {
+   "claim": "Iteration limits: the documented status (optimal, or feasible/noSolution with stop reason iterationLimit); iterations <= maxIterations; a .feasible iterate is primal feasible and no better than the optimum; objectiveValue equals objective(x); bound is valid; an optimal result at k stays optimal at every larger k.",
+   "howChecked": "F2 limits: k from 0 to 2000 on 5 netlib and 6 planted LPs with 16 configurations, 2,288 checks, 0 problems."
+  },
+  {
+   "claim": "Time limits 0, 1e-4, 1e-3 and 1e-2 s end noSolution(timeLimit) with an iterate, promptly.",
+   "howChecked": "F2 timelimit on degen2 and a 100x1000 transport LP: wall time <= limit plus at most 27 ms of setup."
+  },
+  {
+   "claim": "A warm start from the optimal basis takes 0 pivots, with presolve on or off. .primalPoint, a warm start after perturbed costs, and .incremental bound changes all give correct optima. Malformed bases (random statuses, duplicates, out-of-range indices, an empty list, the wrong length) still end optimal and correct. .crash(.slack) and .crash(.triangular) are correct.",
+   "howChecked": "F2 warm 1 150 20 25: 2,400 solves per kind. Warm starts from the optimal basis take at most 0 pivots. The only bad result is 1 of the 2,400 malformed-basis solves (B2-02). F2 crash 1 150 30 40: 14,400 solves, 0 bad."
+  },
+  {
+   "claim": "Highly degenerate assignment LPs are solved at the Hungarian optimum without cycling. Klee-Minty with equilibration or geometric scaling is optimal in every configuration up to order 14 (1 pivot for the default primal method, 2 for the default dual).",
+   "howChecked": "F2 degen 14 60 14: 2,880 assignment solves against an own Hungarian algorithm with 0 bad and at most 105 pivots. F2 km 8 14: every scaled configuration optimal."
+  },
+  {
+   "claim": "The optimum is invariant under row and column permutation, row scaling (10^+-3 with sign flips), column scaling (2^+-8 with sign flips), duplicated and implied redundant rows, min/max reformulation, and an added free row with an empty column.",
+   "howChecked": "F2 invariance 1 150 15 20: 43,200 solves; the only 14 failures all have scaling .none."
+  },
+  {
+   "claim": "dual[i] is the sensitivity of the reported objective to row i's right-hand side, for minimize and maximize.",
+   "howChecked": "F2 sensitivity: each nonzero dual lies between the one-sided finite-difference derivatives on afiro, sc50a, a planted max LP and afiro rewritten as max (66 rows, 0 violations; afiro exact to 4e-9)."
+  },
+  {
+   "claim": "The numerical building blocks are accurate: DenseMatrix products and oneNorm; DenseLU dense and sparse-rhs solves, plain and transposed; denseSolve; triangularSolve; SparseCSC operations with duplicate triplets summed; the Vec kernels; DenseLUBasis and SparseQRBasis ftran/btran after up to ~60 product-form updates; needsRefactor at refactorInterval; unstableUpdate on a zero pivot; .singular for a duplicated basic column.",
+   "howChecked": "F2 numerics 1 300 against own Gaussian elimination: everything within 2.5e-13, triangular backward error 3e-16."
+  },
+  {
+   "claim": "The ill-conditioned-basis warning is consistent with the actual error.",
+   "howChecked": "HARD seed 5082, dual, presolve off, scaling none: row violation 5.8e-4 relative, warning reads 'values may be wrong by about 2.3e-3 relative'."
+  },
+  {
+   "claim": ".automatic uses DenseLU up to 1,500 rows and SparseQR above. The iteration cap is 50,000 whenever 100(m+n) < 50,000. Pricing applies only to the primal method.",
+   "howChecked": "F2 crash prints the factorization types. Stalled runs with 100(m+n) < 50,000 stop at exactly 50,000 pivots. Dual outcomes are identical across the 4 pricings."
+  }
+ ],
+ "notChecked": [
+  "The Metal pricing path inside the simplex (MetalPolicy.forced), and parallel pricing with the pivot row at >= 20,000 columns and 200,000 nonzeros.",
+  "SimplexEngine+Crossover (pushDuals, face bounds) was not probed directly; it is reached only through InteriorPoint, which is outside F2.",
+  "The README timings for the larger transport LP (2,000 x 20,000), refactorization cost and the dense-basis memory figures (8 m^2 bytes) were not re-measured.",
+  "DenseQR, DenseCholesky and SparseSymmetricSolver. The CLAPACKShim entry points were exercised only through DenseLU and the triangular solves. The accuracy of conditionEstimate against the exact condition number was not measured; it was only seen to agree with the observed errors in the warnings.",
+  "Whether B2-01 or B2-02 can be triggered with the default geometric scaling: not seen in 2,700 sampled seeds. No LP above 1,500 rows (where .automatic picks sparse QR) with an intrinsically ill-conditioned optimal basis was built.",
+  "The existing package tests were not re-run.",
+  "Cancellation in the middle of a solve, and the progress-event cadence beyond what the traces showed."
+ ],
+ "overflow": [
+  "info: numericalFailure('primal feasibility could not be maintained') on badly scaled LPs with scaling .none (HARD seeds 5093 P/QR and 5169 D/auto/pre=0) and on unscaled Klee-Minty orders 13-14 is an honest failure status, not verified further.",
+  "info (code reading plus the numerics probe): when dgetrf reports info > 0, DenseLU.init lists only exactly-zero pivots (deficientPivots(relativeTolerance: 0)). A nearly singular basis can therefore be reported with fewer deficient positions than it has. The repair loop retries up to 4 times before falling back to the slack basis; this was not followed further.",
+  "test-coverage info: RefinementTests 'aPassThatCannotFinishLeavesTheAnswerAsItWas' injects only an iteration limit. No test exercises a failed refactorization inside the pass, which is the path of B2-01."
+ ],
+ "summary": "Over more than 650,000 probe solves the simplex was correct: planted LPs in all 432 configurations, all 13 netlib instances, the Hilbert table, the Farkas and ray certificates, limits, warm starts, degenerate assignment LPs, invariance and the numerical building blocks. The README netlib and Hilbert tables reproduce exactly. The failures all come from wide magnitude ranges combined with non-default options: two critical, one medium and one low. B2-01 (critical): with a sparse QR basis, the refinement pass's refactorization hits the QR singularity probe, the engine silently installs the all-slack basis, and returns the starting point as .optimal, infeasible by 3.4e7 and with no warning. The public SimplexEngine localizes it: the run is correct with refinement skipped. B2-02 (critical): primal phase 1 declares .infeasible without checking its own Farkas value, giving false infeasibility on feasible LPs, among them Klee-Minty order 14 where x = 0 is feasible, with rays that certify nothing (margin -inf or <= 0). B2-03 (medium): the dual simplex stalls until the 50,000-pivot cap because the .onStall trigger measures primal degeneracy. B2-04 (low): the SparseQRBasis doc comment describes a density rule that does not exist. Every critical and medium case used scaling .none or .equilibration. None was seen with the defaults (dual, automatic factorization, presolve, geometric scaling)."
+}

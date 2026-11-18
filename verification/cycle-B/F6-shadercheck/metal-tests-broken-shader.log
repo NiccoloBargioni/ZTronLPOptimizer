@@ -1,0 +1,289 @@
+Fetching https://github.com/apple/swift-collections.git from cache
+Fetching https://github.com/apple/swift-atomics.git from cache
+Fetched https://github.com/apple/swift-atomics.git from cache (0.66s)
+Fetched https://github.com/apple/swift-collections.git from cache (0.68s)
+Computing version for https://github.com/apple/swift-collections.git
+Computed https://github.com/apple/swift-collections.git at 1.7.6 (1.49s)
+Computing version for https://github.com/apple/swift-atomics.git
+Computed https://github.com/apple/swift-atomics.git at 1.3.1 (0.54s)
+Creating working copy for https://github.com/apple/swift-atomics.git
+Working copy of https://github.com/apple/swift-atomics.git resolved at 1.3.1
+Creating working copy for https://github.com/apple/swift-collections.git
+Working copy of https://github.com/apple/swift-collections.git resolved at 1.7.6
+Building for debugging...
+[Computing dependencies]
+[Provisioning 35 / 49]
+[Constructing description]
+[Pre-planning 1 / 1291]
+[Planning 1014 / 1291]
+[Planning deferred tasks]
+[Constructing 860 / 2846]
+[81 / 646] ZTronLPMetal
+[284 / 646] ZTronLPOptimizer_ZTronLPTestSupport
+[291 / 646]
+[295 / 648] InternalCollectionsUtilities
+[310 / 689]
+[315 / 689] InternalCollectionsUtilities
+[320 / 689] InternalCollectionsUtilities
+[321 / 689]
+[323 / 689] CLAPACKShim
+[329 / 729]
+[333 / 729]
+[335 / 729]
+[338 / 729]
+[339 / 729] InternalCollectionsUtilities
+[343 / 729]
+[346 / 729]
+[347 / 729] InternalCollectionsUtilities
+[356 / 729] InternalCollectionsUtilities
+[357 / 729] OrderedCollections
+[358 / 729] Atomics
+[360 / 729] Atomics
+[363 / 729] InternalCollectionsUtilities
+[367 / 732] InternalCollectionsUtilities
+[369 / 740] BitCollections
+[372 / 758] Atomics
+[376 / 758]
+[377 / 758] HeapModule
+[383 / 758] HeapModule
+[390 / 758] OrderedCollections
+[390 / 758] Atomics
+[396 / 758] BitCollections
+[405 / 758]
+[407 / 758] OrderedCollections
+[408 / 758] OrderedCollections
+[409 / 758]
+[410 / 758]
+[411 / 758]
+[412 / 758] OrderedCollections
+[414 / 758]
+[416 / 758] HeapModule
+[418 / 758] HeapModule
+[419 / 758] HeapModule-product
+[423 / 758] HeapModule
+[426 / 758] HeapModule
+[428 / 758] OrderedCollections
+[430 / 758] OrderedCollections
+[431 / 758] OrderedCollections
+[433 / 758] BitCollections-product
+[437 / 758] Atomics-product
+[448 / 759] BitCollections
+[448 / 759] ZTronLPCore
+[455 / 801]
+[456 / 801]
+[458 / 801]
+[464 / 801]
+[465 / 801]
+[466 / 801] BitCollections
+[466 / 801]
+[469 / 801] BitCollections
+[472 / 801]
+[474 / 801]
+[477 / 801]
+[480 / 801]
+[482 / 801]
+[483 / 801]
+[491 / 801] ZTronLPCore
+[492 / 801] ZTronLPCore
+[501 / 802] ZTronLPCore
+[505 / 822]
+[507 / 822]
+[508 / 822] ZTronLPCore
+[509 / 822]
+[510 / 822]
+[511 / 822] ZTronLPCore
+[511 / 822]
+[512 / 822]
+[513 / 822]
+[513 / 822] ZTronLPCore
+[520 / 822] ZTronLPNumerics
+[521 / 822] ZTronLPNumerics
+[530 / 825]
+[531 / 826] ZTronLPCore
+[535 / 826]
+[536 / 827] ZTronLPTestSupport
+[539 / 834] ZTronLPTestSupport
+[542 / 852] ZTronLPConditioning
+[542 / 857] ZTronLPTestSupport
+[546 / 857] ZTronLPTestSupport
+[552 / 857] ZTronLPMetal
+[564 / 857]
+[567 / 857] ZTronLPSimplex
+[569 / 857] ZTronLPTestSupport
+[577 / 857] ZTronLPTestSupport
+[581 / 857] ZTronLPCompileBudgetTests-product
+[584 / 857] ZTronLPNumerics
+[585 / 857] ZTronLPTestSupport
+[586 / 857] ZTronLPNumerics
+[588 / 857] ZTronLPMetal
+[591 / 857] ZTronLPNumerics
+[592 / 857] ZTronLPMetalTests-product
+[593 / 857] ZTronLPMetal
+[594 / 857] ZTronLPInteriorPoint
+[596 / 857] ZTronLPConditioningTests-product
+[598 / 857] ZTronLPSimplex
+[599 / 857] ZTronLPCompileBudgetTests-product
+[616 / 858]
+[617 / 859] ZTronLPCore-product
+[620 / 862]
+[621 / 870] ZTronLPConditioning
+[622 / 870] ZTronLPInteriorPoint
+[623 / 870] ZTronLPSimplex
+[631 / 870] ZTronLPCPSAT
+[639 / 870] ZTronLPCPSAT
+[641 / 870] ZTronLPInteriorPoint
+[643 / 870] ZTronLPConditioning
+[644 / 870] ZTronLPCompileBudgetTests-product
+[650 / 870] ZTronLPCPSATTests-product
+[657 / 871] ZTronLPTestSupportTests-product
+[661 / 877] ZTronLPCoreTests-product
+[661 / 886] ZTronLPCPSAT
+[669 / 887] ZTronLPSimplexTests-product
+[674 / 887] ZTronLPMetalTests-product
+[676 / 888] ZTronLPMetalTests-product
+[679 / 898] ZTronLPConditioningTests-product
+[682 / 899]
+[685 / 906] ZTronLPCPSAT
+[687 / 912] ZTronLPTestSupportTests-product
+[689 / 912] ZTronLPTestSupportTests-product
+[696 / 917] ZTronLPCoreTests-product
+[698 / 917] ZTronLPSimplexTests-product
+[709 / 917] ZTronLPSimplexTests-product
+[710 / 917] ZTronLPTestSupportTests-product
+[712 / 917] ZTronLPCPSAT
+[719 / 917] ZTronLPTestSupportTests-product
+[726 / 917] ZTronLPSimplexTests-product
+[727 / 917] ZTronLPSimplexTests-product
+[729 / 917] ZTronLPNumericsTests-product
+[729 / 917] ZTronLPInteriorPoint
+[731 / 917] ZTronLPNumericsTests-product
+[732 / 917] ZTronLPSimplexTests-product
+[734 / 917] ZTronLPSimplexTests-product
+[739 / 917] ZTronLPMetalTests-product
+[740 / 917] ZTronLPMetalTests-product
+[746 / 917] ZTronLPInteriorPoint
+[749 / 917] ZTronLPCoreTests-product
+[751 / 917] ZTronLPCoreTests-product
+[751 / 917] ZTronLPSimplexTests-product
+[752 / 917] ZTronLPCoreTests-product
+[754 / 917] ZTronLPCoreTests-product
+[754 / 917] ZTronLPMetalTests-product
+[755 / 917] ZTronLPMetalTests-product
+[756 / 917] ZTronLPNumericsTests-product
+[757 / 917] ZTronLPMetalTests-product
+[762 / 917] ZTronLPNumericsTests-product
+[764 / 917] ZTronLPMetalTests-product
+[771 / 917] ZTronLPCompileBudgetTests-product
+[775 / 917] ZTronLPSimplexTests-product
+[778 / 918] ZTronLPBranchAndBound
+[780 / 923] ZTronLPCompileBudgetTests-product
+[781 / 923] ZTronLPBranchAndBound
+[783 / 923] ZTronLPConditioningTests-product
+[789 / 923] ZTronLPBranchAndBound
+[790 / 923] ZTronLPOptimizer
+[792 / 923] ZTronLPSimplexTests-product
+[798 / 923] ZTronLPBranchAndBoundTests-product
+[804 / 925] ZTronLPInteriorPointTests-product
+[807 / 933] ZTronLPOptimizer
+[810 / 933] ZTronLPOptimizer
+[817 / 933] ZTronLPInteriorPointTests-product
+[818 / 933] ZTronLPOptimizerTests-product
+[832 / 933]
+[838 / 934] ZTronLPCPSATTests-product
+[844 / 935]
+[850 / 936] ZTronLPCPSATTests-product
+[853 / 945] ZTronLPCPSATTests-product
+[854 / 947] ZTronLPBenchmarks-product
+[854 / 953] ZTronLPBenchmarks-product
+[855 / 953] ZTronLPBranchAndBoundTests-product
+[863 / 953] ZTronLPCPSATTests-product
+[864 / 953] ZTronLPCoreTests-product
+[866 / 953] ZTronLPCPSATTests-product
+[871 / 953] ZTronLPCPSATTests-product
+[872 / 953] ZTronLPCPSATTests-product
+[873 / 953] ZTronLPInteriorPointTests-product
+[875 / 953] ZTronLPInteriorPointTests-product
+[877 / 953] ZTronLPInteriorPointTests-product
+[878 / 953] ZTronLPBranchAndBoundTests-product
+[879 / 953] ZTronLPCoreTests-product
+[882 / 953] ZTronLPBranchAndBoundTests-product
+[883 / 953] ZTronLPBenchmarks-product
+[890 / 955] ZTronLPBranchAndBoundTests-product
+[897 / 955] ZTronLPLivenessTests-product
+[899 / 956] ZTronLPOptimizerTests-product
+[901 / 961] ZTronLPLivenessTests-product
+[902 / 967] ZTronLPIntegrationTests-product
+[906 / 971] ZTronLPOptimizerTests-product
+[907 / 971] ZTronLPOptimizerTests-product
+[907 / 971] ZTronLPIntegrationTests-product
+[919 / 971] ZTronLPLivenessTests-product
+[919 / 971] ZTronLPOptimizerTests-product
+[922 / 971] ZTronLPLivenessTests-product
+[926 / 971] ZTronLPLivenessTests-product
+[927 / 971] ZTronLPIntegrationTests-product
+[932 / 971] ZTronLPIntegrationTests-product
+[936 / 971] ZTronLPIntegrationTests-product
+[941 / 971] AllIncludingTests
+[944 / 971]
+[947 / 971] ZTronLPBenchmarks-product
+[949 / 971] ZTronLPBranchAndBoundTests-product
+[951 / 971] ZTronLPBranchAndBoundTests-product
+[953 / 971] ZTronLPLivenessTests-product
+[953 / 971] ZTronLPIntegrationTests-product
+[953 / 971] ZTronLPOptimizerTests-product
+[955 / 971] ZTronLPOptimizerTests-product
+[957 / 971] ZTronLPOptimizerTests-product
+[959 / 971] ZTronLPLivenessTests-product
+[961 / 971] ZTronLPIntegrationTests-product
+[963 / 971] ZTronLPLivenessTests-product
+[964 / 971] ZTronLPLivenessTests-product
+[968 / 971] ZTronLPIntegrationTests-product
+Build complete! (89,54 s)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+➜ Suite BatchedActivityTests skipped: "the GPU tier is unavailable on this machine"
+➜ Suite ReducedCostScanTests skipped: "the GPU tier is unavailable on this machine"
+◇ Suite MetalTierTests started.
+➜ Test flagsHaveNoFalseNegativesOnRandomPoints() skipped: "the GPU tier is unavailable on this machine"
+➜ Test activitiesMatchTheDoubleReference() skipped: "the GPU tier is unavailable on this machine"
+➜ Test largeBatchesAreSplitAcrossDispatches() skipped: "the GPU tier is unavailable on this machine"
+➜ Test automaticPolicyDeclinesSmallBatches() skipped: "the GPU tier is unavailable on this machine"
+➜ Test theInputSizeIsChecked() skipped: "the GPU tier is unavailable on this machine"
+➜ Test aPointOnItsBoundsIsNeverRejectedBySinglePrecision() skipped: "the GPU tier is unavailable on this machine"
+➜ Test theCopyOfAIsSharedPerProblemAndBounds() skipped: "the GPU tier is unavailable on this machine"
+➜ Test infiniteRowBoundsAndColumnBoundsAreHandled() skipped: "the GPU tier is unavailable on this machine"
+➜ Test theLimitAndTheInputSizesAreChecked() skipped: "the GPU tier is unavailable on this machine"
+➜ Test scoresMatchTheDoubleReference() skipped: "the GPU tier is unavailable on this machine"
+➜ Test theCopyOfAIsBuiltOncePerProblemAndReleasedAfterwards() skipped: "the GPU tier is unavailable on this machine"
+➜ Test scanReturnsTheBestCandidatesBestFirst() skipped: "the GPU tier is unavailable on this machine"
+➜ Test automaticPolicyGrantsTheKernelAtTheThresholds() skipped: "the GPU tier is unavailable on this machine"
+➜ Test anExplicitDeviceWorksLikeTheSharedProvider() skipped: "the GPU tier is unavailable on this machine"
+➜ Test columnsThatMayNotEnterAreNeverReturned() skipped: "the GPU tier is unavailable on this machine"
+➜ Test verificationAgreesWithTheRealKernel() skipped: "the GPU tier is unavailable on this machine"
+➜ Test concurrentScansOnOneKernelDoNotInterfere() skipped: "the GPU tier is unavailable on this machine"
+◇ Test thresholdsAreTheOnesOfTheSpecification() started.
+◇ Test theGuardWaitsForAMinimumSampleAndForMoreThanFivePercent() started.
+◇ Test aLyingKernelIsDisabledForTheSolve() started.
+◇ Test anHonestKernelIsNeverDisabled() started.
+◇ Test statusIsAlwaysOneOfTheThreeOutcomes() started.
+◇ Test automaticPolicyDeclinesProblemsBelowTheThresholds() started.
+◇ Test attachingMetalRespectsThePolicyAndAnExistingProvider() started.
+◇ Test topCandidatesAreTheLargestPositiveScoresBestFirst() started.
+◇ Test theShaderIsBundledAsALibraryOrAsSource() started.
+◇ Test noDeviceDisablesTheTier() started.
+◇ Test policyOffNeverYieldsAKernel() started.
+✔ Test thresholdsAreTheOnesOfTheSpecification() passed after 0.008 seconds.
+✔ Test statusIsAlwaysOneOfTheThreeOutcomes() passed after 0.008 seconds.
+✔ Test attachingMetalRespectsThePolicyAndAnExistingProvider() passed after 0.009 seconds.
+✔ Test theGuardWaitsForAMinimumSampleAndForMoreThanFivePercent() passed after 0.009 seconds.
+✔ Test theShaderIsBundledAsALibraryOrAsSource() passed after 0.009 seconds.
+✔ Test policyOffNeverYieldsAKernel() passed after 0.009 seconds.
+✔ Test noDeviceDisablesTheTier() passed after 0.009 seconds.
+✔ Test aLyingKernelIsDisabledForTheSolve() passed after 0.011 seconds.
+✔ Test topCandidatesAreTheLargestPositiveScoresBestFirst() passed after 0.024 seconds.
+✔ Test anHonestKernelIsNeverDisabled() passed after 0.069 seconds.
+✔ Test automaticPolicyDeclinesProblemsBelowTheThresholds() passed after 1.143 seconds.
+✔ Suite MetalTierTests passed after 1.144 seconds.
+✔ Test run with 28 tests in 3 suites passed after 1.144 seconds.
+rc=0
