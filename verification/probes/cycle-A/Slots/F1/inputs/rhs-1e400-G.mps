@@ -1,0 +1,9 @@
+NAME T
+ROWS
+ N COST
+ G r
+COLUMNS
+    x COST 1 r 1
+RHS
+    RHS r 1e400
+ENDATA

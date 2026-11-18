@@ -1,0 +1,13 @@
+NAME T
+ROWS
+ N COST
+ L l
+COLUMNS
+    x COST 1 l 1
+    y COST 1 l 1
+RHS
+    RHS l -1e30
+BOUNDS
+ FR BND x
+ FR BND y
+ENDATA

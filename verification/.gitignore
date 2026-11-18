@@ -1,0 +1,3 @@
+# Build products of the probe workspaces
+**/.build/
+**/.swiftpm/
